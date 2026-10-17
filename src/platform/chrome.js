@@ -104,3 +104,49 @@ export function onActiveTabChange(callback) {
     tabs.onUpdated.removeListener(onUpdated);
   };
 }
+
+/** True in the Firefox build, where the debugger and File System Access are missing (F43). */
+export const isFirefox = () => import.meta.env?.BROWSER === 'firefox';
+
+/**
+ * Opens the panel's long-lived port (v2 spec 7.1). Reconnects are the caller's job.
+ * @param {(message: object) => void} onMessage
+ * @param {() => void} onDisconnect
+ */
+export function connectPanelPort(name, onMessage, onDisconnect) {
+  const port = api().runtime.connect({ name });
+  port.onMessage.addListener(onMessage);
+  port.onDisconnect.addListener(onDisconnect);
+  return {
+    post: (message) => port.postMessage(message),
+    disconnect: () => port.disconnect(),
+  };
+}
+
+/** Messages sent with runtime.sendMessage by injected scripts (the picker). */
+export function onRuntimeMessage(callback) {
+  const listener = (message) => {
+    callback(message);
+    return false;
+  };
+  api().runtime.onMessage.addListener(listener);
+  return () => api().runtime.onMessage.removeListener(listener);
+}
+
+// Permission prompts must run inside the user's click, so these are called from click handlers
+// with no await before them (v2 spec 7.2).
+export const requestPermissions = (permissions) => api().permissions.request(permissions);
+export const removePermissions = (permissions) => api().permissions.remove(permissions);
+export const hasPermissions = (permissions) => api().permissions.contains(permissions);
+export const getAllPermissions = () => api().permissions.getAll();
+
+/** Origin pattern for one site, for optional host access (F25). */
+export function originPattern(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+    return `${u.protocol}//${u.hostname}/*`;
+  } catch {
+    return null;
+  }
+}

@@ -345,6 +345,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   if (sheets.unreadable > 0 && !components.some((r) => r.stateSource === 'forced')) partial.push('states');
   if (modes.some((m) => overrideOnly[m])) partial.push('dark');
   if ((primary.coverage?.frames?.skipped ?? 0) > 0) partial.push('frames');
+  // Advanced stages that failed (CAPTURE_PARTIAL), reported by the capture.
+  for (const stage of options.partial ?? []) if (typeof stage === 'string') partial.push(stage);
 
   return {
     schemaVersion: 2,

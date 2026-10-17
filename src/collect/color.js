@@ -74,7 +74,7 @@ export function canvasColorParser() {
   let ctx = null;
   return (value) => {
     if (cache.has(value)) return cache.get(value);
-    let result = null;
+    let result;
     try {
       ctx ??= new OffscreenCanvas(1, 1).getContext('2d', { willReadFrequently: true });
       ctx.clearRect(0, 0, 1, 1);

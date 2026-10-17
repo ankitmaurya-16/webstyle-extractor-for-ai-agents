@@ -194,6 +194,7 @@ export const MESSAGES = {
   check_first: ['Check these first', 'Section label'],
   none_detected: ['None detected', 'Empty state'],
   failing_only: ['Failing only', 'Filter'],
+  contrast_sample: ['Aa', 'Contrast pair preview text'],
   non_text_checks: ['Non-text contrast', 'Section label'],
   focus_ring_vs_bg: ['Focus ring vs background', 'Non-text check'],
   input_border_vs_bg: ['Input border vs input', 'Non-text check'],

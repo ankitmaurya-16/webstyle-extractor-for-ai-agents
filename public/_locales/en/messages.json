@@ -828,6 +828,10 @@
     "message": "Failing only",
     "description": "Filter"
   },
+  "contrast_sample": {
+    "message": "Aa",
+    "description": "Contrast pair preview text"
+  },
   "non_text_checks": {
     "message": "Non-text contrast",
     "description": "Section label"

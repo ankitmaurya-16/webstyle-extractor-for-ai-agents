@@ -57,6 +57,55 @@
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
 }
 
+
+/* Light theme (F42). Dark values stay on :root; light values apply when the user picks Light, or
+   when Appearance is System and the OS is light. Every text token meets 4.5:1 on bg. */
+@layer theme {
+  :root[data-theme='light'] {
+    --color-bg: #ffffff;
+    --color-surface: #f7f7f8;
+    --color-surface-2: #efeff1;
+    --color-surface-3: #e5e5e8;
+    --color-border: #e4e4e7;
+    --color-border-strong: #d4d4d8;
+    --color-text: #18181b;
+    --color-muted: #52525b;
+    --color-faint: #71717a;
+    --color-accent: #3358d4;
+    --color-accent-hover: #2a49b3;
+    --color-on-accent: #ffffff;
+    --color-success: #15803d;
+    --color-warning: #b45309;
+    --color-danger: #dc2626;
+    --color-swatch-ring: rgb(0 0 0 / 0.08);
+    --color-preview: #ffffff;
+    --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.12);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme='dark']) {
+      --color-bg: #ffffff;
+      --color-surface: #f7f7f8;
+      --color-surface-2: #efeff1;
+      --color-surface-3: #e5e5e8;
+      --color-border: #e4e4e7;
+      --color-border-strong: #d4d4d8;
+      --color-text: #18181b;
+      --color-muted: #52525b;
+      --color-faint: #71717a;
+      --color-accent: #3358d4;
+      --color-accent-hover: #2a49b3;
+      --color-on-accent: #ffffff;
+      --color-success: #15803d;
+      --color-warning: #b45309;
+      --color-danger: #dc2626;
+      --color-swatch-ring: rgb(0 0 0 / 0.08);
+      --color-preview: #ffffff;
+      --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.12);
+    }
+  }
+}
+
 @layer base {
   html,
   body {
@@ -117,6 +166,48 @@
 
 .animate-pop {
   animation: pop-in 180ms var(--ease-out);
+}
+
+
+:root[data-theme='light'],
+:root[data-theme='light'] body {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']),
+  :root:not([data-theme='dark']) body {
+    color-scheme: light;
+  }
+}
+
+/* 6 px checkerboard under translucent swatches so alpha is visible (CheckerSwatch). */
+.checker {
+  background-color: var(--color-surface-3);
+  background-image:
+    linear-gradient(45deg, var(--color-border-strong) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--color-border-strong) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--color-border-strong) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--color-border-strong) 75%);
+  background-size: 6px 6px;
+  background-position: 0 0, 0 3px, 3px -3px, -3px 0;
+}
+
+/* CurvePreview: a dot travels the easing curve on hover; reduced motion stops it below. */
+.curve-dot {
+  offset-distance: 0%;
+  opacity: 0;
+}
+
+.curve:hover .curve-dot {
+  opacity: 1;
+  animation: curve-travel 1200ms linear infinite;
+}
+
+@keyframes curve-travel {
+  to {
+    offset-distance: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

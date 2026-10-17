@@ -35,7 +35,7 @@ function applyInPlace(next, edit) {
     case 'renameComponent':
       return renameComponent(next, edit.componentId, edit.name);
     case 'useSiteName':
-      return useSiteName(next, edit.tokenId, edit.use);
+      return toggleSiteName(next, edit.tokenId, edit.use);
     default:
       return fail('NOT_FOUND');
   }
@@ -161,7 +161,7 @@ function renameComponent(design, componentId, rawName) {
   return ok(design);
 }
 
-function useSiteName(design, tokenId, use) {
+function toggleSiteName(design, tokenId, use) {
   const found = findToken(design, tokenId);
   if (!found || !found.token.siteName) return fail('NOT_FOUND');
   const t = found.token;

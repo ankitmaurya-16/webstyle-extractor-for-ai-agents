@@ -12,11 +12,7 @@ export function CodePreview({ text, label }) {
       <pre className="m-0 min-w-max">
         {lines.map((line, i) => (
           <div key={i} className="flex">
-            <span
-              className="shrink-0 pr-3 pl-3 text-right text-faint select-none"
-              style={{ width: `${width + 3}ch` }}
-              aria-hidden
-            >
+            <span className="shrink-0 pr-3 pl-3 text-right text-faint select-none" style={{ width: `${width + 3}ch` }} aria-hidden>
               {i + 1}
             </span>
             <span className="pr-3 whitespace-pre text-text">{line || ' '}</span>
