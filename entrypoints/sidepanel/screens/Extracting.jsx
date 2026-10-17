@@ -1,5 +1,5 @@
 import { useStore } from '../store.js';
-import { S } from '../strings.js';
+import { t } from '../../../src/i18n.js';
 import { Button } from '../components/Button.jsx';
 import { ProgressList } from '../components/Basics.jsx';
 import { Header } from '../components/Header.jsx';
@@ -12,10 +12,10 @@ export function Extracting() {
     <>
       <Header />
       <main className="p-4" aria-busy="true">
-        <h1 className="mb-4 truncate text-lg">{tab?.hostname ?? S.currentTab}</h1>
-        <ProgressList stage={run?.stage ?? 'reading'} />
+        <h1 className="mb-4 truncate text-lg">{tab?.hostname ?? t('current_tab')}</h1>
+        <ProgressList stages={run?.stages ?? ['reading', 'analyzing', 'saving']} stage={run?.stage ?? 'reading'} />
         <Button variant="secondary" className="mt-4" onClick={cancel}>
-          {S.cancel}
+          {t('cancel')}
         </Button>
       </main>
     </>

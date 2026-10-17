@@ -1,7 +1,18 @@
-// Shared pieces of the five exporters. Every exporter is pure and deterministic (AC-F7.8).
+// Shared pieces of the exporters. Every exporter is pure and deterministic (AC-F7.8).
 
+import { formatFontStack } from '../analyze/units.js';
+import {
+  ascending,
+  modesOf,
+  orderedColors,
+  primaryModeOf,
+  roleToken,
+  semanticPairs,
+  stripPrefix,
+  visible,
+} from '../model/design.js';
 import { SEMANTIC_ROLES } from '../model/types.js';
-import { ascending, orderedColors, semanticPairs, stripPrefix, visible } from '../model/design.js';
+import { applyMapping } from '../mapping/apply.js';
 
 /** Capture date in UTC as YYYY-MM-DD. */
 export const captureDate = (design) => new Date(design.meta.capturedAt).toISOString().slice(0, 10);
@@ -12,53 +23,126 @@ export const generatedBy = (design, version) =>
 /** Keeps a URL from closing a CSS or JS block comment early. */
 export const safeComment = (text) => text.replace(/\*\//g, '*\\/');
 
-/** Ensures LF endings and exactly one trailing newline. */
-export const finish = (lines) =>
-  `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
+/** LF endings and exactly one trailing newline. */
+export const finish = (lines) => `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
+
+export const pxString = (n) => `${Math.round(n * 100) / 100}px`;
+export const emString = (n) => `${Math.round(n * 1000) / 1000}em`;
+export const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 /**
- * Everything an exporter prints, already filtered for excluded tokens and sorted.
- * Semantic aliases whose role name equals the token name are dropped, since they would point
- * at themselves.
+ * The design as exporters see it: names follow the edit log, then site names, then the user's
+ * names when "Use my token names" is on (v2 spec 9.1).
+ * @param {object} design
+ * @param {{mapping?: object|null}} [ctx]
  */
-export function collectTokens(design) {
-  const colors = orderedColors(design);
-  const semantic = semanticPairs(design, SEMANTIC_ROLES).filter(
-    ([role, token]) => role !== token.name,
-  );
-  const families = visible(design.typography.families);
-  const sizes = ascending(design.typography.sizes, 'sizePx');
-  const spacing = ascending(design.spacing.tokens, 'px');
-  const radii = ascending(design.radii, 'px');
-  const shadows = visible(design.shadows).sort(
-    (a, b) => a.blurPx - b.blurPx || cmp(a.name, b.name),
-  );
-  const breakpoints = ascending(design.breakpoints, 'px');
-  return { colors, semantic, families, sizes, spacing, radii, shadows, breakpoints };
+export function prepare(design, ctx = {}) {
+  return ctx.mapping?.useMyNames ? applyMapping(design, ctx.mapping) : design;
 }
 
-const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+/** Everything an exporter prints, filtered for excluded tokens and sorted. */
+export function collectTokens(design) {
+  const modes = modesOf(design);
+  const primaryMode = primaryModeOf(design);
+  const colors = orderedColors(design);
+  const semanticByMode = Object.fromEntries(modes.map((m) => [m, semanticPairs(design, m)]));
+  return {
+    modes,
+    primaryMode,
+    paired: modes.length > 1,
+    colors,
+    opaque: colors.filter((c) => c.alpha >= 1),
+    translucent: colors.filter((c) => c.alpha < 1),
+    semantic: semanticByMode[primaryMode] ?? [],
+    semanticByMode,
+    gradients: visible(design.gradients),
+    families: visible(design.typography.families),
+    sizes: ascending(design.typography.sizes, 'sizePx'),
+    letterSpacings: ascending(design.typography.letterSpacings ?? [], 'em'),
+    textStyles: visible(design.typography.textStyles ?? []),
+    spacing: ascending(design.spacing.tokens, 'px'),
+    containers: ascending(design.layout?.containers ?? [], 'px'),
+    gridColumns: visible(design.layout?.gridColumns ?? []),
+    gaps: ascending(design.layout?.gaps ?? [], 'px'),
+    radii: ascending(design.radii, 'px'),
+    borderWidths: ascending(design.borderWidths ?? [], 'px'),
+    shadows: visible(design.shadows).sort((a, b) => a.blurPx - b.blurPx || cmp(a.name, b.name)),
+    opacities: ascending(design.opacities ?? [], 'value'),
+    zIndex: ascending(design.zIndex ?? [], 'value'),
+    durations: ascending(design.motion?.durations ?? [], 'ms'),
+    easings: visible(design.motion?.easings ?? []),
+    breakpoints: ascending(design.breakpoints, 'px'),
+  };
+}
 
-/** CSS custom property name for a token. */
+/** A token name made safe for a CSS custom property: `/` becomes `-a` (v2 spec 9.1). */
+export const cssName = (name) => name.replace(/\//g, '-a').replace(/[^a-zA-Z0-9_-]/g, '-');
+
+/** CSS custom property name for a token in our own naming scheme. */
 export function varName(category, name) {
+  const n = cssName(name);
   switch (category) {
     case 'color':
-      return `--color-${name}`;
+      return `--color-${n}`;
     case 'font':
-      return `--font-${name}`;
+      return `--font-${n}`;
     case 'text':
-      return `--text-${name}`;
+      return `--text-${n}`;
     case 'space':
-      return `--space-${stripPrefix(name, 'space')}`;
+      return `--space-${stripPrefix(n, 'space')}`;
     case 'radius':
-      return `--radius-${stripPrefix(name, 'radius')}`;
+      return `--radius-${stripPrefix(n, 'radius')}`;
     case 'shadow':
-      return `--shadow-${stripPrefix(name, 'shadow')}`;
+      return `--shadow-${stripPrefix(n, 'shadow')}`;
     case 'breakpoint':
-      return `--breakpoint-${name}`;
+      return `--breakpoint-${n}`;
+    case 'tracking':
+      return `--tracking-${stripPrefix(n, 'tracking')}`;
+    case 'container':
+      return `--container-${stripPrefix(n, 'container')}`;
+    case 'gap':
+      return `--gap-${stripPrefix(n, 'gap')}`;
+    case 'border':
+      return `--border-${stripPrefix(n, 'border')}`;
+    case 'opacity':
+      return `--opacity-${stripPrefix(n, 'opacity')}`;
+    case 'z':
+      return `--z-${stripPrefix(n, 'z')}`;
+    case 'duration':
+      return `--duration-${stripPrefix(n, 'duration')}`;
+    case 'easing':
+      return n === 'ease' ? '--ease-default' : `--ease-${stripPrefix(n, 'ease')}`;
+    case 'gradient':
+      return `--gradient-${stripPrefix(n, 'gradient')}`;
     default:
       throw new Error(`Unknown category ${category}`);
   }
 }
 
-export const pxString = (n) => `${Math.round(n * 100) / 100}px`;
+/** Semantic role variable name, used by every CSS output: --color-<role>. */
+export const roleVar = (role) => `--color-${role}`;
+
+/** The CSS selector for the dark block, by the site's theme mechanism (v2 spec 9.3). */
+export function darkBlock(design) {
+  const { themeMechanism: mechanism, themeSelector: selector } = design.meta;
+  if ((mechanism === 'class' || mechanism === 'attribute') && selector) {
+    return { open: `${selector} {`, close: '}', indent: '  ', mechanism, selector };
+  }
+  return { open: '@media (prefers-color-scheme: dark) {\n  :root {', close: '  }\n}', indent: '    ', mechanism: 'media', selector: null };
+}
+
+/** The mode whose semantic values go in :root and the other mode, for paired output. */
+export function rootAndOtherMode(t) {
+  if (!t.paired) return { root: t.primaryMode, other: null };
+  return { root: 'light', other: 'dark' };
+}
+
+export function formatStack(family) {
+  return formatFontStack(family.stack);
+}
+
+export function hexOf(design, role, mode) {
+  return roleToken(design, role, mode)?.hex ?? null;
+}
+
+export { SEMANTIC_ROLES, formatFontStack };

@@ -47,11 +47,15 @@ export class SampleMap {
     this.map = new Map();
   }
 
-  add(kind, styles) {
-    const key = kind + '\u0000' + JSON.stringify(styles);
+  /** Adds one element's styles and returns the sample key, which identifies its variant. */
+  add(kind, styles, hint = '') {
+    const key = `${kind}:${fnv1a(JSON.stringify(styles))}`;
     const entry = this.map.get(key);
-    if (entry) entry.count += 1;
-    else this.map.set(key, { kind, styles, count: 1 });
+    if (entry) {
+      entry.count += 1;
+      if (hint && !entry.hints.includes(hint)) entry.hints.push(hint);
+    } else this.map.set(key, { key, kind, styles, count: 1, hints: hint ? [hint] : [] });
+    return key;
   }
 
   toSamples() {
@@ -73,6 +77,16 @@ export class SampleMap {
 }
 
 const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+/** FNV-1a 32-bit hash as 8 hex digits; used for stable ids of long CSS values. */
+export function fnv1a(text) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
 
 /**
  * Normalizes a media-query bound to the breakpoint it describes. Bootstrap-style max-width

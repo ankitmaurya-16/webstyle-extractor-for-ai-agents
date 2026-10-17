@@ -2,8 +2,9 @@ import * as Menu from '@radix-ui/react-dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { useRef } from 'react';
 import { SEMANTIC_ROLES } from '../../../src/model/types.js';
+import { rolesOf } from '../../../src/model/design.js';
+import { t } from '../../../src/i18n.js';
 import { useStore } from '../store.js';
-import { S } from '../strings.js';
 
 const ITEM =
   'flex h-7 cursor-default items-center rounded-swatch px-2 text-base text-text outline-none select-none data-[highlighted]:bg-surface-3 data-[disabled]:text-faint';
@@ -11,12 +12,15 @@ const CONTENT =
   'animate-pop z-50 max-h-[320px] min-w-[180px] overflow-auto rounded-card border border-border-strong bg-surface-2 p-1 shadow-elevated';
 
 /**
- * Token actions: Rename, Set role (colors), Merge into, Exclude or Include.
- * @param {{token: object, category: string, siblings: object[], onRename: () => void}} props
+ * Token actions: Rename, Set role (colors, for the theme in view), Merge into, Use site name,
+ * Exclude or Include.
  */
 export function TokenMenu({ token, category, siblings, onRename, alwaysVisible = false }) {
   const edit = useStore((s) => s.edit);
-  const targets = siblings.filter((t) => t.id !== token.id && !t.excluded);
+  const mode = useStore((s) => s.mode);
+  const design = useStore((s) => s.record?.edited);
+  const targets = siblings.filter((x) => x.id !== token.id && !x.excluded);
+  const roles = category === 'color' && design ? rolesOf(design, token.id, mode) : [];
   // Rename moves focus into the inline field, so the menu must not pull it back to the trigger.
   const renaming = useRef(false);
   return (
@@ -24,7 +28,7 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
       <Menu.Trigger asChild>
         <button
           type="button"
-          aria-label={S.tokenMenu(token.name)}
+          aria-label={t('token_menu', token.name)}
           className={`transition-quick inline-flex size-7 shrink-0 items-center justify-center rounded-control text-muted hover:bg-surface-2 hover:text-text focus-visible:opacity-100 data-[state=open]:opacity-100 ${alwaysVisible ? '' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'}`}
         >
           <MoreHorizontal size={16} aria-hidden />
@@ -40,7 +44,7 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
             renaming.current = false;
           }}
         >
-          {!token.excluded && (
+          {!token.excluded && onRename && (
             <Menu.Item
               className={ITEM}
               onSelect={() => {
@@ -48,29 +52,25 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
                 onRename();
               }}
             >
-              {S.rename}
+              {t('rename')}
             </Menu.Item>
           )}
           {category === 'color' && !token.excluded && (
             <Menu.Sub>
-              <Menu.SubTrigger className={ITEM}>{S.setRole}</Menu.SubTrigger>
+              <Menu.SubTrigger className={ITEM}>{t('set_role')}</Menu.SubTrigger>
               <Menu.Portal>
                 <Menu.SubContent className={CONTENT} sideOffset={4}>
                   {SEMANTIC_ROLES.map((role) => (
                     <Menu.CheckboxItem
                       key={role}
                       className={ITEM}
-                      checked={token.roles.includes(role)}
+                      checked={roles.includes(role)}
                       onSelect={() =>
-                        edit(
-                          token.roles.includes(role)
-                            ? { kind: 'clearRole', role }
-                            : { kind: 'setRole', tokenId: token.id, role },
-                        )
+                        edit(roles.includes(role) ? { kind: 'clearRole', role, mode } : { kind: 'setRole', tokenId: token.id, role, mode })
                       }
                     >
                       <span className="w-4" aria-hidden>
-                        {token.roles.includes(role) ? '✓' : ''}
+                        {roles.includes(role) ? '✓' : ''}
                       </span>
                       {role}
                     </Menu.CheckboxItem>
@@ -81,36 +81,33 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
           )}
           {!token.excluded && targets.length > 0 && (
             <Menu.Sub>
-              <Menu.SubTrigger className={ITEM}>{S.mergeInto}</Menu.SubTrigger>
+              <Menu.SubTrigger className={ITEM}>{t('merge_into')}</Menu.SubTrigger>
               <Menu.Portal>
                 <Menu.SubContent className={CONTENT} sideOffset={4}>
-                  {targets.map((t) => (
+                  {targets.map((x) => (
                     <Menu.Item
-                      key={t.id}
+                      key={x.id}
                       className={`${ITEM} gap-2 font-mono text-sm`}
-                      onSelect={() => edit({ kind: 'merge', sourceId: token.id, targetId: t.id })}
+                      onSelect={() => edit({ kind: 'merge', sourceId: token.id, targetId: x.id })}
                     >
-                      {t.hex && (
-                        <span
-                          className="size-3 rounded-swatch ring-1 ring-swatch-ring ring-inset"
-                          style={{ background: t.hex }}
-                          aria-hidden
-                        />
-                      )}
-                      {t.name}
+                      {x.hex && <span className="size-3 rounded-swatch ring-1 ring-swatch-ring ring-inset" style={{ background: x.hex }} aria-hidden />}
+                      {x.name}
                     </Menu.Item>
                   ))}
                 </Menu.SubContent>
               </Menu.Portal>
             </Menu.Sub>
           )}
-          <Menu.Item
-            className={ITEM}
-            onSelect={() =>
-              edit({ kind: token.excluded ? 'include' : 'exclude', tokenId: token.id })
-            }
-          >
-            {token.excluded ? S.include : S.exclude}
+          {!token.excluded && token.siteName && (
+            <Menu.Item
+              className={ITEM}
+              onSelect={() => edit({ kind: 'useSiteName', tokenId: token.id, use: token.name !== token.siteName })}
+            >
+              {token.name === token.siteName ? t('use_generated_name') : t('use_site_name')}
+            </Menu.Item>
+          )}
+          <Menu.Item className={ITEM} onSelect={() => edit({ kind: token.excluded ? 'include' : 'exclude', tokenId: token.id })}>
+            {token.excluded ? t('include') : t('exclude')}
           </Menu.Item>
         </Menu.Content>
       </Menu.Portal>

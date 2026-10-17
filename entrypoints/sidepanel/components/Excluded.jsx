@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { S } from '../strings.js';
+import { t } from '../../../src/i18n.js';
 
 /** Collapsed "N excluded" row per section (AC-F6.4). */
 export function ExcludedGroup({ tokens, render }) {
@@ -15,7 +15,7 @@ export function ExcludedGroup({ tokens, render }) {
         className="transition-quick flex h-8 items-center gap-1 rounded-control px-1 text-muted hover:text-text"
       >
         <ChevronRight size={16} className={open ? 'rotate-90' : ''} aria-hidden />
-        {S.excludedCount(tokens.length)}
+        {t('excluded_count', tokens.length)}
       </button>
       {open && <ul className="flex flex-col">{tokens.map(render)}</ul>}
     </div>
