@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dark fixture</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        background: #0b0f19;
+        color: #e5e7eb;
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 24px;
+      }
+      .wrap {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+      h1 {
+        font-size: 40px;
+        line-height: 48px;
+        font-weight: 800;
+        margin: 0 0 16px;
+        color: #ffffff;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 700;
+        margin: 32px 0 8px;
+        color: #ffffff;
+      }
+      p {
+        margin: 0 0 16px;
+      }
+      .muted {
+        color: #9ca3af;
+      }
+      .panel {
+        background: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 20px;
+        border: 0;
+        margin-right: 8px;
+        font-family: inherit;
+      }
+      .btn-primary {
+        background: #8b5cf6;
+        color: #ffffff;
+      }
+      .btn-ghost {
+        background: #1f2937;
+        color: #e5e7eb;
+      }
+      a {
+        color: #a78bfa;
+      }
+      .warn {
+        background: #422006;
+        color: #fbbf24;
+        padding: 8px 16px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+      .tag {
+        display: inline-block;
+        background: #14b8a6;
+        color: #042f2e;
+        padding: 0 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-right: 4px;
+      }
+      .runs {
+        margin: 0 0 16px;
+        padding: 0 0 0 24px;
+      }
+      .runs li {
+        padding: 4px 0;
+      }
+      .overlay {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      @media (min-width: 768px) {
+        .wrap {
+          padding: 64px 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Night mode dashboard</h1>
+      <p class="muted">
+        A synthetic dark page for the WebStyle tests, with a violet brand and teal tags.
+      </p>
+      <p>
+        <button class="btn btn-primary">Deploy</button><button class="btn btn-ghost">Cancel</button
+        ><button class="btn btn-primary">Promote</button>
+      </p>
+      <div class="panel">
+        <h2>Activity</h2>
+        <p>
+          Builds run on every push. See the <a href="#logs">logs</a> for failures and the
+          <a href="#history">history</a> for older runs of the pipeline.
+        </p>
+        <span class="tag">api</span><span class="tag">web</span><span class="tag">worker</span>
+      </div>
+      <div class="panel">
+        <h2>Usage</h2>
+        <p>
+          Usage numbers are synthetic. They exist only so this fixture has enough body text to
+          measure.
+        </p>
+        <div class="overlay">Translucent overlay content for the alpha color test case.</div>
+      </div>
+      <div class="warn">Quota at 80 percent. Consider upgrading soon.</div>
+      <div class="warn">Two builds are queued behind a slow runner.</div>
+      <ul class="runs">
+        <li>Build 101 passed in 42 seconds</li>
+        <li>Build 102 passed in 39 seconds</li>
+        <li>Build 103 failed on lint</li>
+        <li>Build 104 passed in 41 seconds</li>
+        <li>Build 105 passed in 40 seconds</li>
+        <li>Build 106 passed in 38 seconds</li>
+        <li>Build 107 passed in 44 seconds</li>
+        <li>Build 108 passed in 37 seconds</li>
+        <li>Build 109 passed in 45 seconds</li>
+        <li>Build 110 passed in 36 seconds</li>
+        <li>Build 111 passed in 43 seconds</li>
+        <li>Build 112 passed in 35 seconds</li>
+      </ul>
+      <p>
+        Closing paragraph with more text so that the base size is the clear winner in this dark
+        synthetic fixture page.
+      </p>
+    </div>
+  </body>
+</html>

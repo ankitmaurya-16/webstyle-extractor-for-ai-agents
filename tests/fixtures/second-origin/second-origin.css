@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  background: #fffbeb;
+  color: #292524;
+  font-family: Georgia, serif;
+  font-size: 17px;
+  line-height: 28px;
+}
+.shell {
+  padding: 32px;
+}
+h1 {
+  font-size: 32px;
+  line-height: 40px;
+}
+.cta {
+  background: #ea580c;
+  color: #ffffff;
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font: inherit;
+}
+@media (min-width: 720px) {
+  .shell {
+    padding: 48px;
+  }
+}

@@ -1,0 +1,168 @@
+{
+ "breakpoints": [],
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(250, 250, 249)",
+   "weight": 1742080
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 20,
+   "value": "rgb(255, 255, 255)",
+   "weight": 1447680
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "value": "rgb(28, 25, 23)",
+   "weight": 479
+  },
+  {
+   "contexts": [
+    "border"
+   ],
+   "count": 80,
+   "value": "rgb(231, 229, 228)",
+   "weight": 52240
+  }
+ ],
+ "cssVariables": {},
+ "elementsSampled": 25,
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "value": "system-ui, sans-serif",
+   "weight": 479
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 20,
+   "value": "16px",
+   "weight": 470
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "32px",
+   "weight": 9
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 20,
+   "value": "400",
+   "weight": 470
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "700",
+   "weight": 9
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "value": "24px",
+   "weight": 479
+  }
+ ],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 20,
+   "value": "8px",
+   "weight": 20
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "kind": "h1",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(28, 25, 23)",
+    "font-family": "system-ui, sans-serif",
+    "font-size": "32px",
+    "font-weight": "700",
+    "line-height": "24px",
+    "padding": "0px 0px 0px 0px"
+   }
+  }
+ ],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 82,
+   "value": "16px",
+   "weight": 82
+  },
+  {
+   "contexts": [],
+   "count": 40,
+   "value": "8px",
+   "weight": 40
+  }
+ ],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "contexts": [
+    "div"
+   ],
+   "count": 20,
+   "value": "16px|24px|400|system-ui, sans-serif",
+   "weight": 470
+  },
+  {
+   "contexts": [
+    "h1"
+   ],
+   "count": 1,
+   "value": "32px|24px|700|system-ui, sans-serif",
+   "weight": 9
+  }
+ ],
+ "title": "Lazy-loading fixture",
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/lazy.html",
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ }
+}

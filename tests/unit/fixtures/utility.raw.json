@@ -1,0 +1,535 @@
+{
+ "breakpoints": [
+  640,
+  768,
+  1024,
+  1280,
+  1536
+ ],
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 4,
+   "value": "rgb(255, 255, 255)",
+   "weight": 1851008.46
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(248, 250, 252)",
+   "weight": 1658500
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 2,
+   "value": "rgb(236, 253, 245)",
+   "weight": 126464
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(248, 250, 251)",
+   "weight": 29184
+  },
+  {
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 2,
+   "value": "rgb(5, 150, 105)",
+   "weight": 7500.25
+  },
+  {
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 1,
+   "value": "rgb(255, 255, 255)",
+   "weight": 2983
+  },
+  {
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 1,
+   "value": "rgb(5, 150, 104)",
+   "weight": 2707.5
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(241, 245, 249)",
+   "weight": 727.73
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 14,
+   "value": "rgb(71, 85, 105)",
+   "weight": 466
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 7,
+   "value": "rgb(15, 23, 42)",
+   "weight": 217
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "rgb(4, 120, 87)",
+   "weight": 106
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "rgb(245, 158, 11)",
+   "weight": 82
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "rgb(225, 29, 72)",
+   "weight": 73
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "rgb(148, 163, 184)",
+   "weight": 48
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "oklch(0.6 0.2 25)",
+   "weight": 38
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 3,
+   "value": "rgb(255, 255, 255)",
+   "weight": 25
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 1,
+   "value": "rgb(4, 120, 87)",
+   "weight": 9
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 1,
+   "value": "rgb(15, 23, 42)",
+   "weight": 6
+  },
+  {
+   "contexts": [
+    "border"
+   ],
+   "count": 16,
+   "value": "rgb(226, 232, 240)",
+   "weight": 3576.53
+  }
+ ],
+ "cssVariables": {},
+ "elementsSampled": 43,
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 34,
+   "value": "ui-sans-serif, system-ui, sans-serif",
+   "weight": 1070
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 26,
+   "value": "14px",
+   "weight": 735
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "16px",
+   "weight": 294
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "36px",
+   "weight": 21
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 3,
+   "value": "20px",
+   "weight": 20
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 26,
+   "value": "400",
+   "weight": 998
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 7,
+   "value": "600",
+   "weight": 51
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "700",
+   "weight": 21
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 26,
+   "value": "20px",
+   "weight": 735
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "24px",
+   "weight": 294
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "40px",
+   "weight": 21
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 3,
+   "value": "28px",
+   "weight": 20
+  }
+ ],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "8px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 3,
+   "value": "12px",
+   "weight": 3
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "4px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "9999px",
+   "weight": 1
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "kind": "h1",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(15, 23, 42)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "36px",
+    "font-weight": "700",
+    "line-height": "40px",
+    "padding": "0px 0px 0px 0px"
+   }
+  },
+  {
+   "count": 2,
+   "kind": "button",
+   "styles": {
+    "background-color": "rgb(5, 150, 105)",
+    "border": "none",
+    "border-radius": "8px",
+    "box-shadow": "none",
+    "color": "rgb(255, 255, 255)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "14px",
+    "font-weight": "600",
+    "line-height": "20px",
+    "padding": "8px 16px 8px 16px"
+   }
+  },
+  {
+   "count": 1,
+   "kind": "button",
+   "styles": {
+    "background-color": "rgb(255, 255, 255)",
+    "border": "1px solid rgb(226, 232, 240)",
+    "border-radius": "8px",
+    "box-shadow": "none",
+    "color": "rgb(15, 23, 42)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "14px",
+    "font-weight": "600",
+    "line-height": "20px",
+    "padding": "8px 16px 8px 16px"
+   }
+  },
+  {
+   "count": 1,
+   "kind": "button",
+   "styles": {
+    "background-color": "rgb(5, 150, 104)",
+    "border": "none",
+    "border-radius": "8px",
+    "box-shadow": "none",
+    "color": "rgb(255, 255, 255)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "14px",
+    "font-weight": "600",
+    "line-height": "20px",
+    "padding": "8px 16px 8px 16px"
+   }
+  },
+  {
+   "count": 3,
+   "kind": "h2",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(15, 23, 42)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "20px",
+    "font-weight": "600",
+    "line-height": "28px",
+    "padding": "0px 0px 0px 0px"
+   }
+  },
+  {
+   "count": 1,
+   "kind": "link",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(4, 120, 87)",
+    "font-family": "ui-sans-serif, system-ui, sans-serif",
+    "font-size": "16px",
+    "font-weight": "400",
+    "line-height": "24px",
+    "padding": "0px 0px 0px 0px"
+   }
+  }
+ ],
+ "shadows": [
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+   "weight": 1
+  }
+ ],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 35,
+   "value": "8px",
+   "weight": 35
+  },
+  {
+   "contexts": [],
+   "count": 32,
+   "value": "16px",
+   "weight": 32
+  },
+  {
+   "contexts": [],
+   "count": 14,
+   "value": "14px",
+   "weight": 14
+  },
+  {
+   "contexts": [],
+   "count": 14,
+   "value": "24px",
+   "weight": 14
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "32px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "4px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "7px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 3,
+   "value": "16.6px",
+   "weight": 3
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "13px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "24.12px",
+   "weight": 1
+  }
+ ],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "contexts": [
+    "div",
+    "li",
+    "p",
+    "span"
+   ],
+   "count": 22,
+   "value": "14px|20px|400|ui-sans-serif, system-ui, sans-serif",
+   "weight": 704
+  },
+  {
+   "contexts": [
+    "a",
+    "p"
+   ],
+   "count": 4,
+   "value": "16px|24px|400|ui-sans-serif, system-ui, sans-serif",
+   "weight": 294
+  },
+  {
+   "contexts": [
+    "button"
+   ],
+   "count": 4,
+   "value": "14px|20px|600|ui-sans-serif, system-ui, sans-serif",
+   "weight": 31
+  },
+  {
+   "contexts": [
+    "h1"
+   ],
+   "count": 1,
+   "value": "36px|40px|700|ui-sans-serif, system-ui, sans-serif",
+   "weight": 21
+  },
+  {
+   "contexts": [
+    "h2"
+   ],
+   "count": 3,
+   "value": "20px|28px|600|ui-sans-serif, system-ui, sans-serif",
+   "weight": 20
+  }
+ ],
+ "title": "Utility-class fixture",
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/utility.html",
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ }
+}

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Utility-class fixture</title>
+    <style>
+      *,
+      ::before,
+      ::after {
+        box-sizing: border-box;
+        border: 0 solid #e5e7eb;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.5;
+        background: #ffffff;
+        color: #0f172a;
+      }
+      .bg-white {
+        background: #ffffff;
+      }
+      .bg-slate-50 {
+        background: #f8fafc;
+      }
+      .bg-slate-100 {
+        background: #f1f5f9;
+      }
+      .bg-emerald-600 {
+        background: #059669;
+      }
+      .bg-emerald-50 {
+        background: #ecfdf5;
+      }
+      .bg-x1 {
+        background: #059668;
+      }
+      .bg-x2 {
+        background: #f8fafb;
+      }
+      .text-slate-900 {
+        color: #0f172a;
+      }
+      .text-slate-600 {
+        color: #475569;
+      }
+      .text-slate-400 {
+        color: #94a3b8;
+      }
+      .text-white {
+        color: #ffffff;
+      }
+      .text-emerald-700 {
+        color: #047857;
+      }
+      .text-rose-600 {
+        color: #e11d48;
+      }
+      .text-amber-500 {
+        color: #f59e0b;
+      }
+      .p-1 {
+        padding: 4px;
+      }
+      .p-2 {
+        padding: 8px;
+      }
+      .p-3 {
+        padding: 12px;
+      }
+      .p-4 {
+        padding: 16px;
+      }
+      .p-6 {
+        padding: 24px;
+      }
+      .p-8 {
+        padding: 32px;
+      }
+      .px-4 {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .py-2 {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      .m-odd {
+        margin: 13px;
+      }
+      .p-odd {
+        padding: 7px;
+      }
+      .mb-2 {
+        margin-bottom: 8px;
+      }
+      .mb-4 {
+        margin-bottom: 16px;
+      }
+      .mb-6 {
+        margin-bottom: 24px;
+      }
+      .gap-4 {
+        gap: 16px;
+      }
+      .rounded {
+        border-radius: 4px;
+      }
+      .rounded-lg {
+        border-radius: 8px;
+      }
+      .rounded-xl {
+        border-radius: 12px;
+      }
+      .rounded-full {
+        border-radius: 9999px;
+      }
+      .border {
+        border-width: 1px;
+      }
+      .border-slate-200 {
+        border-color: #e2e8f0;
+      }
+      .shadow {
+        box-shadow:
+          0 1px 3px 0 rgb(0 0 0 / 0.1),
+          0 1px 2px -1px rgb(0 0 0 / 0.1);
+      }
+      .shadow-lg {
+        box-shadow:
+          0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+      .text-sm {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      .text-base {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+      .text-xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+      }
+      .text-4xl {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .flex {
+        display: flex;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      .tint {
+        color: oklch(0.6 0.2 25);
+      }
+      @media (min-width: 640px) {
+        .sm-p {
+          padding: 24px;
+        }
+      }
+      @media (min-width: 768px) {
+        .md-p {
+          padding: 32px;
+        }
+      }
+      @media (min-width: 1024px) {
+        .lg-p {
+          padding: 48px;
+        }
+      }
+      @media (min-width: 1280px) {
+        .xl-p {
+          padding: 64px;
+        }
+      }
+      @media (min-width: 1536px) {
+        .xxl-p {
+          padding: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="p-8 bg-slate-50">
+      <h1 class="text-4xl font-bold mb-4 text-slate-900">Utility first fixture</h1>
+      <p class="text-base text-slate-600 mb-6">
+        Synthetic content using utility classes with many near-identical one-off values, like a real
+        utility-class site.
+      </p>
+      <div class="flex gap-4 mb-6">
+        <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+          Create project
+        </button>
+        <button
+          class="bg-white text-slate-900 border border-slate-200 px-4 py-2 rounded-lg font-semibold text-sm"
+        >
+          Import
+        </button>
+        <button class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+          Invite
+        </button>
+        <button class="bg-x1 text-white px-4 py-2 rounded-lg font-semibold text-sm">Share</button>
+      </div>
+      <div class="grid gap-4">
+        <div class="bg-white p-6 rounded-xl shadow border border-slate-200">
+          <h2 class="text-xl font-semibold mb-2">Projects</h2>
+          <p class="text-sm text-slate-600">
+            Twelve synthetic projects are listed for testing purposes only.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow border border-slate-200">
+          <h2 class="text-xl font-semibold mb-2">Members</h2>
+          <p class="text-sm text-slate-600">
+            Four synthetic members joined this week in the fixture.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+          <h2 class="text-xl font-semibold mb-2">Usage</h2>
+          <p class="text-sm text-slate-600">
+            Usage is shown as synthetic numbers in this fixture page.
+          </p>
+        </div>
+      </div>
+      <div class="p-4 mb-4 bg-emerald-50 rounded text-emerald-700 text-sm">
+        All systems operational in this synthetic status banner.
+      </div>
+      <div class="p-4 mb-4 bg-emerald-50 rounded text-emerald-700 text-sm">
+        Backups completed on schedule for every workspace.
+      </div>
+      <p class="text-sm text-rose-600 mb-2">Two invoices are overdue in this example.</p>
+      <p class="text-sm text-rose-600 mb-2">One payment method expires soon.</p>
+      <p class="text-sm text-amber-500 mb-2">Storage is nearly full on one workspace.</p>
+      <p class="text-sm text-amber-500 mb-2">A plan change is scheduled for next month.</p>
+      <p class="text-base text-slate-900 mb-4">
+        More body copy for the base size. Read the
+        <a href="#x" class="text-emerald-700">changelog</a> to see what changed in this release of
+        the fixture.
+      </p>
+      <p class="text-base text-slate-900 mb-4 bg-x2">
+        Another body paragraph with a background that is almost the same as slate fifty.
+      </p>
+      <div class="m-odd p-odd text-sm text-slate-400">
+        Odd spacing values that do not sit on the scale.
+      </div>
+      <span class="rounded-full bg-slate-100 p-1 text-sm">tag</span>
+      <ul class="p-4 text-sm text-slate-600">
+        <li class="py-2">Synthetic row one</li>
+        <li class="py-2">Synthetic row two</li>
+        <li class="py-2">Synthetic row three</li>
+        <li class="py-2">Synthetic row four</li>
+        <li class="py-2">Synthetic row five</li>
+        <li class="py-2">Synthetic row six</li>
+        <li class="py-2">Synthetic row seven</li>
+        <li class="py-2">Synthetic row eight</li>
+        <li class="py-2">Synthetic row nine</li>
+        <li class="py-2">Synthetic row ten</li>
+      </ul>
+      <p class="text-sm tint">Modern color syntax in an oklch value.</p>
+    </div>
+  </body>
+</html>
