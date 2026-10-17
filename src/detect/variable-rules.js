@@ -1,0 +1,100 @@
+// Custom-property naming rules shared by analysis and the UI (F10).
+
+/** Framework-internal prefixes that never name tokens (AC-F10.4). */
+export const EXCLUDED_PREFIXES = ['--tw-', '--un-'];
+
+export const isExcludedVariable = (name) => EXCLUDED_PREFIXES.some((p) => name.startsWith(p));
+
+/** Category prefixes stripped from derived names, longest first (AC-F10.6). */
+export const CATEGORY_PREFIXES = [
+  'wp--preset--color--',
+  'colors-',
+  'color-',
+  'clr-',
+  'spacing-',
+  'space-',
+  'size-',
+  'radius-',
+  'radii-',
+  'rounded-',
+  'shadow-',
+  'font-',
+  'ff-',
+  'fs-',
+  'text-',
+  'duration-',
+  'easing-',
+  'ease-',
+  'zindex-',
+  'z-',
+  'breakpoint-',
+  'bp-',
+  'screen-',
+  'gradient-',
+];
+
+/** Derived token name: strip `--` and one known category prefix, then kebab-case. */
+export function deriveName(variable) {
+  let name = variable.replace(/^--/, '');
+  for (const prefix of CATEGORY_PREFIXES) {
+    if (name.toLowerCase().startsWith(prefix) && name.length > prefix.length) {
+      name = name.slice(prefix.length);
+      break;
+    }
+  }
+  return kebab(name);
+}
+
+export function kebab(name) {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[^A-Za-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase()
+    .replace(/^(\d)/, 'n$1');
+}
+
+const ROLE_WORDS = [
+  ['background', ['background', 'bg', 'page']],
+  ['surface', ['surface', 'card', 'panel', 'elevated', 'popover']],
+  ['text', ['foreground', 'fg', 'text', 'body']],
+  ['text-muted', ['muted', 'subtle', 'secondary-text', 'text-secondary']],
+  ['border', ['border', 'divider', 'stroke', 'outline']],
+  ['primary', ['primary', 'brand']],
+  ['accent', ['accent']],
+  ['focus-ring', ['ring', 'focus']],
+  ['danger', ['destructive', 'danger', 'error', 'negative']],
+  ['success', ['success', 'positive']],
+  ['warning', ['warning', 'caution']],
+  ['overlay', ['overlay', 'backdrop', 'scrim']],
+];
+
+/**
+ * The semantic role a variable name signals, or null (AC-F10.8). Paired foregrounds such as
+ * --primary-foreground describe text on another role and signal nothing, except the muted one.
+ * @param {string} variable
+ */
+export function roleFromName(variable) {
+  const words = variable.replace(/^--/, '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const joined = words.join('-');
+  if (words.length === 0) return null;
+  if (/(^|-)muted(-|$)|(^|-)subtle(-|$)|text-secondary|secondary-text|fg-muted|text-muted/.test(joined)) return 'text-muted';
+  const isForeground = words.some((w) => w === 'foreground' || w === 'fg');
+  if (isForeground && words.length > 1) return null;
+  // A leading category word decides the family: text-primary is a text color, bg-primary a fill.
+  const head = words[0];
+  if (head === 'text' || head === 'fg' || head === 'foreground') {
+    return words.length === 1 || /primary|default|base|body|main/.test(words[1]) ? 'text' : null;
+  }
+  if (head === 'bg' || head === 'background') {
+    if (words.length === 1 || /primary|default|base|page|body|main/.test(words[1])) return 'background';
+    if (/secondary|subtle|muted|surface|elevated|raised|card/.test(words[1])) return 'surface';
+    return null;
+  }
+  if (head === 'border' || head === 'divider') return words.length <= 2 ? 'border' : null;
+  if (words.includes('color') && words.length === 1) return null;
+  for (const [role, list] of ROLE_WORDS) {
+    if (words.some((w) => list.includes(w))) return role;
+  }
+  return null;
+}

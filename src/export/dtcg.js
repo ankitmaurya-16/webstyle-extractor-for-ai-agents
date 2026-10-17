@@ -1,22 +1,19 @@
-// tokens.json in the Design Tokens Community Group format (designtokens.org, 2025.10 stable).
-// Color values use the structured form with colorSpace, components and hex; dimensions use
-// { value, unit }; shadows use the structured shadow object.
+// tokens.json and tokens.dark.json in the Design Tokens Community Group format
+// (designtokens.org, 2025.10). tokens.json holds primitives plus light semantic tokens;
+// tokens.dark.json holds the dark semantic aliases only (v2 spec 9.3).
 
-import { parse, converter } from 'culori';
+import { converter, parse } from 'culori';
 import { stripPrefix } from '../model/design.js';
-import { collectTokens, generatedBy } from './common.js';
+import { collectTokens, generatedBy, prepare, rootAndOtherMode } from './common.js';
 
 const toRgb = converter('rgb');
 const round3 = (n) => Math.round(n * 1000) / 1000;
 const dimension = (px) => ({ value: Math.round(px * 100) / 100, unit: 'px' });
 
 export function dtcgColor(hex) {
-  const rgb = toRgb(parse(hex));
-  const value = {
-    colorSpace: 'srgb',
-    components: [round3(rgb.r), round3(rgb.g), round3(rgb.b)],
-  };
-  if (hex.length === 9) value.alpha = round3(rgb.alpha ?? 1);
+  const rgb = toRgb(parse(hex.slice(0, 7)));
+  const value = { colorSpace: 'srgb', components: [round3(rgb.r), round3(rgb.g), round3(rgb.b)] };
+  if (hex.length === 9) value.alpha = round3(parseInt(hex.slice(7, 9), 16) / 255);
   value.hex = hex.slice(0, 7);
   return value;
 }
@@ -37,9 +34,7 @@ export function dtcgShadow(value) {
   layers.push(current.trim());
   const out = [];
   for (const layer of layers) {
-    const colorMatch = /(rgba?|hsla?|oklch|oklab|lab|lch|color)\([^)]*\)|#[0-9a-f]{3,8}\b/i.exec(
-      layer,
-    );
+    const colorMatch = /(rgba?|hsla?|oklch|oklab|lab|lch|color)\([^)]*\)|#[0-9a-f]{3,8}\b/i.exec(layer);
     const rest = (colorMatch ? layer.replace(colorMatch[0], ' ') : layer).trim();
     const inset = /\binset\b/.test(rest);
     const lengths = rest
@@ -66,19 +61,55 @@ export function dtcgShadow(value) {
   return out.length === 1 ? out[0] : out;
 }
 
-export function exportDtcg(design, version) {
-  const t = collectTokens(design);
-  const doc = { $description: generatedBy(design, version) };
+/** Gradient stops as positions 0 to 1 where they are percentages. */
+function dtcgGradient(g, colorRef) {
+  return g.stops.map((s, i) => {
+    const pct = s.position && /%$/.test(s.position) ? Number.parseFloat(s.position) / 100 : i / Math.max(1, g.stops.length - 1);
+    return { color: colorRef(s), position: round3(pct) };
+  });
+}
+
+/**
+ * @returns {{light: string, dark: string|null}} file texts
+ */
+export function exportDtcgFiles(design, version, ctx = {}) {
+  const d = prepare(design, ctx);
+  const t = collectTokens(d);
+  const doc = { $description: generatedBy(d, version) };
+  const colorKey = (c) => c.name.replace(/\//g, '-a');
 
   if (t.colors.length) {
     doc.color = {};
-    for (const c of t.colors) doc.color[c.name] = { $type: 'color', $value: dtcgColor(c.hex) };
-    for (const [role, c] of t.semantic)
-      doc.color[role] = { $type: 'color', $value: `{color.${c.name}}` };
+    for (const c of t.colors) doc.color[colorKey(c)] = { $type: 'color', $value: dtcgColor(c.hex) };
+  }
+  const { root, other } = rootAndOtherMode(t);
+  const semanticGroup = (mode) => {
+    const group = {};
+    for (const [role, c] of t.semanticByMode[mode] ?? []) group[role] = { $type: 'color', $value: `{color.${colorKey(c)}}` };
+    return group;
+  };
+  const rootSemantic = semanticGroup(root);
+  if (Object.keys(rootSemantic).length) doc.semantic = rootSemantic;
+  if (t.gradients.length) {
+    doc.gradient = {};
+    for (const g of t.gradients) {
+      const ref = (s) => {
+        const token = s.colorTokenId ? t.colors.find((c) => c.id === s.colorTokenId) : null;
+        return token ? `{color.${colorKey(token)}}` : dtcgColor(s.hex);
+      };
+      doc.gradient[stripPrefix(g.name, 'gradient')] = {
+        $type: 'gradient',
+        $value: dtcgGradient(g, ref),
+        $extensions: { 'com.webstyle': { type: g.type, direction: g.direction, repeating: g.repeating } },
+      };
+    }
   }
   if (t.families.length) {
     doc.font = {};
-    for (const f of t.families) doc.font[f.name] = { $type: 'fontFamily', $value: [...f.stack] };
+    for (const f of t.families) {
+      doc.font[f.name] = { $type: 'fontFamily', $value: [...f.stack] };
+      if (f.webFont) doc.font[f.name].$extensions = { 'com.webstyle': { provider: f.webFont.provider, weights: f.webFont.weights } };
+    }
   }
   if (t.sizes.length) {
     doc.text = {};
@@ -86,33 +117,100 @@ export function exportDtcg(design, version) {
     doc['font-weight'] = {};
     for (const s of t.sizes) {
       doc.text[s.name] = { $type: 'dimension', $value: dimension(s.sizePx) };
-      if (s.lineHeightPx !== null) {
-        doc['line-height'][s.name] = { $type: 'dimension', $value: dimension(s.lineHeightPx) };
-      }
-      doc['font-weight'][s.name] = { $type: 'fontWeight', $value: s.weight };
+      if (s.lineHeightPx !== null) doc['line-height'][s.name] = { $type: 'dimension', $value: dimension(s.lineHeightPx) };
+      doc['font-weight'][s.name] = { $type: 'fontWeight', $value: s.fontWeight };
     }
     if (Object.keys(doc['line-height']).length === 0) delete doc['line-height'];
   }
-  if (t.spacing.length) {
-    doc.space = {};
-    for (const s of t.spacing)
-      doc.space[stripPrefix(s.name, 'space')] = { $type: 'dimension', $value: dimension(s.px) };
+  if (t.textStyles.length) {
+    doc.typography = {};
+    for (const s of t.textStyles) {
+      const family = d.typography.families.find((f) => f.id === s.familyId && !f.excluded);
+      doc.typography[s.name] = {
+        $type: 'typography',
+        $value: {
+          fontFamily: family ? `{font.${family.name}}` : s.family,
+          fontSize: dimension(s.sizePx),
+          fontWeight: s.fontWeight,
+          letterSpacing: dimension(s.letterSpacingEm * s.sizePx),
+          lineHeight: s.lineHeightPx === null ? 1.2 : round3(s.lineHeightPx / s.sizePx),
+        },
+        $extensions: { 'com.webstyle': { textTransform: s.textTransform, usedFor: s.usedFor } },
+      };
+    }
   }
-  if (t.radii.length) {
-    doc.radius = {};
-    for (const r of t.radii)
-      doc.radius[stripPrefix(r.name, 'radius')] = { $type: 'dimension', $value: dimension(r.px) };
+  if (t.letterSpacings.length) {
+    // DTCG dimensions allow px and rem only, so em letter spacing is a number with its unit noted.
+    doc.tracking = {};
+    for (const l of t.letterSpacings) {
+      doc.tracking[stripPrefix(l.name, 'tracking')] = { $type: 'number', $value: l.em, $extensions: { 'com.webstyle': { unit: 'em' } } };
+    }
   }
+  const dims = (group, list, prefix, px = (x) => x.px) => {
+    if (!list.length) return;
+    doc[group] = {};
+    for (const x of list) doc[group][stripPrefix(x.name, prefix)] = { $type: 'dimension', $value: dimension(px(x)) };
+  };
+  dims('space', t.spacing, 'space');
+  dims('container', t.containers, 'container');
+  dims('gap', t.gaps.filter((g) => !g.spaceId), 'gap');
+  dims('radius', t.radii, 'radius');
+  dims('border-width', t.borderWidths, 'border');
+  dims('breakpoint', t.breakpoints, '');
   const shadows = t.shadows.map((s) => [s, dtcgShadow(s.value)]).filter(([, v]) => v !== null);
   if (shadows.length) {
     doc.shadow = {};
-    for (const [s, value] of shadows)
-      doc.shadow[stripPrefix(s.name, 'shadow')] = { $type: 'shadow', $value: value };
+    for (const [s, value] of shadows) doc.shadow[stripPrefix(s.name, 'shadow')] = { $type: 'shadow', $value: value };
   }
-  if (t.breakpoints.length) {
-    doc.breakpoint = {};
-    for (const b of t.breakpoints)
-      doc.breakpoint[b.name] = { $type: 'dimension', $value: dimension(b.px) };
+  const numbers = (group, list, prefix) => {
+    if (!list.length) return;
+    doc[group] = {};
+    for (const x of list) doc[group][stripPrefix(x.name, prefix)] = { $type: 'number', $value: x.value };
+  };
+  numbers('opacity', t.opacities, 'opacity');
+  numbers('z-index', t.zIndex, 'z');
+  if (t.gridColumns.length) numbers('grid-columns', t.gridColumns, 'grid');
+  if (t.durations.length) {
+    doc.duration = {};
+    for (const x of t.durations) doc.duration[stripPrefix(x.name, 'duration')] = { $type: 'duration', $value: { value: x.ms, unit: 'ms' } };
   }
-  return `${JSON.stringify(doc, null, 2)}\n`;
+  const curves = t.easings.filter((e) => e.bezier);
+  if (curves.length) {
+    doc.easing = {};
+    for (const e of curves) doc.easing[e.name === 'ease' ? 'default' : stripPrefix(e.name, 'ease')] = { $type: 'cubicBezier', $value: e.bezier };
+  }
+  const recipes = (d.components ?? []).filter((r) => !r.excluded);
+  if (recipes.length || d.focusRing) {
+    doc.$extensions = {
+      'com.webstyle': {
+        recipes: Object.fromEntries(recipes.map((r) => [r.id, { name: r.name, kind: r.kind, variant: r.variant, byMode: plainRecipe(r.byMode) }])),
+        focusRing: d.focusRing ?? null,
+      },
+    };
+  }
+  const light = `${JSON.stringify(doc, null, 2)}\n`;
+  let dark = null;
+  if (other) {
+    const darkDoc = {
+      $description: `${generatedBy(d, version)}. Dark theme semantic tokens: load together with tokens.json.`,
+      semantic: semanticGroup(other),
+    };
+    dark = `${JSON.stringify(darkDoc, null, 2)}\n`;
+  }
+  return { light, dark };
+}
+
+function plainRecipe(byMode) {
+  const out = {};
+  for (const [mode, states] of Object.entries(byMode)) {
+    out[mode] = {};
+    for (const [state, styles] of Object.entries(states)) {
+      out[mode][state] = Object.fromEntries(Object.entries(styles).map(([k, v]) => [k, typeof v === 'object' && v ? `{${v.ref}}` : v]));
+    }
+  }
+  return out;
+}
+
+export function exportDtcg(design, version, ctx = {}) {
+  return exportDtcgFiles(design, version, ctx).light;
 }
