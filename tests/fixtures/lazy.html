@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lazy-loading fixture</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background: #fafaf9;
+        color: #1c1917;
+        font-size: 16px;
+        line-height: 24px;
+      }
+      .item {
+        padding: 16px;
+        margin: 8px 16px;
+        background: #ffffff;
+        border: 1px solid #e7e5e4;
+        border-radius: 8px;
+      }
+      .sentinel {
+        height: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin: 16px">Lazy feed</h1>
+    <div id="feed"></div>
+    <div class="sentinel" id="sentinel"></div>
+    <script>
+      // Content only appears once the user scrolls, like a single-page app feed.
+      const feed = document.getElementById('feed');
+      let page = 0;
+      new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting || (page > 0 && window.scrollY === 0)) return;
+        page += 1;
+        for (let i = 0; i < 20; i += 1) {
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.textContent = 'Synthetic feed item ' + page + '.' + i;
+          feed.appendChild(div);
+        }
+      }).observe(document.getElementById('sentinel'));
+    </script>
+  </body>
+</html>

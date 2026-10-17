@@ -1,0 +1,38 @@
+{
+ "breakpoints": [],
+ "capturedAt": 1792324800000,
+ "colorScheme": "dark",
+ "colors": [
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 2,
+   "value": "rgb(0, 0, 0)",
+   "weight": 1843200
+  }
+ ],
+ "cssVariables": {},
+ "elementsSampled": 2,
+ "fontFamilies": [],
+ "fontSizes": [],
+ "fontWeights": [],
+ "lineHeights": [],
+ "radii": [],
+ "rootFontSizePx": 16,
+ "samples": [],
+ "shadows": [],
+ "spacing": [],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [],
+ "title": "Canvas fixture",
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/canvas.html",
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ }
+}

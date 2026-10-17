@@ -1,0 +1,319 @@
+{
+ "breakpoints": [],
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(255, 255, 255)",
+   "weight": 2022400
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 267,
+   "value": "rgb(29, 78, 216)",
+   "weight": 17088
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 266,
+   "value": "rgb(124, 58, 237)",
+   "weight": 17024
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 266,
+   "value": "rgb(15, 118, 110)",
+   "weight": 17024
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 266,
+   "value": "rgb(185, 28, 28)",
+   "weight": 17024
+  },
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 266,
+   "value": "rgb(55, 65, 81)",
+   "weight": 17024
+  },
+  {
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 2,
+   "value": "rgb(29, 78, 216)",
+   "weight": 5663.81
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1332,
+   "value": "rgb(17, 24, 39)",
+   "weight": 4311
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 2,
+   "value": "rgb(255, 255, 255)",
+   "weight": 13
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 1,
+   "value": "rgb(29, 78, 216)",
+   "weight": 4
+  },
+  {
+   "contexts": [
+    "border"
+   ],
+   "count": 5324,
+   "value": "rgb(229, 231, 235)",
+   "weight": 201601.25
+  }
+ ],
+ "cssVariables": {},
+ "elementsSampled": 4000,
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1335,
+   "value": "system-ui, sans-serif",
+   "weight": 4328
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1330,
+   "value": "12px",
+   "weight": 4210
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "14px",
+   "weight": 98
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "24px",
+   "weight": 20
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1330,
+   "value": "500",
+   "weight": 4210
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "400",
+   "weight": 98
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "700",
+   "weight": 20
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1330,
+   "value": "16px",
+   "weight": 4210
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "20px",
+   "weight": 98
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "32px",
+   "weight": 20
+  }
+ ],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 1331,
+   "value": "4px",
+   "weight": 1331
+  },
+  {
+   "contexts": [],
+   "count": 1331,
+   "value": "9999px",
+   "weight": 1331
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "6px",
+   "weight": 2
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "kind": "h1",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(17, 24, 39)",
+    "font-family": "system-ui, sans-serif",
+    "font-size": "24px",
+    "font-weight": "700",
+    "line-height": "32px",
+    "padding": "0px 0px 0px 0px"
+   }
+  },
+  {
+   "count": 1,
+   "kind": "link",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(29, 78, 216)",
+    "font-family": "system-ui, sans-serif",
+    "font-size": "14px",
+    "font-weight": "400",
+    "line-height": "20px",
+    "padding": "0px 0px 0px 0px"
+   }
+  },
+  {
+   "count": 2,
+   "kind": "button",
+   "styles": {
+    "background-color": "rgb(29, 78, 216)",
+    "border": "none",
+    "border-radius": "6px",
+    "box-shadow": "none",
+    "color": "rgb(255, 255, 255)",
+    "font-family": "system-ui, sans-serif",
+    "font-size": "14px",
+    "font-weight": "400",
+    "line-height": "20px",
+    "padding": "8px 16px 8px 16px"
+   }
+  }
+ ],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 7988,
+   "value": "4px",
+   "weight": 7988
+  },
+  {
+   "contexts": [],
+   "count": 7,
+   "value": "8px",
+   "weight": 7
+  },
+  {
+   "contexts": [],
+   "count": 6,
+   "value": "16px",
+   "weight": 6
+  }
+ ],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "contexts": [
+    "b"
+   ],
+   "count": 1330,
+   "value": "12px|16px|500|system-ui, sans-serif",
+   "weight": 4210
+  },
+  {
+   "contexts": [
+    "a",
+    "button",
+    "p"
+   ],
+   "count": 4,
+   "value": "14px|20px|400|system-ui, sans-serif",
+   "weight": 98
+  },
+  {
+   "contexts": [
+    "h1"
+   ],
+   "count": 1,
+   "value": "24px|32px|700|system-ui, sans-serif",
+   "weight": 20
+  }
+ ],
+ "title": "Large fixture",
+ "truncated": true,
+ "url": "http://127.0.0.1:4173/large.html",
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ }
+}

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Classic CSS fixture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --brand: #2563eb;
+        --ink: #111827;
+        --gap: 1rem;
+      }
+      html {
+        font-size: 16px;
+      }
+      body {
+        margin: 0;
+        background: #ffffff;
+        color: #111827;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 32px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      nav a {
+        color: #4b5563;
+        text-decoration: none;
+        margin-left: 24px;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 32px;
+      }
+      h1 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 36px;
+        line-height: 40px;
+        font-weight: 700;
+        margin: 0 0 16px;
+      }
+      h2 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 600;
+        margin: 32px 0 8px;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 600;
+        margin: 24px 0 8px;
+      }
+      p {
+        margin: 0 0 16px;
+      }
+      .muted {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .card.raised {
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        margin-right: 8px;
+        font-family: inherit;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: #ffffff;
+      }
+      .btn-secondary {
+        background: #ffffff;
+        color: #111827;
+        border: 1px solid #d1d5db;
+      }
+      .pill {
+        display: inline-block;
+        border-radius: 9999px;
+        padding: 4px 12px;
+        background: #dbeafe;
+        color: #1e40af;
+        font-size: 12px;
+        line-height: 16px;
+      }
+      input[type='text'],
+      input[type='email'],
+      textarea {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 16px;
+        background: #ffffff;
+        color: #111827;
+        font-family: inherit;
+      }
+      a {
+        color: #2563eb;
+      }
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+      .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+      footer {
+        border-top: 1px solid #e5e7eb;
+        padding: 32px;
+        color: #6b7280;
+        font-size: 14px;
+      }
+      code {
+        font-family: 'JetBrains Mono', Menlo, monospace;
+        font-size: 14px;
+        background: #f3f4f6;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+      @media (min-width: 640px) {
+        main {
+          padding: 48px;
+        }
+      }
+      @media (min-width: 768px) {
+        header {
+          padding: 16px 48px;
+        }
+      }
+      @media (min-width: 1024px) {
+        main {
+          max-width: 1024px;
+        }
+      }
+      @media (max-width: 767.98px) {
+        nav {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Acme Classic</strong>
+      <nav>
+        <a href="#a">Product</a><a href="#b">Pricing</a><a href="#c">Docs</a><a href="#d">Blog</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Build calm interfaces</h1>
+      <p class="muted">
+        A synthetic page written for the WebStyle test suite. It uses a classic stylesheet with one
+        brand color.
+      </p>
+      <p>
+        <button class="btn btn-primary">Get started</button
+        ><button class="btn btn-secondary">Learn more</button
+        ><button class="btn btn-primary">Start trial</button>
+      </p>
+      <div class="card">
+        <h2>Features</h2>
+        <p>
+          Every paragraph here is written for testing. Read the <a href="#docs">documentation</a> to
+          learn more, or browse the <a href="#guide">guide</a> for details.
+        </p>
+        <p>
+          Install with <code>npm install acme</code> and import the module. The setup takes a few
+          minutes on most machines and works offline.
+        </p>
+        <span class="pill">New</span> <span class="pill">Beta</span>
+      </div>
+      <div class="card raised">
+        <h3>Pricing</h3>
+        <p>
+          Simple plans for small teams. Contact <a href="#sales">sales</a> for volume pricing and
+          custom agreements for larger organizations.
+        </p>
+        <button class="btn btn-primary">Buy now</button
+        ><button class="btn btn-secondary">Compare plans</button>
+      </div>
+      <div class="alert-success">Saved successfully. Your changes are live.</div>
+      <div class="alert-success">Payment received. A receipt is on its way.</div>
+      <div class="alert-danger">Something failed. Please retry in a moment.</div>
+      <div class="alert-danger">Card declined. Use another payment method.</div>
+      <form>
+        <input type="text" placeholder="Name" />
+        <input type="email" placeholder="Email" />
+        <textarea rows="3" placeholder="Message"></textarea>
+        <input type="submit" class="btn btn-primary" value="Send" />
+      </form>
+      <h2>Frequently asked</h2>
+      <p>
+        Questions and answers written for testing. Each answer is long enough to count as body text
+        in the type scale analysis of the extension.
+      </p>
+      <p>
+        More body copy follows here so the base size clearly wins over the small and large sizes on
+        this synthetic fixture page for tests.
+      </p>
+      <p class="muted">Last updated recently. All content on this page is synthetic.</p>
+    </main>
+    <footer>© Acme Classic. Synthetic fixture for automated tests.</footer>
+  </body>
+</html>

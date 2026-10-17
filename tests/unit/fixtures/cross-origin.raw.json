@@ -1,0 +1,222 @@
+{
+ "breakpoints": [
+  900
+ ],
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "value": "rgb(255, 251, 235)",
+   "weight": 2287200
+  },
+  {
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 2,
+   "value": "rgb(234, 88, 12)",
+   "weight": 7886.31
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 27,
+   "value": "rgb(41, 37, 36)",
+   "weight": 454
+  },
+  {
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 2,
+   "value": "rgb(255, 255, 255)",
+   "weight": 15
+  }
+ ],
+ "cssVariables": {},
+ "elementsSampled": 33,
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 29,
+   "value": "Georgia, serif",
+   "weight": 469
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 28,
+   "value": "17px",
+   "weight": 450
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "32px",
+   "weight": 19
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 28,
+   "value": "400",
+   "weight": 450
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "700",
+   "weight": 19
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 28,
+   "value": "28px",
+   "weight": 450
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "40px",
+   "weight": 19
+  }
+ ],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "4px",
+   "weight": 2
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "kind": "h1",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "border": "none",
+    "border-radius": "0px",
+    "box-shadow": "none",
+    "color": "rgb(41, 37, 36)",
+    "font-family": "Georgia, serif",
+    "font-size": "32px",
+    "font-weight": "700",
+    "line-height": "40px",
+    "padding": "0px 0px 0px 0px"
+   }
+  },
+  {
+   "count": 2,
+   "kind": "button",
+   "styles": {
+    "background-color": "rgb(234, 88, 12)",
+    "border": "none",
+    "border-radius": "4px",
+    "box-shadow": "none",
+    "color": "rgb(255, 255, 255)",
+    "font-family": "Georgia, serif",
+    "font-size": "17px",
+    "font-weight": "400",
+    "line-height": "28px",
+    "padding": "8px 16px 8px 16px"
+   }
+  }
+ ],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 100,
+   "value": "16px",
+   "weight": 100
+  },
+  {
+   "contexts": [],
+   "count": 6,
+   "value": "17px",
+   "weight": 6
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "48px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "8px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "21.44px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "40px",
+   "weight": 1
+  }
+ ],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 1
+ },
+ "textStyles": [
+  {
+   "contexts": [
+    "button",
+    "li",
+    "p"
+   ],
+   "count": 28,
+   "value": "17px|28px|400|Georgia, serif",
+   "weight": 450
+  },
+  {
+   "contexts": [
+    "h1"
+   ],
+   "count": 1,
+   "value": "32px|40px|700|Georgia, serif",
+   "weight": 19
+  }
+ ],
+ "title": "Cross-origin stylesheet fixture",
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/cross-origin.html",
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ }
+}

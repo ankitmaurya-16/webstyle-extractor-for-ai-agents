@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Slow fixture</title>
+    <style>
+      .cell {
+        display: inline-block;
+        padding: 4px;
+        margin: 2px;
+        border: 1px solid #e5e7eb;
+      }
+      body.alt .cell:nth-child(3n) {
+        padding: 5px;
+      }
+      body.alt .cell:nth-child(5n + 1) {
+        border-color: #d1d5db;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Busy page</h1>
+    <p>
+      This synthetic page keeps its main thread busy when asked, for the timeout and page-change
+      tests.
+    </p>
+    <div id="grid"></div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      // ?block=ms busy-waits once after load, which keeps executeScript from running at all.
+      const block = Number(params.get('block') || 0);
+      if (block > 0)
+        setTimeout(() => {
+          const end = Date.now() + block;
+          while (Date.now() < end) {}
+        }, 50);
+      // ?jank=1 adds many elements, restyles all of them every frame and busy-waits in short bursts,
+      // so collection is slow but the page stays alive.
+      if (params.get('jank')) {
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < 6000; i += 1) {
+          const cell = document.createElement('span');
+          cell.className = 'cell';
+          cell.textContent = String(i);
+          grid.appendChild(cell);
+        }
+        setInterval(() => {
+          const end = Date.now() + 30;
+          while (Date.now() < end) {}
+        }, 35);
+        const flip = () => {
+          document.body.classList.toggle('alt');
+          requestAnimationFrame(flip);
+        };
+        requestAnimationFrame(flip);
+      }
+    </script>
+  </body>
+</html>

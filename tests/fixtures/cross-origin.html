@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cross-origin stylesheet fixture</title>
+    <!-- Served from a second origin by the test server, so its rules cannot be read. -->
+    <link rel="stylesheet" href="http://localhost:4174/second-origin.css" />
+    <style>
+      .local {
+        padding: 8px;
+      }
+      @media (min-width: 900px) {
+        .local {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <h1>Cross-origin styles</h1>
+      <p>Synthetic paragraph one. The colors here come from a stylesheet on another origin.</p>
+      <p>Synthetic paragraph two, long enough to count as body copy for the type scale.</p>
+      <button class="cta">Subscribe</button> <button class="cta">Follow</button>
+      <ul>
+        <li class="local">Item one</li>
+        <li class="local">Item two</li>
+        <li class="local">Item three</li>
+        <li class="local">Item four</li>
+        <li class="local">Item five</li>
+        <li class="local">Item six</li>
+        <li class="local">Item seven</li>
+        <li class="local">Item eight</li>
+        <li class="local">Item nine</li>
+        <li class="local">Item ten</li>
+        <li class="local">Item eleven</li>
+        <li class="local">Item twelve</li>
+        <li class="local">Item thirteen</li>
+        <li class="local">Item fourteen</li>
+        <li class="local">Item fifteen</li>
+        <li class="local">Item sixteen</li>
+        <li class="local">Item seventeen</li>
+        <li class="local">Item eighteen</li>
+        <li class="local">Item nineteen</li>
+        <li class="local">Item twenty</li>
+        <li class="local">Item twenty-one</li>
+        <li class="local">Item twenty-two</li>
+        <li class="local">Item twenty-three</li>
+        <li class="local">Item twenty-four</li>
+      </ul>
+    </div>
+  </body>
+</html>

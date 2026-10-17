@@ -1,0 +1,12 @@
+.output
+.wxt
+node_modules
+pnpm-lock.yaml
+tests/unit/export/__snapshots__
+docs
+tests/unit/fixtures
+tests/fixtures/large.html
+public
+test-results
+playwright-report
+store/
