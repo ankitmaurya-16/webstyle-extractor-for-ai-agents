@@ -347,9 +347,7 @@ describe('translucent colors (F9)', () => {
     expect(overImage.confidence.reasons).toContain('Measured over a background image');
   });
 
-  // Blocked: tokenConfidence (src/analyze/confidence.js) only subtracts 0.3 for overImage, so a
-  // well-used color over an image still scores medium (0.7).
-  it.skip('AC-F9.9 keeps a well-used color over an image at low confidence', () => {
+  it('AC-F9.9 keeps a well-used color over an image at low confidence', () => {
     const confidenceOf = (share) =>
       designOf([
         ...page,

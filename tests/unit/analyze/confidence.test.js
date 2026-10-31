@@ -121,7 +121,8 @@ describe('confidence (F28)', () => {
     expect(tokenConfidence({ count: 99, truncated: true }).score).toBe(0.9);
     expect(tokenConfidence({ count: 99, unreadable: true }).score).toBe(0.9);
     expect(tokenConfidence({ count: 99, overrideOnly: true }).score).toBe(0.8);
-    expect(tokenConfidence({ count: 99, overImage: true }).score).toBe(0.7);
+    // Over an image the score is capped below medium, whatever the usage (AC-F9.9).
+    expect(tokenConfidence({ count: 99, overImage: true }).level).toBe('low');
     expect(
       tokenConfidence({ count: 0, consistency: 0, overImage: true, truncated: true }).score,
     ).toBe(0);
@@ -206,7 +207,8 @@ describe('confidence (F28)', () => {
     const overImage = analyzeRaw(rawSnapshot({ colors: colors(1) }));
     const text = (d) => d.colors.find((c) => c.hex === '#111827').confidence;
     expect(overImage.colors.find((c) => c.hex === '#111827').overImageShare).toBe(1);
-    expect(text(overImage).score).toBeCloseTo(text(clear).score - 0.3, 2);
+    expect(text(overImage).score).toBeLessThanOrEqual(text(clear).score - 0.3);
+    expect(text(overImage).level).toBe('low');
     expect(text(overImage).reasons).toContain('Measured over a background image');
   });
 });

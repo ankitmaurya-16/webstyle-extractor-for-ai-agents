@@ -51,6 +51,8 @@ export function tokenConfidence(input) {
     score -= 0.1;
     reasons.push('Some stylesheets were unreadable');
   }
+  // A color measured over an image is a guess whatever its usage, so it stays low (AC-F9.9).
+  if (input.overImage) score = Math.min(score, MEDIUM - 0.01);
   return result(score, reasons);
 }
 
