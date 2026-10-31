@@ -207,7 +207,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       out.push(
         ...table(
           ['Token', 'Value'],
-          t.gradients.map((g) => [g.name, gradientText(d, g)]),
+          t.gradients.map((g) => [`${g.name}${verify(g)}`, gradientText(d, g)]),
         ),
         '',
       );
@@ -224,7 +224,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
         ...table(
           ['Family', 'Stack', 'Source'],
           t.families.map((f) => [
-            f.name,
+            `${f.name}${verify(f)}`,
             formatFontStack(f.stack),
             f.webFont ? `web font${providerText(f.webFont)}` : 'system font',
           ]),
@@ -239,7 +239,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
         ...table(
           ['Text style', 'Font', 'Size/line', 'Weight', 'Tracking', 'Transform', 'Used for'],
           styles.map((s) => [
-            s.name,
+            `${s.name}${verify(s)}`,
             familyName(d, s.familyId),
             `${s.sizePx}/${s.lineHeightPx ?? 'normal'}`,
             String(s.fontWeight),
@@ -270,7 +270,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     }
     if (t.letterSpacings.length) {
       out.push(
-        `Letter spacing: ${t.letterSpacings.map((l) => `${l.name} ${emString(l.em)}`).join(', ')}`,
+        `Letter spacing: ${t.letterSpacings.map((l) => `${l.name}${verify(l)} ${emString(l.em)}`).join(', ')}`,
         '',
       );
     }
@@ -280,7 +280,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   const spacing = t.spacing.filter(keep);
   if (spacing.length) {
     out.push('## Spacing', '');
-    const values = spacing.map((s) => `${s.name} ${pxString(s.px)}`).join(', ');
+    const values = spacing.map((s) => `${s.name}${verify(s)} ${pxString(s.px)}`).join(', ');
     out.push(
       d.spacing.baseUnitPx
         ? `Base unit ${d.spacing.baseUnitPx}px: ${values}`
@@ -292,23 +292,30 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     out.push('## Layout', '');
     if (t.containers.length)
       out.push(
-        `- Containers: ${t.containers.map((c) => `${c.name} ${pxString(c.px)}`).join(', ')}`,
+        `- Containers: ${t.containers.map((c) => `${c.name}${verify(c)} ${pxString(c.px)}`).join(', ')}`,
       );
     if (t.gridColumns.length)
       out.push(
-        `- Grid columns: ${t.gridColumns.map((g) => `${g.value} (${percent(g.usageShare)})`).join(', ')}`,
+        `- Grid columns: ${t.gridColumns.map((g) => `${g.value} (${percent(g.usageShare)})${verify(g)}`).join(', ')}`,
       );
     if (t.gaps.length)
-      out.push(`- Gaps: ${t.gaps.map((g) => `${g.name} ${pxString(g.px)}`).join(', ')}`);
+      out.push(
+        `- Gaps: ${t.gaps.map((g) => `${g.name}${verify(g)} ${pxString(g.px)}`).join(', ')}`,
+      );
     out.push('');
   }
   if (t.radii.length)
-    out.push('## Radius', '', t.radii.map((r) => `${r.name} ${pxString(r.px)}`).join(', '), '');
+    out.push(
+      '## Radius',
+      '',
+      t.radii.map((r) => `${r.name}${verify(r)} ${pxString(r.px)}`).join(', '),
+      '',
+    );
   if (t.borderWidths.length) {
     out.push(
       '## Borders',
       '',
-      `${t.borderWidths.map((b) => `${b.name} ${pxString(b.px)}`).join(', ')}${d.meta.borderStyle ? ` · usually ${d.meta.borderStyle}` : ''}`,
+      `${t.borderWidths.map((b) => `${b.name}${verify(b)} ${pxString(b.px)}`).join(', ')}${d.meta.borderStyle ? ` · usually ${d.meta.borderStyle}` : ''}`,
       '',
     );
   }
@@ -324,16 +331,28 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     );
   }
   if (t.opacities.length)
-    out.push('## Opacity', '', t.opacities.map((o) => `${o.name} ${o.value}`).join(', '), '');
+    out.push(
+      '## Opacity',
+      '',
+      t.opacities.map((o) => `${o.name}${verify(o)} ${o.value}`).join(', '),
+      '',
+    );
   if (t.zIndex.length)
-    out.push('## Z-index', '', t.zIndex.map((z) => `${z.name} ${z.value}`).join(', '), '');
+    out.push(
+      '## Z-index',
+      '',
+      t.zIndex.map((z) => `${z.name}${verify(z)} ${z.value}`).join(', '),
+      '',
+    );
   if (t.durations.length || t.easings.length) {
     out.push('## Motion', '');
     const parts = [];
-    if (t.durations.length) parts.push(t.durations.map((x) => x.name).join(', '));
+    if (t.durations.length) parts.push(t.durations.map((x) => `${x.name}${verify(x)}`).join(', '));
     if (t.easings.length)
       parts.push(
-        t.easings.map((e) => (e.name === e.css ? e.name : `${e.name} ${e.css}`)).join(', '),
+        t.easings
+          .map((e) => `${e.name}${verify(e)}${e.name === e.css ? '' : ` ${e.css}`}`)
+          .join(', '),
       );
     if (d.motion.properties?.length)
       parts.push(`usually animates ${d.motion.properties.join(', ')}`);
@@ -350,7 +369,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     out.push('## Breakpoints', '');
     out.push(
       t.breakpoints.length
-        ? t.breakpoints.map((b) => `${b.name} ${pxString(b.px)}`).join(', ')
+        ? t.breakpoints.map((b) => `${b.name}${verify(b)} ${pxString(b.px)}`).join(', ')
         : 'Not readable on this site.',
       '',
     );
@@ -438,8 +457,16 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     const name = (id) => findToken(d, id)?.token.name ?? id;
     const label = (c) =>
       `${name(c.textTokenId)} on ${name(c.backgroundTokenId)}${modes.length > 1 ? ` (${c.mode})` : ''}`;
-    const safe = contrast.filter((c) => c.level !== 'fail').slice(0, 8);
-    const avoid = contrast.filter((c) => c.level === 'fail').slice(0, 8);
+    // Results are split by text size, so one token pair can appear twice; list it once.
+    const seen = new Set();
+    const unique = contrast.filter((c) => {
+      const k = `${c.textTokenId}|${c.backgroundTokenId}|${c.mode}|${c.level === 'fail'}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    const safe = unique.filter((c) => c.level !== 'fail').slice(0, 8);
+    const avoid = unique.filter((c) => c.level === 'fail').slice(0, 8);
     if (safe.length)
       out.push(
         `Safe text pairs: ${safe.map((c) => `${label(c)} (${c.ratio}:1, ${c.level})`).join(' · ')}`,
@@ -494,8 +521,8 @@ function providerText(f) {
   const names = {
     'google-fonts': 'Google Fonts',
     'adobe-fonts': 'Adobe Fonts',
-    'self-hosted': 'self-hosted',
   };
+  if (f.provider === 'self-hosted') return ' (self-hosted)';
   if (names[f.provider]) return ` from ${names[f.provider]}`;
   if (f.provider === 'other' && f.providerHost) return ` from ${f.providerHost}`;
   return '';

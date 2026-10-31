@@ -55,13 +55,13 @@ Use opacity modifiers in Tailwind, for example `border-black/10`.
 
 ### Text styles
 
-| Text style | Font | Size/line | Weight | Tracking | Transform | Used for      |
-| ---------- | ---- | --------- | ------ | -------- | --------- | ------------- |
-| h1         | sans | 40/48     | 800    | normal   | none      | h1            |
-| h2         | sans | 24/32     | 700    | normal   | none      | h2            |
-| button     | sans | 15/20     | 600    | normal   | none      | button        |
-| body       | sans | 15/24     | 400    | normal   | none      | a, div, li, p |
-| body-sm    | sans | 12/24     | 400    | normal   | none      | badge, span   |
+| Text style  | Font | Size/line | Weight | Tracking | Transform | Used for      |
+| ----------- | ---- | --------- | ------ | -------- | --------- | ------------- |
+| h1 (verify) | sans | 40/48     | 800    | normal   | none      | h1            |
+| h2          | sans | 24/32     | 700    | normal   | none      | h2            |
+| button      | sans | 15/20     | 600    | normal   | none      | button        |
+| body        | sans | 15/24     | 400    | normal   | none      | a, div, li, p |
+| body-sm     | sans | 12/24     | 400    | normal   | none      | badge, span   |
 
 ### Scale
 
@@ -80,7 +80,7 @@ Base unit 4px: space-1 4px, space-2 8px, space-4 16px, space-5 20px, space-6 24p
 
 ## Layout
 
-- Containers: container-sm 880px
+- Containers: container-sm (verify) 880px
 
 ## Radius
 
@@ -92,7 +92,7 @@ border-1 1px · usually solid
 
 ## Breakpoints
 
-sm 768px
+sm (verify) 768px
 
 ## Components
 

@@ -1,10 +1,12 @@
 import { expect, openFixture, openPanel, test } from './harness.js';
 import {
   activeCapture,
+  attachedTo,
   expectDetached,
   extractFrom,
   latestRecord,
   turnOnAdvanced,
+  waitForAdvancedStage,
 } from './v2-helpers.js';
 
 test('AC-F23.10 the Advanced capture switch explains the debugging bar before first use', async ({
@@ -36,7 +38,7 @@ test('AC-F23.5 AC-F13.3 AC-F23.6 stages run in order, the other theme is emulate
   );
   expect(order.filter((s) => expected.includes(s))).toEqual(expected);
   expect(order).toContain('deep-scan');
-  await expect(panel.getByRole('group', { name: 'Theme' })).toBeVisible();
+  await expect(panel.getByRole('radiogroup', { name: 'Theme' })).toBeVisible();
   const record = await latestRecord(panel);
   expect(record.captures.some((c) => c.kind === 'theme' && c.method === 'emulated')).toBe(true);
   await expectDetached(ext.worker, tabId);
@@ -94,18 +96,8 @@ async function startAdvancedRun(ext, fixture = 'large.html') {
   const panel = await openPanel(ext.context, ext.extensionId, fx.tabId);
   await turnOnAdvanced(panel);
   await panel.getByRole('button', { name: 'Extract design system' }).click();
-  // Wait until the debugger is attached.
-  await expect
-    .poll(
-      () =>
-        ext.worker.evaluate(
-          async (id) =>
-            (await chrome.debugger.getTargets()).some((t) => t.tabId === id && t.attached),
-          fx.tabId,
-        ),
-      { timeout: 15_000 },
-    )
-    .toBe(true);
+  await waitForAdvancedStage(panel);
+  expect(await attachedTo(ext.worker, fx.tabId)).toBe(1);
   return { ...fx, panel };
 }
 

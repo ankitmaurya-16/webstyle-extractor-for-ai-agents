@@ -62,6 +62,7 @@
   --success: var(--color-green-800);
   --danger: var(--color-red-800);
   --focus-ring: var(--color-blue-600);
+  /* No theme namespace in v4; use as z-(--z-dialog), opacity-(--opacity-disabled), duration-(--duration-150), border-(length:--border-1), gap-(--gap-20), bg-(image:--gradient-1) */
   --z-dialog: 50;
   --opacity-disabled: 0.5;
   --duration-150: 150ms;

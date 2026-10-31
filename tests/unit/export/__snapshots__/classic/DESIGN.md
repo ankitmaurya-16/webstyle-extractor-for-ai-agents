@@ -43,24 +43,24 @@ Extracted 2026-10-18 from http://127.0.0.1:4173/classic.html · light theme · W
 
 ## Typography
 
-| Family  | Stack                                 | Source      |
-| ------- | ------------------------------------- | ----------- |
-| sans    | "Helvetica Neue", "Arial", sans-serif | system font |
-| display | "Georgia", "Times New Roman", serif   | system font |
-| mono    | "JetBrains Mono", "Menlo", monospace  | system font |
+| Family        | Stack                                 | Source      |
+| ------------- | ------------------------------------- | ----------- |
+| sans          | "Helvetica Neue", "Arial", sans-serif | system font |
+| display       | "Georgia", "Times New Roman", serif   | system font |
+| mono (verify) | "JetBrains Mono", "Menlo", monospace  | system font |
 
 ### Text styles
 
-| Text style | Font    | Size/line | Weight | Tracking | Transform | Used for       |
-| ---------- | ------- | --------- | ------ | -------- | --------- | -------------- |
-| h1         | display | 36/40     | 700    | normal   | none      | h1             |
-| h2         | display | 24/32     | 600    | normal   | none      | h2             |
-| h3         | sans    | 20/28     | 600    | normal   | none      | h3             |
-| button     | sans    | 14/20     | 600    | normal   | none      | button         |
-| code       | mono    | 14/24     | 400    | normal   | none      | code           |
-| body       | sans    | 16/24     | 400    | normal   | none      | a, div, p      |
-| body-sm    | sans    | 14/20     | 400    | normal   | none      | a, nav-link, p |
-| caption    | sans    | 12/16     | 400    | normal   | none      | badge, span    |
+| Text style    | Font    | Size/line | Weight | Tracking | Transform | Used for       |
+| ------------- | ------- | --------- | ------ | -------- | --------- | -------------- |
+| h1 (verify)   | display | 36/40     | 700    | normal   | none      | h1             |
+| h2            | display | 24/32     | 600    | normal   | none      | h2             |
+| h3 (verify)   | sans    | 20/28     | 600    | normal   | none      | h3             |
+| button        | sans    | 14/20     | 600    | normal   | none      | button         |
+| code (verify) | mono    | 14/24     | 400    | normal   | none      | code           |
+| body          | sans    | 16/24     | 400    | normal   | none      | a, div, p      |
+| body-sm       | sans    | 14/20     | 400    | normal   | none      | a, nav-link, p |
+| caption       | sans    | 12/16     | 400    | normal   | none      | badge, span    |
 
 ### Scale
 
@@ -81,11 +81,11 @@ Base unit 4px: space-1 4px, space-2 8px, space-3 12px, gap 16px, space-6 24px, s
 
 ## Layout
 
-- Containers: container-sm 1024px
+- Containers: container-sm (verify) 1024px
 
 ## Radius
 
-radius-sm 4px, radius-md 6px, radius-lg 8px, radius-full 9999px
+radius-sm (verify) 4px, radius-md 6px, radius-lg 8px, radius-full 9999px
 
 ## Borders
 
@@ -100,7 +100,7 @@ border-1 1px · usually solid
 
 ## Breakpoints
 
-sm 640px, md 768px, lg 1024px
+sm (verify) 640px, md (verify) 768px, lg (verify) 1024px
 
 ## Components
 
@@ -158,7 +158,7 @@ text text (ink), font sans 20px/28px weight 600
 
 ## Accessibility
 
-Safe text pairs: ink on white (17.74:1, AAA) · gray-800 on white (7.56:1, AAA) · gray-600 on white (4.83:1, AA) · white on brand (5.17:1, AA) · brand on white (5.17:1, AA) · ink on white (17.74:1, AAA) · green-800 on green-100 (6.49:1, AA) · red-800 on red-100 (6.8:1, AA)
+Safe text pairs: ink on white (17.74:1, AAA) · gray-800 on white (7.56:1, AAA) · gray-600 on white (4.83:1, AA) · white on brand (5.17:1, AA) · brand on white (5.17:1, AA) · green-800 on green-100 (6.49:1, AA) · red-800 on red-100 (6.8:1, AA)
 Input border vs input: 1.47:1, fails 3:1
 
 ## Notes

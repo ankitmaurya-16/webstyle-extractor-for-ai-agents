@@ -30,10 +30,10 @@
    ],
    "count": 1,
    "effectiveHex": "#ffffff",
-   "maxWeight": 450680,
+   "maxWeight": 1208440,
    "overImageShare": 0,
    "value": "rgb(255, 255, 255)",
-   "weight": 450680
+   "weight": 1208440
   },
   {
    "backdropHex": "#ffffff",
@@ -52,12 +52,12 @@
    "contexts": [
     "text"
    ],
-   "count": 7,
+   "count": 31,
    "effectiveHex": "#111827",
    "maxWeight": 73,
    "overImageShare": 0,
    "value": "rgb(17, 24, 39)",
-   "weight": 113
+   "weight": 464
   }
  ],
  "containers": [
@@ -70,7 +70,7 @@
  ],
  "contrastSamples": [
   {
-   "count": 5,
+   "count": 29,
    "effectiveBg": "#ffffff",
    "effectiveText": "#111827",
    "fontWeight": 400,
@@ -103,16 +103,16 @@
  "devicePixelRatio": 1,
  "durations": [],
  "easings": [],
- "elementsSampled": 11,
+ "elementsSampled": 36,
  "fontFaces": [],
  "fontFamilies": [
   {
    "contexts": [
     "text"
    ],
-   "count": 7,
+   "count": 31,
    "value": "system-ui, sans-serif",
-   "weight": 113
+   "weight": 464
   }
  ],
  "fontSizes": [
@@ -120,9 +120,9 @@
    "contexts": [
     "text"
    ],
-   "count": 5,
+   "count": 29,
    "value": "16px",
-   "weight": 88
+   "weight": 439
   },
   {
    "contexts": [
@@ -146,9 +146,9 @@
    "contexts": [
     "text"
    ],
-   "count": 5,
+   "count": 29,
    "value": "400",
-   "weight": 88
+   "weight": 439
   },
   {
    "contexts": [
@@ -162,13 +162,13 @@
  "frameCount": 0,
  "frameworkSignals": [
   {
-   "count": 3,
+   "count": 4,
    "evidence": "unique class names sampled",
    "id": "meta:classes"
   },
   {
    "count": 1,
-   "evidence": "1 of 3 class names are utility classes",
+   "evidence": "1 of 4 class names are utility classes",
    "id": "tailwind:classes"
   },
   {
@@ -203,9 +203,9 @@
    "contexts": [
     "text"
    ],
-   "count": 7,
+   "count": 31,
    "value": "0",
-   "weight": 113
+   "weight": 464
   }
  ],
  "lineHeights": [
@@ -213,9 +213,9 @@
    "contexts": [
     "text"
    ],
-   "count": 5,
+   "count": 29,
    "value": "24px",
-   "weight": 88
+   "weight": 439
   },
   {
    "contexts": [
@@ -332,9 +332,9 @@
   },
   {
    "contexts": [],
-   "count": 2,
+   "count": 4,
    "value": "16px",
-   "weight": 2
+   "weight": 4
   },
   {
    "contexts": [],
@@ -347,6 +347,12 @@
    "count": 2,
    "value": "32.16px",
    "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "40px",
+   "weight": 1
   }
  ],
  "stateSamples": [],
@@ -356,7 +362,7 @@
  },
  "textStyles": [
   {
-   "count": 5,
+   "count": 29,
    "family": "system-ui, sans-serif",
    "fontWeight": 400,
    "letterSpacingEm": 0,
@@ -364,10 +370,11 @@
    "sizePx": 16,
    "tags": [
     "div",
+    "li",
     "p"
    ],
    "textTransform": "none",
-   "usage": 88
+   "usage": 439
   },
   {
    "count": 1,
@@ -401,9 +408,9 @@
    "contexts": [
     "text"
    ],
-   "count": 7,
+   "count": 31,
    "value": "none",
-   "weight": 113
+   "weight": 464
   }
  ],
  "themeRootRules": [],

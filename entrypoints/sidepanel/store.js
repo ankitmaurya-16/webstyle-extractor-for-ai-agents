@@ -757,6 +757,8 @@ export const useStore = create((set, get) => ({
     const { record, settings } = get();
     return {
       mapping: record?.mapping ?? null,
+      // A component snapshot exports only what the component uses (AC-F26.8).
+      kind: record?.kind ?? 'page',
       shadcnFormat: settings.shadcnFormat,
       screenshots: get().screenshots.map((s) => ({ recipeId: s.recipeId, mode: s.mode })),
     };

@@ -43,6 +43,7 @@
   --border: var(--color-gray-900);
   --primary: var(--color-purple-600);
   --warning: var(--color-yellow-300);
+  /* No theme namespace in v4; use as border-(length:--border-1) */
   --border-1: 1px;
 }
 

@@ -38,10 +38,10 @@ Extracted 2026-10-18 from http://127.0.0.1:4173/cross-origin.html · light theme
 
 ### Text styles
 
-| Text style | Font  | Size/line | Weight | Tracking | Transform | Used for      |
-| ---------- | ----- | --------- | ------ | -------- | --------- | ------------- |
-| h1         | serif | 32/40     | 700    | normal   | none      | h1            |
-| button     | serif | 17/28     | 400    | normal   | none      | button, li, p |
+| Text style  | Font  | Size/line | Weight | Tracking | Transform | Used for      |
+| ----------- | ----- | --------- | ------ | -------- | --------- | ------------- |
+| h1 (verify) | serif | 32/40     | 700    | normal   | none      | h1            |
+| button      | serif | 17/28     | 400    | normal   | none      | button, li, p |
 
 ### Scale
 
@@ -54,7 +54,7 @@ Letter spacing: tracking-normal 0em
 
 ## Spacing
 
-Base unit 8px: space-1 8px, space-2 16px, space-5 40px, space-6 48px
+Base unit 8px: space-1 8px, space-2 16px, space-5 (verify) 40px, space-6 48px
 
 ## Radius
 
@@ -62,7 +62,7 @@ radius-sm 4px
 
 ## Breakpoints
 
-sm 900px
+sm (verify) 900px
 
 ## Components
 
@@ -80,7 +80,7 @@ text text (gray-900), font serif 32px/40px weight 700
 
 ## Accessibility
 
-Safe text pairs: gray-900 on yellow-100 (14.63:1, AAA) · gray-900 on yellow-100 (14.63:1, AAA)
+Safe text pairs: gray-900 on yellow-100 (14.63:1, AAA)
 Avoid: white on orange-500 (3.56:1, fails)
 
 ## Notes

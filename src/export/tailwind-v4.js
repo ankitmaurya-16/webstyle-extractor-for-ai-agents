@@ -64,23 +64,27 @@ export function exportTailwindV4(design, version, ctx = {}) {
   const semanticLine = (role, c) =>
     `  --${role}: ${c.alpha < 1 ? c.hex : `var(${varName('color', c.name)})`};`;
   const rootLines = (t.semanticByMode[root] ?? []).map(([role, c]) => semanticLine(role, c));
-  rootLines.push(...t.zIndex.map((z) => `  ${varName('z', z.name)}: ${z.value};`));
-  rootLines.push(...t.opacities.map((o) => `  ${varName('opacity', o.name)}: ${o.value};`));
-  rootLines.push(...t.durations.map((x) => `  ${varName('duration', x.name)}: ${x.ms}ms;`));
-  rootLines.push(
-    ...t.borderWidths.map((b) => `  ${varName('border', b.name)}: ${pxString(b.px)};`),
-  );
-  rootLines.push(
-    ...t.gaps
-      .filter((g) => !g.spaceId)
-      .map((g) => `  ${varName('gap', g.name)}: ${pxString(g.px)};`),
-  );
-  rootLines.push(
-    ...t.gradients.map(
-      (g) =>
-        `  ${varName('gradient', g.name)}: ${gradientCss(d, g, (c) => `var(${varName('color', c.name)})`)};`,
-    ),
-  );
+  const gaps = t.gaps.filter((g) => !g.spaceId);
+  const plain = [
+    ['z', t.zIndex, (z) => z.value, (v) => `z-(${v})`],
+    ['opacity', t.opacities, (o) => o.value, (v) => `opacity-(${v})`],
+    ['duration', t.durations, (x) => `${x.ms}ms`, (v) => `duration-(${v})`],
+    ['border', t.borderWidths, (b) => pxString(b.px), (v) => `border-(length:${v})`],
+    ['gap', gaps, (g) => pxString(g.px), (v) => `gap-(${v})`],
+    [
+      'gradient',
+      t.gradients,
+      (g) => gradientCss(d, g, (c) => `var(${varName('color', c.name)})`),
+      (v) => `bg-(image:${v})`,
+    ],
+  ].filter(([, list]) => list.length);
+  if (plain.length) {
+    // v4 has no theme namespace for these, so the agent needs the arbitrary-value syntax.
+    const examples = plain.map(([category, list, , use]) => use(varName(category, list[0].name)));
+    rootLines.push(`  /* No theme namespace in v4; use as ${examples.join(', ')} */`);
+    for (const [category, list, value] of plain)
+      rootLines.push(...list.map((tk) => `  ${varName(category, tk.name)}: ${value(tk)};`));
+  }
   if (rootLines.length) out.push('', ':root {', ...rootLines, '}');
   if (other) {
     const dark = (t.semanticByMode[other] ?? []).map(([role, c]) => semanticLine(role, c));

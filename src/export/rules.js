@@ -21,6 +21,10 @@ export function frameworkLabel(d) {
   return d.name;
 }
 
+/** "Inter (400, 600)": the family with the weights the page loaded (AC-F19.6). */
+const fontWithWeights = (f) =>
+  f.weights?.length ? `${f.family} (${f.weights.join(', ')})` : f.family;
+
 export const loadedFonts = (design) => (design.meta.webFonts ?? []).filter((f) => f.loaded);
 
 export function mechanismText(design) {
@@ -90,7 +94,7 @@ export function agentRules(design, ctx = {}) {
   let stackRule = stack.length ? `${stack.join(' ')}.` : '';
   const fonts = loadedFonts(design);
   if (fonts.length)
-    stackRule += `${stackRule ? ' ' : ''}Load ${listWords(fonts.map((f) => f.family))} rather than substituting.`;
+    stackRule += `${stackRule ? ' ' : ''}Load ${listWords(fonts.map(fontWithWeights))} rather than substituting.`;
   if (stackRule) rules.push(stackRule);
   if ((design.motion?.durations ?? []).some((d) => !d.excluded)) {
     rules.push('Animate with the motion tokens below and honor `prefers-reduced-motion`.');

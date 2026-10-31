@@ -334,7 +334,7 @@ describe('spec 9.4 new token categories in each format', () => {
     expect(md).toContain('### Text styles');
     expect(md).toContain('Letter spacing: tracking-normal 0em');
     expect(md).toMatch(
-      /## Layout\n\n- Containers: container-sm 1024px\n- Grid columns: 3 \(100%\)\n- Gaps: gap-20 20px/,
+      /## Layout\n\n- Containers: container-sm \(verify\) 1024px\n- Grid columns: 3 \(100%\)\n- Gaps: gap-20 20px/,
     );
     expect(md).toContain('## Borders\n\nborder-1 1px · usually solid');
     expect(md).toContain('## Opacity\n\nopacity-disabled 0.5');
@@ -345,7 +345,7 @@ describe('spec 9.4 new token categories in each format', () => {
     expect(md).toContain(
       '### Focus ring\n\noutline 2px solid focus-ring (blue-600), offset 2px (from forced states)',
     );
-    expect(md).toContain('## Stack\n\n- Web font: Helvetica Neue 400, 600 from self-hosted');
+    expect(md).toContain('## Stack\n\n- Web font: Helvetica Neue 400, 600 (self-hosted)');
     expect(md).toMatch(/\| hover +\| background gray-900/);
   });
 

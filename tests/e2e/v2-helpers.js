@@ -12,13 +12,29 @@ export async function turnOnAdvanced(panel) {
   await expect(toggle).toHaveAttribute('aria-checked', 'true');
 }
 
-/** Debugger targets attached to a tab, as Chrome reports them. */
+/**
+ * 1 while the extension's own debugger session is attached to the tab, else 0. getTargets()
+ * cannot tell, because Playwright drives every page through CDP too; a second extension attach
+ * is refused only while ours is still attached.
+ */
 export const attachedTo = (worker, tabId) =>
-  worker.evaluate(
-    async (id) =>
-      (await chrome.debugger.getTargets()).filter((t) => t.tabId === id && t.attached).length,
-    tabId,
+  worker.evaluate(async (id) => {
+    try {
+      await chrome.debugger.attach({ tabId: id }, '1.3');
+      await chrome.debugger.detach({ tabId: id });
+      return 0;
+    } catch (error) {
+      return /already attached/i.test(error.message) ? 1 : 0;
+    }
+  }, tabId);
+
+/** Waits until the panel shows an Advanced stage after attach, so the debugger is on. */
+export async function waitForAdvancedStage(panel) {
+  await panel.waitForSelector(
+    '[aria-current=step][data-stage]:not([data-stage=reading]):not([data-stage=scrolling]):not([data-stage=attach])',
+    { timeout: 15_000 },
   );
+}
 
 export async function expectDetached(worker, tabId) {
   await expect.poll(() => attachedTo(worker, tabId), { timeout: 10_000 }).toBe(0);

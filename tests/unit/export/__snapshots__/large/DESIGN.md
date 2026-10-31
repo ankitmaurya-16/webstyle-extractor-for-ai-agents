@@ -46,11 +46,11 @@ Extracted 2026-10-18 from http://127.0.0.1:4173/large.html · light theme · Web
 
 ### Text styles
 
-| Text style | Font | Size/line | Weight | Tracking | Transform | Used for     |
-| ---------- | ---- | --------- | ------ | -------- | --------- | ------------ |
-| h1         | sans | 24/32     | 700    | normal   | none      | h1           |
-| button     | sans | 14/20     | 400    | normal   | none      | a, button, p |
-| body       | sans | 12/16     | 500    | normal   | none      | b            |
+| Text style      | Font | Size/line | Weight | Tracking | Transform | Used for     |
+| --------------- | ---- | --------- | ------ | -------- | --------- | ------------ |
+| h1 (verify)     | sans | 24/32     | 700    | normal   | none      | h1           |
+| button (verify) | sans | 14/20     | 400    | normal   | none      | a, button, p |
+| body            | sans | 12/16     | 500    | normal   | none      | b            |
 
 ### Scale
 
@@ -68,7 +68,7 @@ Base unit 4px: space-1 4px
 
 ## Layout
 
-- Grid columns: 2 (91%), 40 (9%)
+- Grid columns: 2 (91%), 40 (9%) (verify)
 - Gaps: space-1 4px
 
 ## Radius
@@ -99,7 +99,7 @@ text text (gray-900), font sans 24px/32px weight 700
 
 ## Accessibility
 
-Safe text pairs: gray-900 on white (17.74:1, AAA) · white on blue-700 (6.7:1, AA) · blue-700 on white (6.7:1, AA) · gray-900 on white (17.74:1, AAA)
+Safe text pairs: gray-900 on white (17.74:1, AAA) · white on blue-700 (6.7:1, AA) · blue-700 on white (6.7:1, AA)
 
 ## Notes
 

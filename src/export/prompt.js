@@ -64,7 +64,7 @@ export function exportPrompt(design, version, ctx = {}) {
     .filter((s) => keepToken(d, s))
     .sort((a, b) => a.sizePx - b.sizePx);
   if (sizes.length) {
-    const family = visible(d.typography.families)[0];
+    const family = visible(d.typography.families).filter((f) => keepToken(d, f))[0];
     out.push(
       `Type: ${sizes.map((s) => `${s.name} ${s.sizePx}${s.name === 'base' && s.lineHeightPx ? `/${s.lineHeightPx}` : ''}`).join(' · ')}${family ? ` (${family.name})` : ''}`,
     );
@@ -107,8 +107,8 @@ export function exportPrompt(design, version, ctx = {}) {
     out.push(`Button: ${parts.filter(Boolean).join(' · ')}`);
   }
   const ring = describeFocusRing(d);
-  const motion = visible(d.motion?.durations ?? [])[0];
-  const easing = visible(d.motion?.easings ?? [])[0];
+  const motion = visible(d.motion?.durations ?? []).filter((x) => keepToken(d, x))[0];
+  const easing = visible(d.motion?.easings ?? []).filter((x) => keepToken(d, x))[0];
   const tail = [];
   if (ring) tail.push(`Focus ring: ${ring}`);
   if (motion) tail.push(`Motion: ${motion.ms}ms${easing ? ` ${easing.name}` : ''}`);

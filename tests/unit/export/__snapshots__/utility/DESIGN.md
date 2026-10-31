@@ -53,12 +53,12 @@ Extracted 2026-10-18 from http://127.0.0.1:4173/utility.html · light theme · W
 
 ### Text styles
 
-| Text style | Font | Size/line | Weight | Tracking | Transform | Used for         |
-| ---------- | ---- | --------- | ------ | -------- | --------- | ---------------- |
-| h1         | sans | 36/40     | 700    | normal   | none      | h1               |
-| h2         | sans | 20/28     | 600    | normal   | none      | h2               |
-| button     | sans | 14/20     | 600    | normal   | none      | button           |
-| body       | sans | 14/20     | 400    | normal   | none      | div, li, p, span |
+| Text style  | Font | Size/line | Weight | Tracking | Transform | Used for         |
+| ----------- | ---- | --------- | ------ | -------- | --------- | ---------------- |
+| h1 (verify) | sans | 36/40     | 700    | normal   | none      | h1               |
+| h2          | sans | 20/28     | 600    | normal   | none      | h2               |
+| button      | sans | 14/20     | 600    | normal   | none      | button           |
+| body        | sans | 14/20     | 400    | normal   | none      | div, li, p, span |
 
 ### Scale
 
@@ -77,12 +77,12 @@ Base unit 4px: space-1 4px, space-2 8px, space-3 12px, space-4 16px, space-6 24p
 
 ## Layout
 
-- Grid columns: 3 (100%)
+- Grid columns: 3 (100%) (verify)
 - Gaps: space-4 16px
 
 ## Radius
 
-radius-sm 4px, radius-md 8px, radius-lg 12px, radius-full 9999px
+radius-sm 4px, radius-md 8px, radius-lg 12px, radius-full (verify) 9999px
 
 ## Borders
 
@@ -97,7 +97,7 @@ border-1 1px · usually solid
 
 ## Breakpoints
 
-sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px
+sm (verify) 640px, md (verify) 768px, lg (verify) 1024px, xl (verify) 1280px, 2xl (verify) 1536px
 
 ## Components
 
@@ -127,7 +127,7 @@ text gray-900, font sans 20px/28px weight 600
 
 ## Accessibility
 
-Safe text pairs: gray-800 on white (7.58:1, AAA) · gray-900 on white (17.85:1, AAA) · red-600 on white (4.7:1, AA) · teal-700 on teal-100 (5.21:1, AA) · teal-700 on white (5.48:1, AA) · gray-900 on white (17.85:1, AAA)
+Safe text pairs: gray-800 on white (7.58:1, AAA) · gray-900 on white (17.85:1, AAA) · red-600 on white (4.7:1, AA) · teal-700 on teal-100 (5.21:1, AA) · teal-700 on white (5.48:1, AA)
 Avoid: white on green-600 (3.77:1, fails) · orange-400 on white (2.15:1, fails) · gray-400 on white (2.56:1, fails) · red-500 on white (4.38:1, fails)
 
 ## Notes

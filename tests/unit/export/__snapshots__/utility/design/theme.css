@@ -49,6 +49,7 @@
   --primary: var(--color-green-600);
   --warning: var(--color-orange-400);
   --danger: var(--color-red-600);
+  /* No theme namespace in v4; use as border-(length:--border-1) */
   --border-1: 1px;
 }
 

@@ -13,7 +13,7 @@ Follow the design system in @DESIGN.md.
 5. Match the component recipes below, including their hover, focus and active states.
 6. Every interactive element shows the focus ring on `:focus-visible`: outline 2px solid focus-ring (blue-600), offset 2px.
 7. Support light and dark themes with the paired semantic tokens. The site switches themes with the `.dark` class on `<html>`.
-8. Load Helvetica Neue rather than substituting.
+8. Load Helvetica Neue (400, 600) rather than substituting.
 9. Animate with the motion tokens below and honor `prefers-reduced-motion`.
 10. If a needed value is missing, use the nearest existing token and leave a TODO comment.
 

@@ -56,6 +56,7 @@
   --primary: var(--color-brand);
   --success: var(--color-green-800);
   --danger: var(--color-red-800);
+  /* No theme namespace in v4; use as border-(length:--border-1) */
   --border-1: 1px;
 }
 
