@@ -2,10 +2,12 @@ import { expect, openFixture, test } from './harness.js';
 
 async function collect(ext, name) {
   const { tabId } = await openFixture(ext.context, ext.worker, name);
+  // The v2 extractor installs self.__webstyle; collect() is then called with options (AC-F23.2).
   return ext.worker.evaluate(async (id) => {
+    await chrome.scripting.executeScript({ target: { tabId: id }, files: ['/extractor.js'] });
     const [result] = await chrome.scripting.executeScript({
       target: { tabId: id },
-      files: ['/extractor.js'],
+      func: () => self.__webstyle.collect({}),
     });
     return result.result;
   }, tabId);

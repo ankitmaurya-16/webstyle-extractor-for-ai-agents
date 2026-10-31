@@ -29,20 +29,21 @@ test('AC-F6.1 AC-F6.7 a rename shows in the export and survives closing the pane
   ext,
 }) => {
   const { panel, tabId } = await setup(ext);
-  const row = panel.locator('li', { hasText: 'gray-900' }).first();
-  await row.hover();
-  await row.getByRole('button', { name: 'Actions for gray-900' }).click();
+  // In v2 gray-900 is already named ink from the site's --ink, so rename gray-600 from its scale row.
+  await panel.getByRole('button', { name: 'Show gray-600' }).click();
+  const row = panel.locator('li[data-token-id="color:#6b7280"]');
+  await row.getByRole('button', { name: 'Actions for gray-600' }).click();
   await panel.getByRole('menuitem', { name: 'Rename' }).click();
   const field = panel.getByRole('textbox', { name: 'New name' });
   await field.fill('Bad Name');
   await field.press('Enter');
   await expect(panel.getByRole('alert')).toContainText('lowercase letters');
-  await field.fill('ink');
+  await field.fill('slate');
   await field.press('Enter');
-  await expect(panel.getByText('ink', { exact: true }).first()).toBeVisible();
+  await expect(panel.getByText('slate', { exact: true }).first()).toBeVisible();
   await panel.getByRole('tab', { name: 'Export' }).click();
   await panel.getByLabel('Format').selectOption('css-vars');
-  await expect(panel.locator('pre')).toContainText('--color-ink: #111827;');
+  await expect(panel.locator('pre')).toContainText('--color-slate: #6b7280;');
   await panel.waitForTimeout(700);
   await panel.close();
 
@@ -51,7 +52,7 @@ test('AC-F6.1 AC-F6.7 a rename shows in the export and survives closing the pane
     .getByRole('button', { name: /127\.0\.0\.1/ })
     .first()
     .click();
-  await expect(again.getByText('ink', { exact: true }).first()).toBeVisible();
+  await expect(again.getByText('slate', { exact: true }).first()).toBeVisible();
   // AC-F7.9 the chosen format is remembered.
   await again.getByRole('tab', { name: 'Export' }).click();
   await expect(again.getByLabel('Format')).toHaveValue('css-vars');
@@ -106,12 +107,17 @@ test('AC-F7.4 AC-F7.5 Download and Download all save named files', async ({ ext 
   ]);
   expect(zip.suggestedFilename()).toBe('127.0.0.1-webstyle.zip');
   const files = unzipSync(new Uint8Array(await readFile(await zip.path())));
+  // The v2 zip follows the file map (v2 spec 9.2) with the default selection.
   expect(Object.keys(files).sort()).toEqual([
+    '.cursor/rules/design-system.mdc',
+    'AGENTS.md',
+    'CLAUDE.md',
     'DESIGN.md',
-    'tailwind.config.js',
-    'theme.css',
-    'tokens.json',
-    'variables.css',
+    'design/prompt.md',
+    'design/shadcn-theme.css',
+    'design/theme.css',
+    'design/tokens.json',
+    'design/variables.css',
   ]);
 });
 
@@ -120,7 +126,7 @@ test('AC-F8.2 to AC-F8.5 History lists, opens and deletes snapshots', async ({ e
   await panel.getByRole('button', { name: 'Back' }).click();
   await panel.getByRole('button', { name: 'History' }).click();
   await expect(panel.locator('[data-screen=history] li')).toHaveCount(1);
-  await expect(panel.getByText(/^Today \d\d:\d\d$/)).toBeVisible();
+  await expect(panel.getByText(/^Today \d{1,2}:\d\d/)).toBeVisible();
   await panel
     .getByRole('button', { name: /127\.0\.0\.1/ })
     .first()

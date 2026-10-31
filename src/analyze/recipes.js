@@ -5,6 +5,13 @@ import { ids } from '../model/ids.js';
 import { familyOf, normalizeColor, oklchOf } from './colors.js';
 import { cmp, parseFontStack, round2, toPx } from './units.js';
 
+const stableJson = (styles) =>
+  JSON.stringify(
+    Object.keys(styles ?? {})
+      .sort()
+      .map((k) => [k, styles[k]]),
+  );
+
 const HEADINGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const MAX_VARIANTS = 3;
 const STATES = ['hover', 'focus', 'focus-visible', 'active'];
@@ -173,7 +180,9 @@ export function buildRecipes(rawByMode, t, findColor, primaryByMode) {
       (raw.samples ?? [])
         .filter((s) => s.kind === kind)
         .sort(
-          (a, b) => b.count - a.count || cmp(JSON.stringify(a.styles), JSON.stringify(b.styles)),
+          // Keys are sorted first: Chrome returns script results with sorted keys and the CLI
+          // does not, and the tie-break must not depend on key order (AC-F41.2).
+          (a, b) => b.count - a.count || cmp(stableJson(a.styles), stableJson(b.styles)),
         );
     const statesFor = (sample) => {
       const out = {};

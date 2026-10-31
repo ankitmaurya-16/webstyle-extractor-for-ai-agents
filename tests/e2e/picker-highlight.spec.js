@@ -90,16 +90,21 @@ test('AC-F30.3 AC-F30.6 highlighting shows a count and outlines without changing
   await expect.poll(() => overlayCount(page)).toBe(0);
 });
 
-test('AC-F30.5 outlines clear when the panel closes and on navigation', async ({ ext }) => {
+test('AC-F30.5 outlines clear when the panel closes', async ({ ext }) => {
   const { page, panel } = await highlightReady(ext);
   await panel.getByRole('button', { name: 'Where is white used?' }).first().click();
   await expect.poll(() => overlayCount(page)).toBe(1);
   await panel.close();
   await expect.poll(() => overlayCount(page)).toBe(0);
+});
 
-  const second = await highlightReady(ext);
-  await second.panel.getByRole('button', { name: 'Where is white used?' }).first().click();
-  await expect.poll(() => overlayCount(second.page)).toBe(1);
-  await second.page.reload();
-  expect(await overlayCount(second.page)).toBe(0);
+test('AC-F30.5 outlines clear on navigation and when another token is chosen', async ({ ext }) => {
+  const { page, panel } = await highlightReady(ext);
+  const eyes = panel.getByRole('button', { name: /Where is .* used\?/ });
+  await eyes.nth(0).click();
+  await expect.poll(() => overlayCount(page)).toBe(1);
+  await eyes.nth(1).click();
+  await expect(eyes.nth(0)).toHaveAttribute('aria-pressed', 'false');
+  await page.reload();
+  expect(await overlayCount(page)).toBe(0);
 });

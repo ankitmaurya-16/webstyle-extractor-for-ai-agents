@@ -71,6 +71,20 @@ async function launchBrowser(chromium) {
   }
 }
 
+/**
+ * Chrome returns executeScript results with every object's keys sorted; Playwright keeps page
+ * order. Sorting here gives analysis the same input as the extension (AC-F41.2).
+ */
+export function sortKeysDeep(value) {
+  if (Array.isArray(value)) return value.map(sortKeysDeep);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map((k) => [k, sortKeysDeep(value[k])]),
+  );
+}
+
 let ids = 0;
 const nextId = () => `cli-${(ids += 1).toString(36)}-${Date.now().toString(36)}`;
 
@@ -78,7 +92,7 @@ const nextId = () => `cli-${(ids += 1).toString(36)}-${Date.now().toString(36)}`
 async function capturePage(browser, url, options, source, log) {
   const context = await browser.newContext({
     bypassCSP: true,
-    viewport: { width: 1280, height: 800 },
+    viewport: { width: 1280, height: 720 },
   });
   const page = await context.newPage();
   try {
@@ -93,7 +107,8 @@ async function capturePage(browser, url, options, source, log) {
       throw new CliError(EXIT.LOAD, `Couldn't load ${url}: ${error.message}`);
     }
     await page.evaluate(source);
-    const collect = (opts) => page.evaluate((o) => globalThis.__webstyle.collect(o), opts);
+    const collect = async (opts) =>
+      sortKeysDeep(await page.evaluate((o) => globalThis.__webstyle.collect(o), opts));
     const base = await collect({ autoScroll: options.scroll });
     if (!base || base.elementsSampled < MIN_ELEMENTS) {
       throw new CliError(
