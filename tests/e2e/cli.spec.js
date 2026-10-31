@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { mkdtemp, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
@@ -10,10 +11,11 @@ import { DEFAULT_EXPORT_SELECTION } from '../../src/model/types.js';
 
 const run = promisify(execFile);
 const CLI = new URL('../../cli/dist/webstyle.js', import.meta.url).pathname;
-const env = {
-  ...process.env,
-  CHROMIUM_PATH: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-};
+// Use the preinstalled Chromium in sandboxes; on CI, Playwright's own browser is found by default.
+const LOCAL_CHROMIUM = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+const chromiumPath =
+  process.env.CHROMIUM_PATH ?? (existsSync(LOCAL_CHROMIUM) ? LOCAL_CHROMIUM : null);
+const env = { ...process.env, ...(chromiumPath ? { CHROMIUM_PATH: chromiumPath } : {}) };
 
 async function webstyle(args) {
   try {

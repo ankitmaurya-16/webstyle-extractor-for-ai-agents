@@ -42,6 +42,8 @@ jobs:
             .output/*.zip
             test-results/
           if-no-files-found: ignore
+          # .output starts with a dot; upload-artifact skips hidden paths unless told otherwise.
+          include-hidden-files: true
 
   # AC-F43.7: a Firefox package on every pull request, checked with web-ext lint.
   firefox:
@@ -63,6 +65,7 @@ jobs:
           name: firefox
           path: .output/*-firefox.zip
           if-no-files-found: error
+          include-hidden-files: true
 
   # AC-F41.9: the CLI package installs and runs with npx on Node 20 on a clean runner.
   cli:
