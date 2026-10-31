@@ -229,10 +229,10 @@ The code differs from the spec in these ways. Each is intentional and recorded h
 
 ### Open gaps
 
-These parts of the spec are not in the code yet:
+Known limits of the current code:
 
-- There is no `pnpm-workspace.yaml`, so `pnpm cli:build` (`pnpm --filter webstyle-extractor build`) needs one before it works.
-- `web-ext`, `eslint-plugin-i18next` and `axe-core` are not in `package.json`, and `tsup` (declared in `cli/package.json`) is not installed without the workspace. The i18next lint rule (AC-F44.1) and the axe-core checks (AC-F34.5) are not wired up.
-- Settings has no controls for the Advanced option defaults (deep scan, dark, states, widths) or the default export selection; the Home popover and the Export tab checklist change them.
-- `cropScreenshots` in `src/platform/screenshots.js` decodes the screenshot with `fetch(dataUrl)`. The production CSP's `connect-src 'none'` blocks `fetch` of `data:` URLs, so screenshots need checking in a production build.
-- The version in `package.json` and `cli/package.json` is still 1.0.0.
+- Tabs hover is not captured from stylesheets: state rules are matched against the tab list, not a single tab. Forced states (Advanced capture) still read it.
+- Only the first representative of each variant is matched against stylesheet state rules.
+- With only stylesheet overrides (Path A) for the other theme, contrast pairs are computed for the active theme only; emulated themes (Path B) get pairs for both.
+- Settings shows the Advanced option defaults only after the debugger permission is granted; the default export selection is set from the Export tab checklist.
+- Manual checks not automated: the Figma import (AC-F35.4), the Firefox sidebar and smoke checklist (AC-F43.3, AC-F43.5) and the Edge smoke checklist (AC-F43.6).
