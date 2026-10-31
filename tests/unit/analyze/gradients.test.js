@@ -165,8 +165,7 @@ describe('gradients (F18)', () => {
     });
   });
 
-  it.skip('AC-F18.3 names a gradient after a site variable written with hex stops', () => {
-    // Blocked: variables.js valueMatches compares authored hex stops with computed rgb() CSS.
+  it('AC-F18.3 names a gradient after a site variable written with hex stops', () => {
     const css = 'linear-gradient(to right, rgb(37, 99, 235), rgb(124, 58, 237))';
     const d = analyzeRaw(
       rawSnapshot({

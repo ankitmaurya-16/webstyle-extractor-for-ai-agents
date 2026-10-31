@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Translucent fixture</title>
+    <style>
+      body {
+        margin: 0;
+        background: #ffffff;
+        color: #111827;
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 32px 24px;
+      }
+      h1 {
+        font-size: 32px;
+        line-height: 40px;
+        margin: 0 0 16px;
+      }
+      p {
+        margin: 0 0 16px;
+      }
+      /* Muted text drawn as the text color at 60% rather than a gray. */
+      .muted {
+        color: rgba(17, 24, 39, 0.6);
+      }
+      /* Hairline borders as black at 10%; one card uses 12%, which rounds to the same bucket. */
+      .card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .card.alt {
+        border-color: rgba(0, 0, 0, 0.12);
+      }
+      /* A tinted panel with a translucent chip inside it: the chip composites over the tint. */
+      .tint {
+        background: rgba(37, 99, 235, 0.1);
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .chip {
+        background: rgba(37, 99, 235, 0.2);
+        color: #1e3a8a;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+      .btn {
+        background: #2563eb;
+        color: #ffffff;
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font: inherit;
+      }
+      /* Translucent text over a background image (a data URL, never fetched). */
+      .hero {
+        background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=');
+        background-size: cover;
+        padding: 32px;
+        margin-bottom: 16px;
+      }
+      .hero p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 20px;
+      }
+      /* A modal overlay covering the viewport. */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dialog {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        width: 320px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Translucent colors</h1>
+      <p>Body copy in the opaque text color, long enough to be the main text of the page.</p>
+      <p class="muted">Muted copy drawn with the text color at sixty percent alpha.</p>
+      <p class="muted">More muted copy, so the muted color is used on several elements.</p>
+      <div class="card">
+        <p>A card with a black ten percent border.</p>
+        <p class="muted">Card details in muted text.</p>
+      </div>
+      <div class="card">
+        <p>Another card with the same hairline border.</p>
+      </div>
+      <div class="card alt">
+        <p>A card whose border is black at twelve percent.</p>
+      </div>
+      <div class="tint">
+        <p>A tinted panel. <span class="chip">Chip</span></p>
+      </div>
+      <p><button class="btn">Primary action</button> <button class="btn">Second action</button></p>
+      <div class="hero">
+        <p>Translucent white text over a background image.</p>
+      </div>
+    </div>
+    <div class="overlay">
+      <div class="dialog">
+        <p>Dialog over the overlay.</p>
+        <button class="btn">Confirm</button>
+      </div>
+    </div>
+  </body>
+</html>

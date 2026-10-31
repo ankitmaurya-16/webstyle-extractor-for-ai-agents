@@ -67,7 +67,13 @@ export function normalizeColor(value) {
   const alpha = parsed.alpha ?? 1;
   if (alpha <= 0) return null;
   const rgb = toRgb(parsed);
-  const clamped = { mode: 'rgb', r: clamp01(rgb.r), g: clamp01(rgb.g), b: clamp01(rgb.b), alpha: Math.round(alpha * 255) / 255 };
+  const clamped = {
+    mode: 'rgb',
+    r: clamp01(rgb.r),
+    g: clamp01(rgb.g),
+    b: clamp01(rgb.b),
+    alpha: Math.round(alpha * 255) / 255,
+  };
   const hex = alpha >= 1 ? formatHex(clamped) : formatHex8(clamped);
   return { hex: hex.toLowerCase(), alpha: alpha >= 1 ? 1 : Math.round(alpha * 1000) / 1000 };
 }
@@ -79,7 +85,8 @@ export function oklchOf(hex) {
 }
 
 /** Rounds alpha to the nearest 0.05 (AC-F9.3). */
-export const alphaBucket = (a) => Math.max(ALPHA_STEP, Math.min(0.95, Math.round(a / ALPHA_STEP) * ALPHA_STEP));
+export const alphaBucket = (a) =>
+  Math.max(ALPHA_STEP, Math.min(0.95, Math.round(a / ALPHA_STEP) * ALPHA_STEP));
 
 const emptyWeights = () => ({ text: 0, background: 0, border: 0, outline: 0, gradient: 0 });
 
@@ -131,7 +138,8 @@ export function normalizeColors(inputs) {
         m.interactiveCount += stat.count;
         if (context === 'background') m.interactiveBackgroundCount += stat.count;
       }
-      if (context === 'background') m.maxBackground = Math.max(m.maxBackground, stat.maxWeight ?? stat.weight);
+      if (context === 'background')
+        m.maxBackground = Math.max(m.maxBackground, stat.maxWeight ?? stat.weight);
       for (const c of stat.contexts) entry.contexts.add(c);
       const eff = stat.effectiveHex ?? color.hex.slice(0, 7);
       const key = `${eff}|${stat.backdropHex ?? eff}`;
@@ -146,7 +154,8 @@ export function normalizeColors(inputs) {
 /** Total weight per context across all colors and modes. */
 function contextTotals(colors) {
   const totals = emptyWeights();
-  for (const c of colors) for (const m of Object.values(c.modes)) for (const k of CONTEXTS) totals[k] += m.weights[k];
+  for (const c of colors)
+    for (const m of Object.values(c.modes)) for (const k of CONTEXTS) totals[k] += m.weights[k];
   return totals;
 }
 
@@ -156,12 +165,20 @@ function contextTotals(colors) {
  */
 export function computeShares(colors) {
   const t = contextTotals(colors);
-  const totals = { text: t.text, background: t.background + t.gradient, border: t.border + t.outline };
+  const totals = {
+    text: t.text,
+    background: t.background + t.gradient,
+    border: t.border + t.outline,
+  };
   const used = Object.keys(totals).filter((k) => totals[k] > 0);
   for (const c of colors) {
     const w = emptyWeights();
     for (const m of Object.values(c.modes)) for (const k of CONTEXTS) w[k] += m.weights[k];
-    const mine = { text: w.text, background: w.background + w.gradient, border: w.border + w.outline };
+    const mine = {
+      text: w.text,
+      background: w.background + w.gradient,
+      border: w.border + w.outline,
+    };
     c.share = used.length ? used.reduce((sum, k) => sum + mine[k] / totals[k], 0) / used.length : 0;
   }
   return colors;
@@ -195,7 +212,10 @@ export function clusterColors(colors) {
     const bucket = translucent ? alphaBucket(color.alpha) : 1;
     const parsed = parse(color.hex.slice(0, 7));
     const target = clusters.find(
-      (c) => c.translucent === translucent && c.alphaBucket === bucket && oklabDistance(c.parsed, parsed) < MERGE_DISTANCE,
+      (c) =>
+        c.translucent === translucent &&
+        c.alphaBucket === bucket &&
+        oklabDistance(c.parsed, parsed) < MERGE_DISTANCE,
     );
     if (target) {
       mergeModes(target, color);
@@ -218,7 +238,9 @@ export function clusterColors(colors) {
   for (const c of clusters) {
     c.oklch = oklchOf(c.hex);
     c.mergedFrom.sort();
-    const [effKey] = [...c.effective.entries()].sort((a, b) => b[1] - a[1] || cmp(a[0], b[0]))[0] ?? [`${c.hex}|${c.hex}`];
+    const [effKey] = [...c.effective.entries()].sort(
+      (a, b) => b[1] - a[1] || cmp(a[0], b[0]),
+    )[0] ?? [`${c.hex}|${c.hex}`];
     [c.effectiveHex, c.backdropHex] = effKey.split('|');
     c.effectiveOklch = oklchOf(c.effectiveHex);
     c.overImageShare = c.totalWeight > 0 ? c.imageWeight / c.totalWeight : 0;
@@ -292,7 +314,8 @@ export function assignRoles(clusters, mode) {
   const statusCandidates = opaque
     .filter((c) => {
       const m = c.modes[mode];
-      const nonGradient = m.weights.text + m.weights.background + m.weights.border + m.weights.outline;
+      const nonGradient =
+        m.weights.text + m.weights.background + m.weights.border + m.weights.outline;
       return c !== primary && isSaturated(c) && m.count >= 2 && nonGradient > 0;
     })
     .sort((a, b) => b.share - a.share || cmp(a.hex, b.hex));
@@ -372,7 +395,11 @@ export function nameColors(clusters) {
         const holder = occupied.get(step);
         const direction = c.oklch.l > holder.oklch.l ? -1 : 1;
         step = null;
-        for (let i = STEPS.indexOf(natural) + direction; i >= 0 && i < STEPS.length; i += direction) {
+        for (
+          let i = STEPS.indexOf(natural) + direction;
+          i >= 0 && i < STEPS.length;
+          i += direction
+        ) {
           if (!occupied.has(STEPS[i])) {
             step = STEPS[i];
             break;
@@ -441,7 +468,11 @@ export function colorLookup(tokens) {
       const parsed = parse(color.hex.slice(0, 7));
       return (
         tokens.find(
-          (t) => t.alpha < 1 && Math.abs(t.alpha - alphaBucket(color.alpha)) < 0.001 && oklabDistance(parse(t.hex.slice(0, 7)), parsed) < MERGE_DISTANCE,
+          (t) =>
+            t.alpha < 1 &&
+            // Compare buckets: a token's own alpha is that of its most-used member, not the bucket.
+            Math.abs(alphaBucket(t.alpha) - alphaBucket(color.alpha)) < 0.001 &&
+            oklabDistance(parse(t.hex.slice(0, 7)), parsed) < MERGE_DISTANCE,
         ) ?? null
       );
     }
