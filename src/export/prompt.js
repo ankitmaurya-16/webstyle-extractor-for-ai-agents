@@ -3,7 +3,7 @@
 import { modesOf, primaryModeOf, roleToken, visible } from '../model/design.js';
 import { finish, prepare } from './common.js';
 import { describeFocusRing, describeStyles } from './describe.js';
-import { confidentFrameworks, confidentIcons, frameworkLabel } from './rules.js';
+import { confidentFrameworks, confidentIcons, frameworkLabel, loadedFonts } from './rules.js';
 
 export const MAX_PROMPT_LINES = 40;
 
@@ -35,7 +35,7 @@ export function exportPrompt(design, version, ctx = {}) {
   if (fw.length) stack.push(fw.map(frameworkLabel).join(' + '));
   const icons = confidentIcons(d)[0];
   if (icons) stack.push(`${icons.name} icons${d.meta.iconSizePx ? ` ${d.meta.iconSizePx}px` : ''}`);
-  const fonts = (d.meta.webFonts ?? []).filter((f) => f.loaded);
+  const fonts = loadedFonts(d);
   if (fonts.length) stack.push(fonts.map((f) => f.family).join(', '));
   if (stack.length) out.push(`Stack: ${stack.join(' · ')}`);
 
