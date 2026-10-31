@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Multi-page fixture: about</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="site.css" />
+    <style>
+      /* Only on the about page. */
+      .people {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        padding: 0;
+        list-style: none;
+      }
+      .person {
+        padding: 16px;
+        background: #fef3c7;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Tealworks</strong>
+      <nav><a href="index.html">Home</a><a href="about.html">About</a></nav>
+    </header>
+    <main>
+      <h1>About Tealworks</h1>
+      <p>A second page of the same site. Its amber cards and 4 px radius appear only here.</p>
+      <ul class="people">
+        <li class="person">
+          <h2>Person 1</h2>
+          <p>Role 1 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 2</h2>
+          <p>Role 2 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 3</h2>
+          <p>Role 3 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 4</h2>
+          <p>Role 4 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 5</h2>
+          <p>Role 5 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 6</h2>
+          <p>Role 6 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 7</h2>
+          <p>Role 7 at Tealworks.</p>
+        </li>
+        <li class="person">
+          <h2>Person 8</h2>
+          <p>Role 8 at Tealworks.</p>
+        </li>
+      </ul>
+      <button class="button" type="button">Contact us</button>
+    </main>
+    <footer>Synthetic multi-page fixture written for this repo.</footer>
+  </body>
+</html>
