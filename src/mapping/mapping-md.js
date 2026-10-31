@@ -6,7 +6,15 @@ import { table } from '../export/design-md.js';
 import { mappingCounts } from './index.js';
 
 const valueOf = (category, t) =>
-  category === 'color' ? t.hex : category === 'text' ? `${t.sizePx}px` : t.px !== undefined ? `${t.px}px` : t.ms !== undefined ? `${t.ms}ms` : t.value ?? t.css ?? t.stack?.[0] ?? '';
+  category === 'color'
+    ? t.hex
+    : category === 'text'
+      ? `${t.sizePx}px`
+      : t.px !== undefined
+        ? `${t.px}px`
+        : t.ms !== undefined
+          ? `${t.ms}ms`
+          : (t.value ?? t.css ?? t.stack?.[0] ?? '');
 
 export function exportMappingMd(design, mapping) {
   const c = mappingCounts(mapping);
@@ -15,7 +23,13 @@ export function exportMappingMd(design, mapping) {
     .map((e) => {
       const found = findToken(design, e.tokenId);
       const t = found?.token;
-      return [t?.name ?? e.tokenId, t ? valueOf(e.category, t) : '', e.userToken ?? '-', e.status, e.delta ?? '-'];
+      return [
+        t?.name ?? e.tokenId,
+        t ? valueOf(e.category, t) : '',
+        e.userToken ?? '-',
+        e.status,
+        e.delta ?? '-',
+      ];
     });
   return finish([
     `# Token mapping: ${design.meta.hostname}`,

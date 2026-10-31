@@ -1,10 +1,23 @@
 // DESIGN.md v2: the file an AI coding agent reads (v2 spec 9.5). Under 450 lines.
 
 import { formatFontStack } from '../analyze/units.js';
-import { findToken, modesOf, primaryModeOf, roleToken, semanticRows, visible } from '../model/design.js';
+import {
+  findToken,
+  modesOf,
+  primaryModeOf,
+  roleToken,
+  semanticRows,
+  visible,
+} from '../model/design.js';
 import { captureDate, collectTokens, emString, finish, prepare, pxString } from './common.js';
 import { describeFocusRing, describeStyles, recipeTitle } from './describe.js';
-import { agentRules, confidentFrameworks, confidentIcons, frameworkLabel, mechanismText } from './rules.js';
+import {
+  agentRules,
+  confidentFrameworks,
+  confidentIcons,
+  frameworkLabel,
+  mechanismText,
+} from './rules.js';
 import { screenshotPath } from './files.js';
 
 export const MAX_LINES = 450;
@@ -16,7 +29,8 @@ export function table(headers, rows) {
   return [line(headers), `| ${widths.map((w) => '-'.repeat(w)).join(' | ')} |`, ...rows.map(line)];
 }
 
-export const percent = (share) => (share > 0 && share < 0.01 ? '<1%' : `${Math.round(share * 100)}%`);
+export const percent = (share) =>
+  share > 0 && share < 0.01 ? '<1%' : `${Math.round(share * 100)}%`;
 const verify = (t) => (t?.confidence?.level === 'low' ? ' (verify)' : '');
 
 /**
@@ -35,7 +49,8 @@ export function exportDesignMd(design, version, ctx = {}) {
     const lines = text.split('\n').length;
     if (lines <= MAX_LINES) return text;
     const scaleCount = scaleCandidates(d).length;
-    if (dropScale < scaleCount) dropScale = Math.min(scaleCount, dropScale + Math.max(1, lines - MAX_LINES));
+    if (dropScale < scaleCount)
+      dropScale = Math.min(scaleCount, dropScale + Math.max(1, lines - MAX_LINES));
     else if (!dropLow) dropLow = true;
     else return text;
   }
@@ -52,7 +67,11 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   const t = collectTokens(d);
   const modes = modesOf(d);
   const primary = primaryModeOf(d);
-  const dropped = new Set(scaleCandidates(d).slice(0, dropScale).map((c) => c.id));
+  const dropped = new Set(
+    scaleCandidates(d)
+      .slice(0, dropScale)
+      .map((c) => c.id),
+  );
   const keep = (token) => !dropped.has(token.id) && !(dropLow && token.confidence?.level === 'low');
   let omitted = dropped.size;
   const out = [];
@@ -63,7 +82,10 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   const source = pages > 1 ? `${pages} pages of ${d.meta.sourceUrl}` : d.meta.sourceUrl;
   const themes = modes.length > 1 ? 'light and dark themes' : `${modes[0]} theme`;
   const capture = d.meta.capture?.advanced ? ' · Advanced capture' : '';
-  out.push(`Extracted ${captureDate(d)} from ${source} · ${themes}${capture} · WebStyle Extractor v${version}`, '');
+  out.push(
+    `Extracted ${captureDate(d)} from ${source} · ${themes}${capture} · WebStyle Extractor v${version}`,
+    '',
+  );
 
   // ---- Rules ----
   out.push('## Rules for the agent', '');
@@ -76,13 +98,17 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   const fonts = (d.meta.webFonts ?? []).filter((f) => f.loaded);
   if (frameworks.length || icons.length || fonts.length) {
     out.push('## Stack', '');
-    if (frameworks.length) out.push(`- Framework: ${frameworks.map((f) => `${frameworkLabel(f)} (${f.confidence.level} confidence)`).join(', ')}`);
+    if (frameworks.length)
+      out.push(
+        `- Framework: ${frameworks.map((f) => `${frameworkLabel(f)} (${f.confidence.level} confidence)`).join(', ')}`,
+      );
     for (const icon of icons.slice(0, 1)) {
       const size = d.meta.iconSizePx ? `, ${d.meta.iconSizePx}px` : '';
       const stroke = d.meta.iconStroke ? `, stroke ${d.meta.iconStroke}` : '';
       out.push(`- Icons: ${icon.name}${size}${stroke} (${icon.confidence.level} confidence)`);
     }
-    for (const f of fonts) out.push(`- Web font: ${f.family} ${f.weights.join(', ')}${providerText(f)}`);
+    for (const f of fonts)
+      out.push(`- Web font: ${f.family} ${f.weights.join(', ')}${providerText(f)}`);
     out.push('');
   }
 
@@ -95,9 +121,17 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     if (rows.length) {
       out.push('### Semantic', '');
       const hasSite = rows.some((r) => Object.values(r.byMode).some((tok) => tok?.siteVariable));
-      const site = (r) => Object.values(r.byMode).find((tok) => tok?.siteVariable)?.siteVariable ?? '';
+      const site = (r) =>
+        Object.values(r.byMode).find((tok) => tok?.siteVariable)?.siteVariable ?? '';
       if (modes.length > 1) {
-        const headers = ['Role', 'Light token', 'Light', 'Dark token', 'Dark', ...(hasSite ? ['Site variable'] : [])];
+        const headers = [
+          'Role',
+          'Light token',
+          'Light',
+          'Dark token',
+          'Dark',
+          ...(hasSite ? ['Site variable'] : []),
+        ];
         out.push(
           ...table(
             headers,
@@ -119,13 +153,22 @@ function render(d, version, ctx, { dropScale, dropLow }) {
             headers,
             rows.map((r) => {
               const tok = r.byMode[primary];
-              return [r.role, `${tok.name}${verifyRole(d, r.role, primary)}`, tok.hex, ...(hasSite ? [tok.siteVariable ?? ''] : [])];
+              return [
+                r.role,
+                `${tok.name}${verifyRole(d, r.role, primary)}`,
+                tok.hex,
+                ...(hasSite ? [tok.siteVariable ?? ''] : []),
+              ];
             }),
           ),
           '',
         );
       }
-      if (modes.length > 1 && mechanismText(d)) out.push(`Theme switching: ${mechanismText(d)}${d.meta.themeSelector && d.meta.themeMechanism !== 'media' ? ` (\`${d.meta.themeSelector}\`)` : ''}.`, '');
+      if (modes.length > 1 && mechanismText(d))
+        out.push(
+          `Theme switching: ${mechanismText(d)}${d.meta.themeSelector && d.meta.themeMechanism !== 'media' ? ` (\`${d.meta.themeSelector}\`)` : ''}.`,
+          '',
+        );
     }
     if (scale.length) {
       out.push('### Scales', '');
@@ -133,7 +176,12 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       out.push(
         ...table(
           ['Token', 'Hex', 'Usage', ...(hasSite ? ['Site variable'] : [])],
-          scale.map((c) => [`${c.name}${verify(c)}`, c.hex, percent(c.usageShare), ...(hasSite ? [c.siteVariable ?? ''] : [])]),
+          scale.map((c) => [
+            `${c.name}${verify(c)}`,
+            c.hex,
+            percent(c.usageShare),
+            ...(hasSite ? [c.siteVariable ?? ''] : []),
+          ]),
         ),
         '',
       );
@@ -143,7 +191,12 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       out.push(
         ...table(
           ['Token', 'Value', 'Alpha', 'Looks like on background'],
-          translucent.map((c) => [`${c.name}${verify(c)}`, c.hex, `${Math.round(c.alpha * 100)}%`, c.effectiveHex]),
+          translucent.map((c) => [
+            `${c.name}${verify(c)}`,
+            c.hex,
+            `${Math.round(c.alpha * 100)}%`,
+            c.effectiveHex,
+          ]),
         ),
         '',
       );
@@ -151,8 +204,15 @@ function render(d, version, ctx, { dropScale, dropLow }) {
     }
     if (t.gradients.length) {
       out.push('### Gradients', '');
-      out.push(...table(['Token', 'Value'], t.gradients.map((g) => [g.name, gradientText(d, g)])), '');
-      if (d.meta.gradientText > 0) out.push('Gradients are also used as text fills (`background-clip: text`).', '');
+      out.push(
+        ...table(
+          ['Token', 'Value'],
+          t.gradients.map((g) => [g.name, gradientText(d, g)]),
+        ),
+        '',
+      );
+      if (d.meta.gradientText > 0)
+        out.push('Gradients are also used as text fills (`background-clip: text`).', '');
     }
   }
 
@@ -163,7 +223,11 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       out.push(
         ...table(
           ['Family', 'Stack', 'Source'],
-          t.families.map((f) => [f.name, formatFontStack(f.stack), f.webFont ? `web font${providerText(f.webFont)}` : 'system font']),
+          t.families.map((f) => [
+            f.name,
+            formatFontStack(f.stack),
+            f.webFont ? `web font${providerText(f.webFont)}` : 'system font',
+          ]),
         ),
         '',
       );
@@ -205,7 +269,10 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       );
     }
     if (t.letterSpacings.length) {
-      out.push(`Letter spacing: ${t.letterSpacings.map((l) => `${l.name} ${emString(l.em)}`).join(', ')}`, '');
+      out.push(
+        `Letter spacing: ${t.letterSpacings.map((l) => `${l.name} ${emString(l.em)}`).join(', ')}`,
+        '',
+      );
     }
   }
 
@@ -214,54 +281,116 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   if (spacing.length) {
     out.push('## Spacing', '');
     const values = spacing.map((s) => `${s.name} ${pxString(s.px)}`).join(', ');
-    out.push(d.spacing.baseUnitPx ? `Base unit ${d.spacing.baseUnitPx}px: ${values}` : `No base unit. Values: ${values}`, '');
+    out.push(
+      d.spacing.baseUnitPx
+        ? `Base unit ${d.spacing.baseUnitPx}px: ${values}`
+        : `No base unit. Values: ${values}`,
+      '',
+    );
   }
   if (t.containers.length || t.gridColumns.length || t.gaps.length) {
     out.push('## Layout', '');
-    if (t.containers.length) out.push(`- Containers: ${t.containers.map((c) => `${c.name} ${pxString(c.px)}`).join(', ')}`);
-    if (t.gridColumns.length) out.push(`- Grid columns: ${t.gridColumns.map((g) => `${g.value} (${percent(g.usageShare)})`).join(', ')}`);
-    if (t.gaps.length) out.push(`- Gaps: ${t.gaps.map((g) => `${g.name} ${pxString(g.px)}`).join(', ')}`);
+    if (t.containers.length)
+      out.push(
+        `- Containers: ${t.containers.map((c) => `${c.name} ${pxString(c.px)}`).join(', ')}`,
+      );
+    if (t.gridColumns.length)
+      out.push(
+        `- Grid columns: ${t.gridColumns.map((g) => `${g.value} (${percent(g.usageShare)})`).join(', ')}`,
+      );
+    if (t.gaps.length)
+      out.push(`- Gaps: ${t.gaps.map((g) => `${g.name} ${pxString(g.px)}`).join(', ')}`);
     out.push('');
   }
-  if (t.radii.length) out.push('## Radius', '', t.radii.map((r) => `${r.name} ${pxString(r.px)}`).join(', '), '');
+  if (t.radii.length)
+    out.push('## Radius', '', t.radii.map((r) => `${r.name} ${pxString(r.px)}`).join(', '), '');
   if (t.borderWidths.length) {
-    out.push('## Borders', '', `${t.borderWidths.map((b) => `${b.name} ${pxString(b.px)}`).join(', ')}${d.meta.borderStyle ? ` · usually ${d.meta.borderStyle}` : ''}`, '');
+    out.push(
+      '## Borders',
+      '',
+      `${t.borderWidths.map((b) => `${b.name} ${pxString(b.px)}`).join(', ')}${d.meta.borderStyle ? ` · usually ${d.meta.borderStyle}` : ''}`,
+      '',
+    );
   }
   if (t.shadows.length) {
-    out.push('## Shadows', '', ...table(['Token', 'Value'], t.shadows.map((s) => [`${s.name}${verify(s)}`, s.value])), '');
+    out.push(
+      '## Shadows',
+      '',
+      ...table(
+        ['Token', 'Value'],
+        t.shadows.map((s) => [`${s.name}${verify(s)}`, s.value]),
+      ),
+      '',
+    );
   }
-  if (t.opacities.length) out.push('## Opacity', '', t.opacities.map((o) => `${o.name} ${o.value}`).join(', '), '');
-  if (t.zIndex.length) out.push('## Z-index', '', t.zIndex.map((z) => `${z.name} ${z.value}`).join(', '), '');
+  if (t.opacities.length)
+    out.push('## Opacity', '', t.opacities.map((o) => `${o.name} ${o.value}`).join(', '), '');
+  if (t.zIndex.length)
+    out.push('## Z-index', '', t.zIndex.map((z) => `${z.name} ${z.value}`).join(', '), '');
   if (t.durations.length || t.easings.length) {
     out.push('## Motion', '');
     const parts = [];
     if (t.durations.length) parts.push(t.durations.map((x) => x.name).join(', '));
-    if (t.easings.length) parts.push(t.easings.map((e) => (e.name === e.css ? e.name : `${e.name} ${e.css}`)).join(', '));
-    if (d.motion.properties?.length) parts.push(`usually animates ${d.motion.properties.join(', ')}`);
+    if (t.easings.length)
+      parts.push(
+        t.easings.map((e) => (e.name === e.css ? e.name : `${e.name} ${e.css}`)).join(', '),
+      );
+    if (d.motion.properties?.length)
+      parts.push(`usually animates ${d.motion.properties.join(', ')}`);
     out.push(parts.join(' · '), '');
-    out.push(d.motion.reducedMotion ? 'The site honors `prefers-reduced-motion`.' : 'No `prefers-reduced-motion` rules were found; add them for new animations.', '');
+    out.push(
+      d.motion.reducedMotion
+        ? 'The site honors `prefers-reduced-motion`.'
+        : 'No `prefers-reduced-motion` rules were found; add them for new animations.',
+      '',
+    );
   }
   const unreadable = d.meta.stylesheets?.readable === 0;
   if (t.breakpoints.length || unreadable) {
     out.push('## Breakpoints', '');
-    out.push(t.breakpoints.length ? t.breakpoints.map((b) => `${b.name} ${pxString(b.px)}`).join(', ') : 'Not readable on this site.', '');
+    out.push(
+      t.breakpoints.length
+        ? t.breakpoints.map((b) => `${b.name} ${pxString(b.px)}`).join(', ')
+        : 'Not readable on this site.',
+      '',
+    );
   }
   if (d.responsive) {
     out.push('## Responsive', '');
     const w = d.responsive.widths;
-    out.push(...table(['Text', ...w.map((x) => `${x}px`)], d.responsive.textSizes.map((r) => [r.label, ...w.map((x) => (r.byWidth[x] ? `${r.byWidth[x]}px` : '-'))])), '');
+    out.push(
+      ...table(
+        ['Text', ...w.map((x) => `${x}px`)],
+        d.responsive.textSizes.map((r) => [
+          r.label,
+          ...w.map((x) => (r.byWidth[x] ? `${r.byWidth[x]}px` : '-')),
+        ]),
+      ),
+      '',
+    );
     out.push(
       ...table(
         ['Layout', ...w.map((x) => `${x}px`)],
         [
-          ['container', ...w.map((x) => (d.responsive.containers[x] ? `${d.responsive.containers[x]}px` : '-'))],
+          [
+            'container',
+            ...w.map((x) => (d.responsive.containers[x] ? `${d.responsive.containers[x]}px` : '-')),
+          ],
           ['grid columns', ...w.map((x) => d.responsive.gridColumns[x] ?? '-')],
-          ['spacing base', ...w.map((x) => (d.responsive.spacingBase[x] ? `${d.responsive.spacingBase[x]}px` : '-'))],
+          [
+            'spacing base',
+            ...w.map((x) =>
+              d.responsive.spacingBase[x] ? `${d.responsive.spacingBase[x]}px` : '-',
+            ),
+          ],
         ],
       ),
       '',
     );
-    out.push('Build mobile first: start from the smallest width and add the larger values at the breakpoints.', '');
+    out.push(
+      'Build mobile first: start from the smallest width and add the larger values at the breakpoints.',
+      '',
+    );
   }
 
   // ---- Components ----
@@ -282,7 +411,8 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       for (const mode of modes) {
         const states = recipe.byMode[mode];
         if (!states) continue;
-        const suffix = modes.length > 1 && Object.keys(recipe.byMode).length > 1 ? ` (${mode})` : '';
+        const suffix =
+          modes.length > 1 && Object.keys(recipe.byMode).length > 1 ? ` (${mode})` : '';
         for (const [state, styles] of Object.entries(states)) {
           const text = describeStyles(d, styles, mode);
           if (text) stateRows.push([`${state}${suffix}`, text]);
@@ -291,33 +421,50 @@ function render(d, version, ctx, { dropScale, dropLow }) {
       if (stateRows.length === 1) out.push(stateRows[0][1], '');
       else out.push(...table(['State', 'Changes'], stateRows), '');
       for (const shot of (ctx.screenshots ?? []).filter((s) => s.recipeId === recipe.id)) {
-        out.push(`![${recipeTitle(recipe)}${shot.mode === 'dark' ? ' (dark)' : ''}](${screenshotPath(recipe, shot.mode)})`, '');
+        out.push(
+          `![${recipeTitle(recipe)}${shot.mode === 'dark' ? ' (dark)' : ''}](${screenshotPath(recipe, shot.mode)})`,
+          '',
+        );
       }
     }
   }
 
   // ---- Accessibility ----
-  const contrast = (d.contrast ?? []).filter((c) => tokenVisible(d, c.textTokenId) && tokenVisible(d, c.backgroundTokenId));
+  const contrast = (d.contrast ?? []).filter(
+    (c) => tokenVisible(d, c.textTokenId) && tokenVisible(d, c.backgroundTokenId),
+  );
   if (contrast.length || (d.nonTextContrast ?? []).length) {
     out.push('## Accessibility', '');
     const name = (id) => findToken(d, id)?.token.name ?? id;
-    const label = (c) => `${name(c.textTokenId)} on ${name(c.backgroundTokenId)}${modes.length > 1 ? ` (${c.mode})` : ''}`;
+    const label = (c) =>
+      `${name(c.textTokenId)} on ${name(c.backgroundTokenId)}${modes.length > 1 ? ` (${c.mode})` : ''}`;
     const safe = contrast.filter((c) => c.level !== 'fail').slice(0, 8);
     const avoid = contrast.filter((c) => c.level === 'fail').slice(0, 8);
-    if (safe.length) out.push(`Safe text pairs: ${safe.map((c) => `${label(c)} (${c.ratio}:1, ${c.level})`).join(' · ')}`);
-    if (avoid.length) out.push(`Avoid: ${avoid.map((c) => `${label(c)} (${c.ratio}:1, fails)`).join(' · ')}`);
+    if (safe.length)
+      out.push(
+        `Safe text pairs: ${safe.map((c) => `${label(c)} (${c.ratio}:1, ${c.level})`).join(' · ')}`,
+      );
+    if (avoid.length)
+      out.push(`Avoid: ${avoid.map((c) => `${label(c)} (${c.ratio}:1, fails)`).join(' · ')}`);
     for (const n of d.nonTextContrast ?? []) {
-      out.push(`${n.check === 'focus-ring' ? 'Focus ring vs background' : 'Input border vs input'}: ${n.ratio}:1, ${n.pass ? 'passes' : 'fails'} 3:1`);
+      out.push(
+        `${n.check === 'focus-ring' ? 'Focus ring vs background' : 'Input border vs input'}: ${n.ratio}:1, ${n.pass ? 'passes' : 'fails'} 3:1`,
+      );
     }
     out.push('');
   }
 
   // ---- Values not in your system (F38) ----
   if (ctx.mapping) {
-    const missing = (ctx.mapping.entries ?? []).filter((e) => e.status === 'none' && tokenVisible(d, e.tokenId));
+    const missing = (ctx.mapping.entries ?? []).filter(
+      (e) => e.status === 'none' && tokenVisible(d, e.tokenId),
+    );
     if (missing.length) {
       out.push('## Values not in your system', '');
-      out.push(...missing.slice(0, 40).map((e) => `- ${findToken(d, e.tokenId)?.token.name ?? e.tokenId}`), '');
+      out.push(
+        ...missing.slice(0, 40).map((e) => `- ${findToken(d, e.tokenId)?.token.name ?? e.tokenId}`),
+        '',
+      );
     }
   }
 
@@ -327,7 +474,10 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   const low = lowConfidence(d);
   if (low.length) out.push(`- Check these first (low confidence): ${low.slice(0, 12).join(', ')}`);
   if (dropLow) omitted += low.length;
-  if (omitted > 0) out.push(`- ${omitted} low-usage or low-confidence tokens were left out to keep this file under ${MAX_LINES} lines.`);
+  if (omitted > 0)
+    out.push(
+      `- ${omitted} low-usage or low-confidence tokens were left out to keep this file under ${MAX_LINES} lines.`,
+    );
   return finish(out);
 }
 
@@ -341,7 +491,11 @@ function verifyRole(d, role, mode) {
 }
 
 function providerText(f) {
-  const names = { 'google-fonts': 'Google Fonts', 'adobe-fonts': 'Adobe Fonts', 'self-hosted': 'self-hosted' };
+  const names = {
+    'google-fonts': 'Google Fonts',
+    'adobe-fonts': 'Adobe Fonts',
+    'self-hosted': 'self-hosted',
+  };
   if (names[f.provider]) return ` from ${names[f.provider]}`;
   if (f.provider === 'other' && f.providerHost) return ` from ${f.providerHost}`;
   return '';
@@ -359,7 +513,9 @@ function trackingName(t, em) {
 
 function gradientText(d, g) {
   const stops = g.stops.map((s) => {
-    const token = s.colorTokenId ? d.colors.find((c) => c.id === s.colorTokenId && !c.excluded) : null;
+    const token = s.colorTokenId
+      ? d.colors.find((c) => c.id === s.colorTokenId && !c.excluded)
+      : null;
     return `${token ? token.name : s.hex}${s.position ? ` ${s.position}` : ''}`;
   });
   return `${g.repeating ? 'repeating-' : ''}${g.type}-gradient(${[g.direction, ...stops].filter(Boolean).join(', ')})`;
@@ -380,21 +536,39 @@ function lowConfidence(d) {
   return names;
 }
 
-function notes(d, modes) {
+/** The Notes list, shared with the style guide. */
+export function notes(d, modes = modesOf(d)) {
   const list = [];
   const sheets = d.meta.stylesheets ?? { readable: 0, unreadable: 0 };
   const total = sheets.readable + sheets.unreadable;
   if (d.meta.capture?.deepScan) list.push('Breakpoints and variables were read through deep scan.');
-  else if (sheets.readable === 0) list.push('Breakpoints and CSS variables are partial: no stylesheet on this page could be read.');
-  else if (sheets.unreadable > 0) list.push(`Breakpoints are partial: ${sheets.unreadable} of ${total} stylesheets could not be read.`);
-  if (d.meta.partial?.includes('states')) list.push('Hover and focus states come from readable stylesheet rules only (approximate).');
-  if (d.meta.partial?.includes('dark')) list.push('The other theme came from stylesheet overrides; component colors in it are not known (verify).');
-  if (d.meta.partial?.includes('frames')) list.push(`Some frames could not be read (${d.meta.coverage?.frames?.skipped ?? 0} skipped).`);
-  if (d.meta.truncated) list.push('The page was large, so extraction stopped at the element limit. Rare values may be missing.');
+  else if (sheets.readable === 0)
+    list.push(
+      'Breakpoints and CSS variables are partial: no stylesheet on this page could be read.',
+    );
+  else if (sheets.unreadable > 0)
+    list.push(
+      `Breakpoints are partial: ${sheets.unreadable} of ${total} stylesheets could not be read.`,
+    );
+  if (d.meta.partial?.includes('states'))
+    list.push('Hover and focus states come from readable stylesheet rules only (approximate).');
+  if (d.meta.partial?.includes('dark'))
+    list.push(
+      'The other theme came from stylesheet overrides; component colors in it are not known (verify).',
+    );
+  if (d.meta.partial?.includes('frames'))
+    list.push(`Some frames could not be read (${d.meta.coverage?.frames?.skipped ?? 0} skipped).`);
+  if (d.meta.truncated)
+    list.push(
+      'The page was large, so extraction stopped at the element limit. Rare values may be missing.',
+    );
   if (!modes.some((m) => roleToken(d, 'primary', m))) list.push('No primary color detected.');
-  if (d.focusRing?.source === 'browser-default') list.push('No focus style was found on buttons, links or inputs.');
+  if (d.focusRing?.source === 'browser-default')
+    list.push('No focus style was found on buttons, links or inputs.');
   if (modes.length === 1) {
-    list.push(`Extracted from ${(d.meta.pages?.length ?? 1) > 1 ? `${d.meta.pages.length} pages` : 'one page'} in its ${modes[0]} theme.${d.components.some((r) => r.stateSource !== 'none') ? '' : ' Hover and focus states are not included.'}`);
+    list.push(
+      `Extracted from ${(d.meta.pages?.length ?? 1) > 1 ? `${d.meta.pages.length} pages` : 'one page'} in its ${modes[0]} theme.${d.components.some((r) => r.stateSource !== 'none') ? '' : ' Hover and focus states are not included.'}`,
+    );
   }
   return list;
 }

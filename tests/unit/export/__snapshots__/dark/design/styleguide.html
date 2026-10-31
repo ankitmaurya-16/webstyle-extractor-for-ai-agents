@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style guide: 127.0.0.1</title>
+<style>
+:root {
+  --color-white: #ffffff;
+  --color-gray-200: #e5e7eb;
+  --color-gray-400: #9ca3af;
+  --color-gray-900: #1f2937;
+  --color-gray-extra-1: #0b0f19;
+  --color-gray-extra-2: #111827;
+  --color-orange-900: #422006;
+  --color-yellow-300: #fbbf24;
+  --color-purple-600: #8b5cf6;
+  --color-black-a50: #00000080;
+  --color-background: var(--color-gray-extra-1);
+  --color-surface: var(--color-gray-extra-2);
+  --color-text: var(--color-gray-200);
+  --color-text-muted: var(--color-gray-400);
+  --color-border: var(--color-gray-900);
+  --color-primary: var(--color-purple-600);
+  --color-warning: var(--color-yellow-300);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --text-sm: 12px;
+  --text-sm-line-height: 24px;
+  --text-base: 15px;
+  --text-base-line-height: 24px;
+  --text-lg: 24px;
+  --text-lg-line-height: 32px;
+  --text-xl: 40px;
+  --text-xl-line-height: 48px;
+  --text-h1-font-size: 40px;
+  --text-h1-line-height: 48px;
+  --text-h1-font-weight: 800;
+  --text-h2-font-size: 24px;
+  --text-h2-line-height: 32px;
+  --text-h2-font-weight: 700;
+  --text-button-font-size: 15px;
+  --text-button-line-height: 20px;
+  --text-button-font-weight: 600;
+  --text-body-font-size: 15px;
+  --text-body-line-height: 24px;
+  --text-body-font-weight: 400;
+  --text-body-sm-font-size: 12px;
+  --text-body-sm-line-height: 24px;
+  --text-body-sm-font-weight: 400;
+  --tracking-normal: 0em;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-16: 64px;
+  --container-sm: 880px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --border-1: 1px;
+  --breakpoint-sm: 768px; /* reference only: custom properties do not work inside @media */
+}
+
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;color:#1f2937;background:#ffffff;line-height:1.5}
+header,main{max-width:1040px;margin:0 auto;padding:24px}h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:32px 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:4px}h3{font-size:15px;margin:20px 0 8px}
+code{font-family:ui-monospace,monospace;font-size:12px}small{color:#4b5563}table{border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:4px 12px 4px 0;vertical-align:middle}
+.grid{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.grid li{display:flex;flex-direction:column;gap:4px}
+.stack{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}.stack li{display:flex;align-items:center;gap:12px}
+.swatch{width:40px;height:40px;border:1px solid #d1d5db;border-radius:6px;padding:0;cursor:pointer;background:#fff;overflow:hidden}.swatch span{display:block;width:100%;height:100%}
+.checker{background-image:linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%),linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%);background-size:12px 12px;background-position:0 0,6px 6px}
+.strip{display:block;width:240px;height:24px;border-radius:4px;border:1px solid #d1d5db}.bar{display:block;height:8px;background:#4b5563;border-radius:2px;max-width:320px}
+.tile{display:block;width:56px;height:56px;background:#e5e7eb;border:1px solid #9ca3af}.tile.white{background:#fff;border:0}.tile.filled{background:#374151}.light-tile{background:#f4f4f5;padding:16px;border-radius:8px}
+.states{display:flex;flex-wrap:wrap;gap:12px}.states figure{margin:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.preview{min-height:56px;min-width:120px;padding:12px;border:1px dashed #d1d5db;border-radius:6px;display:flex;align-items:center;background:var(--color-background,#fff)}
+.shot{max-width:320px;border:1px solid #d1d5db;border-radius:6px}#theme{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #6b7280;background:#fff;color:#1f2937;cursor:pointer}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>Design system: 127.0.0.1</h1>
+<p>Extracted 2026-10-18 from <code>http://127.0.0.1:4173/dark.html</code> · WebStyle Extractor v2.0.0</p>
+
+<p id="status" role="status" aria-live="polite"></p>
+</header>
+<main>
+<section aria-labelledby="colors"><h2 id="colors">Colors</h2><h3>Semantic</h3><table><thead><tr><th scope="col">Role</th><th scope="col">Dark</th></tr></thead><tbody><tr><th scope="row">background</th><td><button type="button" class="swatch" data-copy="#0b0f19" aria-label="Copy gray-extra-1 #0b0f19"><span style="background:#0b0f19"></span></button> <code>gray-extra-1</code> <code>#0b0f19</code></td></tr><tr><th scope="row">surface</th><td><button type="button" class="swatch" data-copy="#111827" aria-label="Copy gray-extra-2 #111827"><span style="background:#111827"></span></button> <code>gray-extra-2</code> <code>#111827</code></td></tr><tr><th scope="row">text</th><td><button type="button" class="swatch" data-copy="#e5e7eb" aria-label="Copy gray-200 #e5e7eb"><span style="background:#e5e7eb"></span></button> <code>gray-200</code> <code>#e5e7eb</code></td></tr><tr><th scope="row">text-muted</th><td><button type="button" class="swatch" data-copy="#9ca3af" aria-label="Copy gray-400 #9ca3af"><span style="background:#9ca3af"></span></button> <code>gray-400</code> <code>#9ca3af</code></td></tr><tr><th scope="row">border</th><td><button type="button" class="swatch" data-copy="#1f2937" aria-label="Copy gray-900 #1f2937"><span style="background:#1f2937"></span></button> <code>gray-900</code> <code>#1f2937</code></td></tr><tr><th scope="row">primary</th><td><button type="button" class="swatch" data-copy="#8b5cf6" aria-label="Copy purple-600 #8b5cf6"><span style="background:#8b5cf6"></span></button> <code>purple-600</code> <code>#8b5cf6</code></td></tr><tr><th scope="row">warning</th><td><button type="button" class="swatch" data-copy="#fbbf24" aria-label="Copy yellow-300 #fbbf24"><span style="background:#fbbf24"></span></button> <code>yellow-300</code> <code>#fbbf24</code></td></tr></tbody></table><h3>Scales</h3><ul class="grid"><li><button type="button" class="swatch" data-copy="#ffffff" aria-label="Copy white #ffffff"><span style="background:#ffffff"></span></button><code>white</code><code>#ffffff</code></li><li><button type="button" class="swatch" data-copy="#e5e7eb" aria-label="Copy gray-200 #e5e7eb"><span style="background:#e5e7eb"></span></button><code>gray-200</code><code>#e5e7eb</code></li><li><button type="button" class="swatch" data-copy="#9ca3af" aria-label="Copy gray-400 #9ca3af"><span style="background:#9ca3af"></span></button><code>gray-400</code><code>#9ca3af</code></li><li><button type="button" class="swatch" data-copy="#1f2937" aria-label="Copy gray-900 #1f2937"><span style="background:#1f2937"></span></button><code>gray-900</code><code>#1f2937</code></li><li><button type="button" class="swatch" data-copy="#0b0f19" aria-label="Copy gray-extra-1 #0b0f19"><span style="background:#0b0f19"></span></button><code>gray-extra-1</code><code>#0b0f19</code></li><li><button type="button" class="swatch" data-copy="#111827" aria-label="Copy gray-extra-2 #111827"><span style="background:#111827"></span></button><code>gray-extra-2</code><code>#111827</code></li><li><button type="button" class="swatch" data-copy="#422006" aria-label="Copy orange-900 #422006"><span style="background:#422006"></span></button><code>orange-900</code><code>#422006</code></li><li><button type="button" class="swatch" data-copy="#fbbf24" aria-label="Copy yellow-300 #fbbf24"><span style="background:#fbbf24"></span></button><code>yellow-300</code><code>#fbbf24</code></li><li><button type="button" class="swatch" data-copy="#8b5cf6" aria-label="Copy purple-600 #8b5cf6"><span style="background:#8b5cf6"></span></button><code>purple-600</code><code>#8b5cf6</code></li></ul><h3>Translucent</h3><ul class="grid"><li><button type="button" class="swatch checker" data-copy="#00000080" aria-label="Copy black/50 #00000080"><span style="background:#00000080"></span></button><code>black/50</code><code>#00000080</code><small>looks like #090c14</small></li></ul></section>
+<section aria-labelledby="typography"><h2 id="typography">Typography</h2><h3>Families</h3><ul class="stack"><li><code>sans</code> <span style="font-family:"Inter", system-ui, sans-serif">Inter</span> <small>system font</small></li></ul><h3>Text styles</h3><ul class="stack"><li><code>h1</code> <span style="font-family:"Inter", system-ui, sans-serif;font-size:40px;line-height:48px;font-weight:800">The quick brown fox</span> <small>40/48 800</small></li><li><code>h2</code> <span style="font-family:"Inter", system-ui, sans-serif;font-size:24px;line-height:32px;font-weight:700">The quick brown fox</span> <small>24/32 700</small></li><li><code>button</code> <span style="font-family:"Inter", system-ui, sans-serif;font-size:15px;line-height:20px;font-weight:600">The quick brown fox</span> <small>15/20 600</small></li><li><code>body</code> <span style="font-family:"Inter", system-ui, sans-serif;font-size:15px;line-height:24px;font-weight:400">The quick brown fox</span> <small>15/24 400</small></li><li><code>body-sm</code> <span style="font-family:"Inter", system-ui, sans-serif;font-size:12px;line-height:24px;font-weight:400">The quick brown fox</span> <small>12/24 400</small></li></ul><h3>Scale</h3><ul class="stack"><li><code>sm</code> <span style="font-size:12px;line-height:1.2">Aa</span> <small>12px</small></li><li><code>base</code> <span style="font-size:15px;line-height:1.2">Aa</span> <small>15px</small></li><li><code>lg</code> <span style="font-size:24px;line-height:1.2">Aa</span> <small>24px</small></li><li><code>xl</code> <span style="font-size:40px;line-height:1.2">Aa</span> <small>40px</small></li></ul></section>
+<section aria-labelledby="spacing"><h2 id="spacing">Spacing</h2><p>Base unit 4px</p><ul class="stack"><li><code>space-1</code><span class="bar" style="width:6.25%"></span><small>4px</small></li><li><code>space-2</code><span class="bar" style="width:12.5%"></span><small>8px</small></li><li><code>space-4</code><span class="bar" style="width:25%"></span><small>16px</small></li><li><code>space-5</code><span class="bar" style="width:31.25%"></span><small>20px</small></li><li><code>space-6</code><span class="bar" style="width:37.5%"></span><small>24px</small></li><li><code>space-8</code><span class="bar" style="width:50%"></span><small>32px</small></li><li><code>space-16</code><span class="bar" style="width:100%"></span><small>64px</small></li></ul></section>
+<section aria-labelledby="layout"><h2 id="layout">Layout</h2><h3>Containers</h3><p><code>container-sm</code> 880px</p></section>
+<section aria-labelledby="radius"><h2 id="radius">Radius</h2><ul class="grid"><li><span class="tile" style="border-radius:4px"></span><code>radius-sm</code></li><li><span class="tile" style="border-radius:8px"></span><code>radius-md</code></li><li><span class="tile" style="border-radius:12px"></span><code>radius-lg</code></li></ul></section>
+<section aria-labelledby="borders"><h2 id="borders">Borders</h2><ul class="grid"><li><span class="tile" style="border:1px solid #6b7280"></span><code>border-1</code></li></ul></section>
+<section aria-labelledby="breakpoints"><h2 id="breakpoints">Breakpoints</h2><p><code>sm</code> 768px</p></section>
+<section aria-labelledby="components"><h2 id="components">Components</h2><h3>Focus ring</h3><p>No focus style found; the browser default is used.</p><h3>Button, primary</h3><div class="states"><figure><div class="preview" role="img" aria-label="Button, primary, default"><span style="display:inline-block;background-color:#8b5cf6;color:#ffffff;border:0;border-radius:8px;padding:10px 20px;font-family:Inter, system-ui, sans-serif;font-size:15px;font-weight:600;line-height:20px">Button</span></div><figcaption>default</figcaption></figure></div><p><small>background primary (purple-600), text white, border none, radius radius-md, padding 10px 20px, font sans 15px/20px weight 600</small></p><h3>Button, secondary</h3><div class="states"><figure><div class="preview" role="img" aria-label="Button, secondary, default"><span style="display:inline-block;background-color:#1f2937;color:#e5e7eb;border:0;border-radius:8px;padding:10px 20px;font-family:Inter, system-ui, sans-serif;font-size:15px;font-weight:600;line-height:20px">Button</span></div><figcaption>default</figcaption></figure></div><p><small>background gray-900, text text (gray-200), border none, radius radius-md, padding 10px 20px, font sans 15px/20px weight 600</small></p><h3>Link</h3><div class="states"><figure><div class="preview" role="img" aria-label="Link, default"><span style="text-decoration:underline;color:#a78bfa;font-family:Inter, system-ui, sans-serif;font-size:15px;font-weight:400;line-height:24px">Link text</span></div><figcaption>default</figcaption></figure></div><p><small>text #a78bfa, font sans 15px/24px weight 400</small></p><h3>Badge, success</h3><div class="states"><figure><div class="preview" role="img" aria-label="Badge, success, default"><span style="display:inline-block;background-color:#14b8a6;color:#042f2e;border:0;border-radius:4px;padding:0px 8px;font-size:12px;font-weight:400">Badge</span></div><figcaption>default</figcaption></figure></div><p><small>background #14b8a6, text #042f2e, border none, radius radius-sm, padding 0 space-2 (0px 8px), font 12px weight 400</small></p><h3>Heading 1</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 1, default"><span style="display:inline-block;color:#ffffff;font-family:Inter, system-ui, sans-serif;font-size:40px;font-weight:800;line-height:48px">Heading 1</span></div><figcaption>default</figcaption></figure></div><p><small>text white, font sans 40px/48px weight 800</small></p><h3>Heading 2</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 2, default"><span style="display:inline-block;color:#ffffff;font-family:Inter, system-ui, sans-serif;font-size:24px;font-weight:700;line-height:32px">Heading 2</span></div><figcaption>default</figcaption></figure></div><p><small>text white, font sans 24px/32px weight 700</small></p></section>
+<section aria-labelledby="accessibility"><h2 id="accessibility">Accessibility</h2><table><thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">Level</th></tr></thead><tbody><tr><td>gray-200 on gray-extra-1</td><td>15.47:1</td><td>AAA</td></tr><tr><td>white on purple-600</td><td>4.23:1</td><td>fail</td></tr><tr><td>yellow-300 on orange-900</td><td>8.73:1</td><td>AAA</td></tr><tr><td>gray-200 on gray-extra-2</td><td>14.33:1</td><td>AAA</td></tr><tr><td>white on gray-extra-2</td><td>17.74:1</td><td>AAA</td></tr><tr><td>gray-400 on gray-extra-1</td><td>7.54:1</td><td>AAA</td></tr><tr><td>gray-200 on gray-900</td><td>11.86:1</td><td>AAA</td></tr><tr><td>gray-200 on black/50</td><td>15.79:1</td><td>AAA</td></tr><tr><td>white on gray-extra-1</td><td>19.15:1</td><td>AAA</td></tr></tbody></table></section>
+<section aria-labelledby="notes"><h2 id="notes">Notes</h2><ul><li>No focus style was found on buttons, links or inputs.</li><li>Extracted from one page in its dark theme. Hover and focus states are not included.</li></ul></section>
+</main>
+<script>
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var v=b.getAttribute('data-copy');if(navigator.clipboard){navigator.clipboard.writeText(v).catch(function(){});}var s=document.getElementById('status');s.textContent='Copied '+v;});
+var t=document.getElementById('theme');if(t){t.addEventListener('click',function(){var r=document.documentElement;var dark=r.getAttribute('data-theme')!=='dark';r.setAttribute('data-theme',dark?'dark':'light');t.setAttribute('aria-pressed',String(dark));t.textContent=dark?'Show light theme':'Show dark theme';});}
+</script>
+</body>
+</html>

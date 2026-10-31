@@ -5,12 +5,15 @@ import { describeFocusRing } from './describe.js';
 import { modesOf, primaryModeOf, roleToken } from '../model/design.js';
 
 const listWords = (words) =>
-  words.length <= 1 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+  words.length <= 1
+    ? words.join('')
+    : `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
 
 /** Framework detections worth naming: medium or high confidence (AC-F11.5). */
 export const confidentFrameworks = (design) =>
   (design.meta.framework ?? []).filter((d) => d.confidence.level !== 'low');
-export const confidentIcons = (design) => (design.meta.icons ?? []).filter((d) => d.confidence.level !== 'low');
+export const confidentIcons = (design) =>
+  (design.meta.icons ?? []).filter((d) => d.confidence.level !== 'low');
 
 export function frameworkLabel(d) {
   if (d.id === 'tailwind' && d.version) return `${d.name} ${d.version}`;
@@ -40,28 +43,41 @@ export function agentRules(design, ctx = {}) {
   const mode = primaryModeOf(design);
   const has = (role) => modesOf(design).some((m) => roleToken(design, role, m));
   const preferred = ['background', 'text', 'primary', 'border'].filter(has);
-  if (preferred.length) rules.push(`In components, prefer semantic tokens (${preferred.join(', ')}) over scale tokens.`);
+  if (preferred.length)
+    rules.push(
+      `In components, prefer semantic tokens (${preferred.join(', ')}) over scale tokens.`,
+    );
   if (design.spacing.baseUnitPx && design.spacing.tokens.some((t) => !t.excluded)) {
-    rules.push(`Spacing uses a ${design.spacing.baseUnitPx}px base unit. Use the spacing scale, never arbitrary values.`);
+    rules.push(
+      `Spacing uses a ${design.spacing.baseUnitPx}px base unit. Use the spacing scale, never arbitrary values.`,
+    );
   }
   if (roleToken(design, 'text', mode)) {
     let rule = 'Body text is `text`';
     if (has('background')) rule += ' on `background`';
     if (has('text-muted')) rule += '; secondary text is `text-muted`';
     rule += '.';
-    if ((design.contrast ?? []).some((c) => c.level !== 'fail')) rule += ' Use only the safe text pairs in Accessibility.';
+    if ((design.contrast ?? []).some((c) => c.level !== 'fail'))
+      rule += ' Use only the safe text pairs in Accessibility.';
     rules.push(rule);
   }
   const recipes = (design.components ?? []).filter((r) => !r.excluded);
   if (recipes.length) {
-    const withStates = recipes.some((r) => Object.values(r.byMode).some((s) => Object.keys(s).length > 1));
-    rules.push(`Match the component recipes below${withStates ? ', including their hover, focus and active states' : ''}.`);
+    const withStates = recipes.some((r) =>
+      Object.values(r.byMode).some((s) => Object.keys(s).length > 1),
+    );
+    rules.push(
+      `Match the component recipes below${withStates ? ', including their hover, focus and active states' : ''}.`,
+    );
   }
   const ring = describeFocusRing(design);
-  if (ring) rules.push(`Every interactive element shows the focus ring on \`:focus-visible\`: ${ring}.`);
+  if (ring)
+    rules.push(`Every interactive element shows the focus ring on \`:focus-visible\`: ${ring}.`);
   if (modesOf(design).length > 1) {
     const how = mechanismText(design);
-    rules.push(`Support light and dark themes with the paired semantic tokens.${how ? ` The site switches themes with ${how}.` : ''}`);
+    rules.push(
+      `Support light and dark themes with the paired semantic tokens.${how ? ` The site switches themes with ${how}.` : ''}`,
+    );
   }
   const stack = [];
   const frameworks = confidentFrameworks(design);
@@ -73,14 +89,19 @@ export function agentRules(design, ctx = {}) {
   }
   let stackRule = stack.length ? `${stack.join(' ')}.` : '';
   const fonts = loadedFonts(design);
-  if (fonts.length) stackRule += `${stackRule ? ' ' : ''}Load ${listWords(fonts.map((f) => f.family))} rather than substituting.`;
+  if (fonts.length)
+    stackRule += `${stackRule ? ' ' : ''}Load ${listWords(fonts.map((f) => f.family))} rather than substituting.`;
   if (stackRule) rules.push(stackRule);
   if ((design.motion?.durations ?? []).some((d) => !d.excluded)) {
     rules.push('Animate with the motion tokens below and honor `prefers-reduced-motion`.');
   }
-  rules.push('If a needed value is missing, use the nearest existing token and leave a TODO comment.');
+  rules.push(
+    'If a needed value is missing, use the nearest existing token and leave a TODO comment.',
+  );
   if (ctx.mapping) {
-    rules.push(`Prefer the existing tokens from ${ctx.mapping.sourceName}. Values under "Values not in your system" need a decision.`);
+    rules.push(
+      `Prefer the existing tokens from ${ctx.mapping.sourceName}. Values under "Values not in your system" need a decision.`,
+    );
   }
   return rules;
 }

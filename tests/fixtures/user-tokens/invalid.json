@@ -1,0 +1,5 @@
+{
+  "name": "not-a-token-file",
+  "description": "Valid JSON with no design tokens in it, so mapping must refuse it.",
+  "dependencies": { "left-pad": "1.3.0" }
+}

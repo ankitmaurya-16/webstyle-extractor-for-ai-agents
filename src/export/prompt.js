@@ -13,6 +13,10 @@ function keepToken(d, t) {
   return Object.values(d.semantic ?? {}).some((ref) => Object.values(ref).includes(t.id));
 }
 
+/** "md 8", or just "full" for a pill radius named full. */
+const radiusText = (name, px) =>
+  px >= 9999 ? (name === 'full' ? 'full' : `${name} full`) : `${name} ${px}`;
+
 export function exportPrompt(design, version, ctx = {}) {
   const d = prepare(design, ctx);
   const modes = modesOf(d);
@@ -53,26 +57,42 @@ export function exportPrompt(design, version, ctx = {}) {
   if (colorParts.length) {
     const label = modes.length > 1 ? 'Colors (light / dark): ' : 'Colors: ';
     // Wrap at 4 per line to stay readable.
-    for (let i = 0; i < colorParts.length; i += 4) out.push(`${i === 0 ? label : '  '}${colorParts.slice(i, i + 4).join(' · ')}`);
+    for (let i = 0; i < colorParts.length; i += 4)
+      out.push(`${i === 0 ? label : '  '}${colorParts.slice(i, i + 4).join(' · ')}`);
   }
-  const sizes = visible(d.typography.sizes).filter((s) => keepToken(d, s)).sort((a, b) => a.sizePx - b.sizePx);
+  const sizes = visible(d.typography.sizes)
+    .filter((s) => keepToken(d, s))
+    .sort((a, b) => a.sizePx - b.sizePx);
   if (sizes.length) {
     const family = visible(d.typography.families)[0];
-    out.push(`Type: ${sizes.map((s) => `${s.name} ${s.sizePx}${s.name === 'base' && s.lineHeightPx ? `/${s.lineHeightPx}` : ''}`).join(' · ')}${family ? ` (${family.name})` : ''}`);
+    out.push(
+      `Type: ${sizes.map((s) => `${s.name} ${s.sizePx}${s.name === 'base' && s.lineHeightPx ? `/${s.lineHeightPx}` : ''}`).join(' · ')}${family ? ` (${family.name})` : ''}`,
+    );
   }
-  const styles = visible(d.typography.textStyles ?? []).filter((s) => keepToken(d, s)).slice(0, 3);
+  const styles = visible(d.typography.textStyles ?? [])
+    .filter((s) => keepToken(d, s))
+    .slice(0, 3);
   if (styles.length) {
     out.push(
       `Text styles: ${styles
-        .map((s) => `${s.name} ${s.sizePx}/${s.lineHeightPx ?? 'normal'} ${s.fontWeight}${s.letterSpacingEm ? ` ${s.letterSpacingEm}em` : ''}${s.textTransform !== 'none' ? ` ${s.textTransform}` : ''}`)
+        .map(
+          (s) =>
+            `${s.name} ${s.sizePx}/${s.lineHeightPx ?? 'normal'} ${s.fontWeight}${s.letterSpacingEm ? ` ${s.letterSpacingEm}em` : ''}${s.textTransform !== 'none' ? ` ${s.textTransform}` : ''}`,
+        )
         .join(' · ')}`,
     );
   }
   const layout = [];
   const spacing = visible(d.spacing.tokens).filter((s) => keepToken(d, s));
-  if (spacing.length) layout.push(`Spacing: ${d.spacing.baseUnitPx ? `${d.spacing.baseUnitPx}px base ` : ''}(${spacing.map((s) => s.px).join(', ')})`);
+  if (spacing.length)
+    layout.push(
+      `Spacing: ${d.spacing.baseUnitPx ? `${d.spacing.baseUnitPx}px base ` : ''}(${spacing.map((s) => s.px).join(', ')})`,
+    );
   const radii = visible(d.radii).filter((r) => keepToken(d, r));
-  if (radii.length) layout.push(`Radius: ${radii.map((r) => `${r.name.replace(/^radius-/, '')} ${r.px >= 9999 ? 'full' : r.px}`).join(', ')}`);
+  if (radii.length)
+    layout.push(
+      `Radius: ${radii.map((r) => radiusText(r.name.replace(/^radius-/, ''), r.px)).join(', ')}`,
+    );
   const shadow = visible(d.shadows).filter((s) => keepToken(d, s))[0];
   if (shadow) layout.push(`Shadow: ${shadow.name.replace(/^shadow-/, '')} ${shadow.value}`);
   if (layout.length) out.push(layout.join(' · '));
@@ -81,7 +101,8 @@ export function exportPrompt(design, version, ctx = {}) {
     const states = button.byMode[primary] ?? {};
     const parts = [describeStyles(d, states.default, primary)];
     for (const state of ['hover', 'focus-visible', 'active']) {
-      if (states[state]) parts.push(`${state} ${describeStyles(d, states[state], primary)}`);
+      const text = states[state] && describeStyles(d, states[state], primary);
+      if (text) parts.push(`${state} ${text}`);
     }
     out.push(`Button: ${parts.filter(Boolean).join(' · ')}`);
   }

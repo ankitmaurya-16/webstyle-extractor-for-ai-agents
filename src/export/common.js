@@ -24,7 +24,8 @@ export const generatedBy = (design, version) =>
 export const safeComment = (text) => text.replace(/\*\//g, '*\\/');
 
 /** LF endings and exactly one trailing newline. */
-export const finish = (lines) => `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
+export const finish = (lines) =>
+  `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
 
 export const pxString = (n) => `${Math.round(n * 100) / 100}px`;
 export const emString = (n) => `${Math.round(n * 1000) / 1000}em`;
@@ -128,7 +129,13 @@ export function darkBlock(design) {
   if ((mechanism === 'class' || mechanism === 'attribute') && selector) {
     return { open: `${selector} {`, close: '}', indent: '  ', mechanism, selector };
   }
-  return { open: '@media (prefers-color-scheme: dark) {\n  :root {', close: '  }\n}', indent: '    ', mechanism: 'media', selector: null };
+  return {
+    open: '@media (prefers-color-scheme: dark) {\n  :root {',
+    close: '  }\n}',
+    indent: '    ',
+    mechanism: 'media',
+    selector: null,
+  };
 }
 
 /** The mode whose semantic values go in :root and the other mode, for paired output. */

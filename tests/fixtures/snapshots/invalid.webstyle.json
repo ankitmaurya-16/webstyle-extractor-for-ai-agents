@@ -1,0 +1,16 @@
+{
+  "format": "webstyle-snapshots",
+  "version": 2,
+  "exportedAt": 1792540800000,
+  "snapshots": [
+    {
+      "id": "broken",
+      "schemaVersion": 2,
+      "kind": "page",
+      "hostname": "example.com",
+      "title": "Missing captures and designs",
+      "capturedAt": 1792540800000,
+      "edits": []
+    }
+  ]
+}

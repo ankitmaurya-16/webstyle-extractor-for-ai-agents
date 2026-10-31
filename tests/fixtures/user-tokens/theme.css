@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+/* A synthetic Tailwind CSS v4 theme, written for the mapping tests. */
+@theme {
+  --color-brand-600: oklch(0.546 0.215 262.881);
+  --color-ink: #111827;
+  --spacing: 4px;
+  --radius-md: 6px;
+  --font-display: Georgia, serif;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --breakpoint-md: 48rem;
+}

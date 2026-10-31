@@ -18,7 +18,9 @@ export class ImportError extends Error {
 const designSchema = z
   .object({
     schemaVersion: z.literal(2),
-    meta: z.object({ sourceUrl: z.string(), hostname: z.string(), capturedAt: z.number() }).passthrough(),
+    meta: z
+      .object({ sourceUrl: z.string(), hostname: z.string(), capturedAt: z.number() })
+      .passthrough(),
     colors: z.array(z.object({ id: z.string(), name: z.string(), hex: z.string() }).passthrough()),
     components: z.array(z.object({ id: z.string() }).passthrough()),
   })
@@ -32,7 +34,18 @@ const recordV2 = z
     hostname: z.string(),
     title: z.string(),
     capturedAt: z.number(),
-    captures: z.array(z.object({ id: z.string(), pageUrl: z.string(), mode: z.enum(['light', 'dark']), raw: z.object({}).passthrough() }).passthrough()).min(1),
+    captures: z
+      .array(
+        z
+          .object({
+            id: z.string(),
+            pageUrl: z.string(),
+            mode: z.enum(['light', 'dark']),
+            raw: z.object({}).passthrough(),
+          })
+          .passthrough(),
+      )
+      .min(1),
     extracted: designSchema,
     edited: designSchema,
     edits: z.array(z.object({ kind: z.string() }).passthrough()),
@@ -40,10 +53,24 @@ const recordV2 = z
   .passthrough();
 
 const recordV1 = z
-  .object({ id: z.string(), schemaVersion: z.literal(1), raw: z.object({}).passthrough(), extracted: z.object({}).passthrough(), edited: z.object({}).passthrough() })
+  .object({
+    id: z.string(),
+    schemaVersion: z.literal(1),
+    raw: z.object({}).passthrough(),
+    extracted: z.object({}).passthrough(),
+    edited: z.object({}).passthrough(),
+  })
   .passthrough();
 
-const screenshotSchema = z.object({ snapshotId: z.string(), id: z.string(), recipeId: z.string(), mode: z.string(), base64: z.string() }).passthrough();
+const screenshotSchema = z
+  .object({
+    snapshotId: z.string(),
+    id: z.string(),
+    recipeId: z.string(),
+    mode: z.string(),
+    base64: z.string(),
+  })
+  .passthrough();
 
 const fileSchema = z.object({
   format: z.literal(FORMAT),
@@ -93,16 +120,25 @@ const firstProblem = (error) => {
  * @param {{existingIds?: Set<string>, newId?: () => string}} [options]
  * @returns {{snapshots: object[], screenshots: object[], migrated: number, copies: number}}
  */
-export function importSnapshots(text, { existingIds = new Set(), newId = () => crypto.randomUUID() } = {}) {
+export function importSnapshots(
+  text,
+  { existingIds = new Set(), newId = () => crypto.randomUUID() } = {},
+) {
   const size = typeof text === 'string' ? new TextEncoder().encode(text).length : 0;
-  if (size > MAX_IMPORT_BYTES) throw new ImportError('IMPORT_INVALID', 'the file is larger than 50 MB');
+  if (size > MAX_IMPORT_BYTES)
+    throw new ImportError('IMPORT_INVALID', 'the file is larger than 50 MB');
   let json;
   try {
     json = JSON.parse(text);
   } catch {
     throw new ImportError('IMPORT_INVALID', 'the file is not valid JSON');
   }
-  if (json && typeof json === 'object' && typeof json.version === 'number' && json.version > VERSION) {
+  if (
+    json &&
+    typeof json === 'object' &&
+    typeof json.version === 'number' &&
+    json.version > VERSION
+  ) {
     throw new ImportError('IMPORT_TOO_NEW', 'made with a newer version');
   }
   const parsed = fileSchema.safeParse(json);
@@ -112,16 +148,19 @@ export function importSnapshots(text, { existingIds = new Set(), newId = () => c
   let copies = 0;
   const idMap = new Map();
   for (const [i, record] of parsed.data.snapshots.entries()) {
-    if (record.schemaVersion > VERSION) throw new ImportError('IMPORT_TOO_NEW', 'made with a newer version');
+    if (record.schemaVersion > VERSION)
+      throw new ImportError('IMPORT_TOO_NEW', 'made with a newer version');
     let upgraded;
     if (record.schemaVersion === 1) {
       const v1 = recordV1.safeParse(record);
-      if (!v1.success) throw new ImportError('IMPORT_INVALID', `snapshots.${i}.${firstProblem(v1.error)}`);
+      if (!v1.success)
+        throw new ImportError('IMPORT_INVALID', `snapshots.${i}.${firstProblem(v1.error)}`);
       upgraded = migrateRecord(v1.data).record;
       migrated += 1;
     } else {
       const v2 = recordV2.safeParse(record);
-      if (!v2.success) throw new ImportError('IMPORT_INVALID', `snapshots.${i}.${firstProblem(v2.error)}`);
+      if (!v2.success)
+        throw new ImportError('IMPORT_INVALID', `snapshots.${i}.${firstProblem(v2.error)}`);
       upgraded = v2.data;
     }
     if (existingIds.has(upgraded.id) || snapshots.some((s) => s.id === upgraded.id)) {
@@ -132,6 +171,9 @@ export function importSnapshots(text, { existingIds = new Set(), newId = () => c
     }
     snapshots.push(upgraded);
   }
-  const screenshots = (parsed.data.screenshots ?? []).map((s) => ({ ...s, snapshotId: idMap.get(s.snapshotId) ?? s.snapshotId }));
+  const screenshots = (parsed.data.screenshots ?? []).map((s) => ({
+    ...s,
+    snapshotId: idMap.get(s.snapshotId) ?? s.snapshotId,
+  }));
   return { snapshots, screenshots, migrated, copies };
 }

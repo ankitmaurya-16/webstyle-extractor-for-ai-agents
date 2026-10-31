@@ -92,11 +92,13 @@ export function renderFormat(format, design, version, ctx = {}) {
 
 /** The main text of a format: what the preview shows and Copy copies (AC-F7.2). */
 export function exportFile(format, design, version, ctx = {}) {
-  return renderFormat(format, design, version, ctx)[0].text;
+  // A single file never carries the PNGs, so DESIGN.md must not link them (AC-F36.6).
+  return renderFormat(format, design, version, { ...ctx, screenshots: [] })[0].text;
 }
 
 /** Download name for one file: example.com-DESIGN.md. */
-export const downloadName = (design, format) => `${design.meta.hostname}-${baseName(FILE_MAP[format][0])}`;
+export const downloadName = (design, format) =>
+  `${design.meta.hostname}-${baseName(FILE_MAP[format][0])}`;
 export const zipName = (design) => `${design.meta.hostname}-webstyle.zip`;
 
 /**
@@ -106,17 +108,26 @@ export const zipName = (design) => `${design.meta.hostname}-webstyle.zip`;
  * @param {{formats?: string[], ctx?: ExportContext, includeScreenshots?: boolean}} [options]
  * @returns {Array<{path: string, text?: string, bytes?: Uint8Array}>}
  */
-export function exportFiles(design, version, { formats = EXPORT_FORMATS, ctx = {}, includeScreenshots = false } = {}) {
+export function exportFiles(
+  design,
+  version,
+  { formats = EXPORT_FORMATS, ctx = {}, includeScreenshots = false } = {},
+) {
   const files = [];
   const shots = includeScreenshots ? (ctx.screenshots ?? []) : [];
-  const exportCtx = { ...ctx, screenshots: shots };
+  const exportCtx = {
+    ...ctx,
+    screenshots: shots,
+    screenshotData: includeScreenshots ? ctx.screenshotData : [],
+  };
   for (const format of EXPORT_FORMATS) {
     if (!formats.includes(format)) continue;
     files.push(...renderFormat(format, design, version, exportCtx));
   }
   for (const shot of shots) {
     const recipe = design.components.find((r) => r.id === shot.recipeId);
-    if (recipe && shot.bytes) files.push({ path: screenshotPath(recipe, shot.mode), bytes: shot.bytes });
+    if (recipe && shot.bytes)
+      files.push({ path: screenshotPath(recipe, shot.mode), bytes: shot.bytes });
   }
   return files;
 }

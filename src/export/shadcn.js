@@ -20,19 +20,38 @@ export function oklchString(hex) {
 export function hslTriplet(hex) {
   const c = toHsl(parse(hex.slice(0, 7)));
   const h = c.h === undefined || Number.isNaN(c.h) ? 0 : r1(c.h);
-  return `${h} ${r1(c.s * 100)}% ${r1(c.l * 100)}%`;
+  // A translucent value keeps its alpha; `hsl(var(--border))` accepts the `/ a` form.
+  const alpha = hex.length === 9 ? r3(parseInt(hex.slice(7, 9), 16) / 255) : 1;
+  return `${h} ${r1((c.s ?? 0) * 100)}% ${r1(c.l * 100)}%${alpha < 1 ? ` / ${alpha}` : ''}`;
 }
 
 const VARIABLES = [
-  'background', 'foreground', 'card', 'card-foreground', 'popover', 'popover-foreground', 'primary',
-  'primary-foreground', 'secondary', 'secondary-foreground', 'muted', 'muted-foreground', 'accent',
-  'accent-foreground', 'destructive', 'border', 'input', 'ring',
+  'background',
+  'foreground',
+  'card',
+  'card-foreground',
+  'popover',
+  'popover-foreground',
+  'primary',
+  'primary-foreground',
+  'secondary',
+  'secondary-foreground',
+  'muted',
+  'muted-foreground',
+  'accent',
+  'accent-foreground',
+  'destructive',
+  'border',
+  'input',
+  'ring',
 ];
 
 /** Resolves each shadcn variable for one theme, in the order of preference in 9.6. */
 export function shadcnValues(d, mode) {
   const role = (r) => roleToken(d, r, mode)?.hex ?? null;
-  const recipe = (kind, variant) => d.components.find((x) => !x.excluded && x.kind === kind && (!variant || x.variant === variant))?.byMode[mode]?.default;
+  const recipe = (kind, variant) =>
+    d.components.find((x) => !x.excluded && x.kind === kind && (!variant || x.variant === variant))
+      ?.byMode[mode]?.default;
   const color = (styles, prop) => {
     if (!styles || styles[prop] === undefined) return null;
     const v = cssValue(d, styles[prop]);
@@ -47,8 +66,12 @@ export function shadcnValues(d, mode) {
   const card = recipe('card');
   const primaryButton = recipe('button', 'primary');
   const secondaryButton = recipe('button', 'secondary');
-  const grays = visible(d.colors).filter((c) => c.alpha >= 1 && c.family === 'gray' && c.modes.includes(mode));
-  const lightestGray = grays.sort((a, b) => (mode === 'dark' ? a.oklch.l - b.oklch.l : b.oklch.l - a.oklch.l))[0]?.hex ?? null;
+  const grays = visible(d.colors).filter(
+    (c) => c.alpha >= 1 && c.family === 'gray' && c.modes.includes(mode),
+  );
+  const lightestGray =
+    grays.sort((a, b) => (mode === 'dark' ? a.oklch.l - b.oklch.l : b.oklch.l - a.oklch.l))[0]
+      ?.hex ?? null;
 
   const v = {};
   v.background = role('background');
@@ -123,22 +146,37 @@ export function exportShadcn(design, version, ctx = {}) {
     const lines = [];
     if (withRadius) {
       const radius = radiusRem(d);
-      lines.push(radius ? `  --radius: ${radius};` : '  /* --radius: TODO, no border radius found on the page */');
+      lines.push(
+        radius
+          ? `  --radius: ${radius};`
+          : '  /* --radius: TODO, no border radius found on the page */',
+      );
     }
     for (const name of VARIABLES) {
-      lines.push(v[name] ? `  --${name}: ${fmt(v[name])};` : `  /* --${name}: TODO, ${todoReason(name)} */`);
+      lines.push(
+        v[name] ? `  --${name}: ${fmt(v[name])};` : `  /* --${name}: TODO, ${todoReason(name)} */`,
+      );
     }
     const charts = chartColors(d);
     charts.forEach((hex, i) => lines.push(`  --chart-${i + 1}: ${fmt(hex)};`));
     return lines;
   };
   const lightMode = t.modes.includes('light') ? 'light' : t.primaryMode;
-  const out = [`/* ${safeComment(generatedBy(d, version))} */`, ':root {', ...block(lightMode, true), '}'];
-  if (t.modes.includes('dark') && t.modes.includes('light')) out.push('', '.dark {', ...block('dark', false), '}');
+  const out = [
+    `/* ${safeComment(generatedBy(d, version))} */`,
+    ':root {',
+    ...block(lightMode, true),
+    '}',
+  ];
+  if (t.modes.includes('dark') && t.modes.includes('light'))
+    out.push('', '.dark {', ...block('dark', false), '}');
   if (format === 'oklch') {
     // Only variables that have a value are mapped, so no utility points at an undefined variable.
     const defined = shadcnValues(d, lightMode);
-    const names = [...VARIABLES.filter((n) => defined[n]), ...chartColors(d).map((_, i) => `chart-${i + 1}`)];
+    const names = [
+      ...VARIABLES.filter((n) => defined[n]),
+      ...chartColors(d).map((_, i) => `chart-${i + 1}`),
+    ];
     out.push('', '@theme inline {', ...names.map((n) => `  --color-${n}: var(--${n});`));
     if (radiusRem(d)) {
       out.push(

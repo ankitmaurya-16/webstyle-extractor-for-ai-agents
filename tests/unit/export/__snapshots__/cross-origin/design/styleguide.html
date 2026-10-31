@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style guide: 127.0.0.1</title>
+<style>
+:root {
+  --color-white: #ffffff;
+  --color-gray-900: #292524;
+  --color-orange-500: #ea580c;
+  --color-yellow-100: #fffbeb;
+  --color-background: var(--color-yellow-100);
+  --color-text: var(--color-gray-900);
+  --color-primary: var(--color-orange-500);
+  --font-serif: "Georgia", serif;
+  --text-base: 17px;
+  --text-base-line-height: 28px;
+  --text-lg: 32px;
+  --text-lg-line-height: 40px;
+  --text-h1-font-size: 32px;
+  --text-h1-line-height: 40px;
+  --text-h1-font-weight: 700;
+  --text-button-font-size: 17px;
+  --text-button-line-height: 28px;
+  --text-button-font-weight: 400;
+  --tracking-normal: 0em;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --radius-sm: 4px;
+  --breakpoint-sm: 900px; /* reference only: custom properties do not work inside @media */
+}
+
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;color:#1f2937;background:#ffffff;line-height:1.5}
+header,main{max-width:1040px;margin:0 auto;padding:24px}h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:32px 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:4px}h3{font-size:15px;margin:20px 0 8px}
+code{font-family:ui-monospace,monospace;font-size:12px}small{color:#4b5563}table{border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:4px 12px 4px 0;vertical-align:middle}
+.grid{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.grid li{display:flex;flex-direction:column;gap:4px}
+.stack{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}.stack li{display:flex;align-items:center;gap:12px}
+.swatch{width:40px;height:40px;border:1px solid #d1d5db;border-radius:6px;padding:0;cursor:pointer;background:#fff;overflow:hidden}.swatch span{display:block;width:100%;height:100%}
+.checker{background-image:linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%),linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%);background-size:12px 12px;background-position:0 0,6px 6px}
+.strip{display:block;width:240px;height:24px;border-radius:4px;border:1px solid #d1d5db}.bar{display:block;height:8px;background:#4b5563;border-radius:2px;max-width:320px}
+.tile{display:block;width:56px;height:56px;background:#e5e7eb;border:1px solid #9ca3af}.tile.white{background:#fff;border:0}.tile.filled{background:#374151}.light-tile{background:#f4f4f5;padding:16px;border-radius:8px}
+.states{display:flex;flex-wrap:wrap;gap:12px}.states figure{margin:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.preview{min-height:56px;min-width:120px;padding:12px;border:1px dashed #d1d5db;border-radius:6px;display:flex;align-items:center;background:var(--color-background,#fff)}
+.shot{max-width:320px;border:1px solid #d1d5db;border-radius:6px}#theme{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #6b7280;background:#fff;color:#1f2937;cursor:pointer}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>Design system: 127.0.0.1</h1>
+<p>Extracted 2026-10-18 from <code>http://127.0.0.1:4173/cross-origin.html</code> · WebStyle Extractor v2.0.0</p>
+
+<p id="status" role="status" aria-live="polite"></p>
+</header>
+<main>
+<section aria-labelledby="colors"><h2 id="colors">Colors</h2><h3>Semantic</h3><table><thead><tr><th scope="col">Role</th><th scope="col">Light</th></tr></thead><tbody><tr><th scope="row">background</th><td><button type="button" class="swatch" data-copy="#fffbeb" aria-label="Copy yellow-100 #fffbeb"><span style="background:#fffbeb"></span></button> <code>yellow-100</code> <code>#fffbeb</code></td></tr><tr><th scope="row">text</th><td><button type="button" class="swatch" data-copy="#292524" aria-label="Copy gray-900 #292524"><span style="background:#292524"></span></button> <code>gray-900</code> <code>#292524</code></td></tr><tr><th scope="row">primary</th><td><button type="button" class="swatch" data-copy="#ea580c" aria-label="Copy orange-500 #ea580c"><span style="background:#ea580c"></span></button> <code>orange-500</code> <code>#ea580c</code></td></tr></tbody></table><h3>Scales</h3><ul class="grid"><li><button type="button" class="swatch" data-copy="#ffffff" aria-label="Copy white #ffffff"><span style="background:#ffffff"></span></button><code>white</code><code>#ffffff</code></li><li><button type="button" class="swatch" data-copy="#292524" aria-label="Copy gray-900 #292524"><span style="background:#292524"></span></button><code>gray-900</code><code>#292524</code></li><li><button type="button" class="swatch" data-copy="#ea580c" aria-label="Copy orange-500 #ea580c"><span style="background:#ea580c"></span></button><code>orange-500</code><code>#ea580c</code></li><li><button type="button" class="swatch" data-copy="#fffbeb" aria-label="Copy yellow-100 #fffbeb"><span style="background:#fffbeb"></span></button><code>yellow-100</code><code>#fffbeb</code></li></ul></section>
+<section aria-labelledby="typography"><h2 id="typography">Typography</h2><h3>Families</h3><ul class="stack"><li><code>serif</code> <span style="font-family:"Georgia", serif">Georgia</span> <small>system font</small></li></ul><h3>Text styles</h3><ul class="stack"><li><code>h1</code> <span style="font-family:"Georgia", serif;font-size:32px;line-height:40px;font-weight:700">The quick brown fox</span> <small>32/40 700</small></li><li><code>button</code> <span style="font-family:"Georgia", serif;font-size:17px;line-height:28px;font-weight:400">The quick brown fox</span> <small>17/28 400</small></li></ul><h3>Scale</h3><ul class="stack"><li><code>base</code> <span style="font-size:17px;line-height:1.2">Aa</span> <small>17px</small></li><li><code>lg</code> <span style="font-size:32px;line-height:1.2">Aa</span> <small>32px</small></li></ul></section>
+<section aria-labelledby="spacing"><h2 id="spacing">Spacing</h2><p>Base unit 8px</p><ul class="stack"><li><code>space-1</code><span class="bar" style="width:16.666666666666664%"></span><small>8px</small></li><li><code>space-2</code><span class="bar" style="width:33.33333333333333%"></span><small>16px</small></li><li><code>space-5</code><span class="bar" style="width:83.33333333333334%"></span><small>40px</small></li><li><code>space-6</code><span class="bar" style="width:100%"></span><small>48px</small></li></ul></section>
+<section aria-labelledby="radius"><h2 id="radius">Radius</h2><ul class="grid"><li><span class="tile" style="border-radius:4px"></span><code>radius-sm</code></li></ul></section>
+<section aria-labelledby="breakpoints"><h2 id="breakpoints">Breakpoints</h2><p><code>sm</code> 900px</p></section>
+<section aria-labelledby="components"><h2 id="components">Components</h2><h3>Focus ring</h3><p>No focus style found; the browser default is used.</p><h3>Button, primary</h3><div class="states"><figure><div class="preview" role="img" aria-label="Button, primary, default"><span style="display:inline-block;background-color:#ea580c;color:#ffffff;border:0;border-radius:4px;padding:8px 16px;font-family:Georgia, serif;font-size:17px;font-weight:400;line-height:28px">Button</span></div><figcaption>default</figcaption></figure></div><p><small>background primary (orange-500), text white, border none, radius radius-sm, padding space-1 space-2 (8px 16px), font serif 17px/28px weight 400</small></p><h3>Heading 1</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 1, default"><span style="display:inline-block;color:#292524;font-family:Georgia, serif;font-size:32px;font-weight:700;line-height:40px">Heading 1</span></div><figcaption>default</figcaption></figure></div><p><small>text text (gray-900), font serif 32px/40px weight 700</small></p></section>
+<section aria-labelledby="accessibility"><h2 id="accessibility">Accessibility</h2><table><thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">Level</th></tr></thead><tbody><tr><td>gray-900 on yellow-100</td><td>14.63:1</td><td>AAA</td></tr><tr><td>white on orange-500</td><td>3.56:1</td><td>fail</td></tr><tr><td>gray-900 on yellow-100</td><td>14.63:1</td><td>AAA</td></tr></tbody></table></section>
+<section aria-labelledby="notes"><h2 id="notes">Notes</h2><ul><li>Breakpoints are partial: 1 of 2 stylesheets could not be read.</li><li>Hover and focus states come from readable stylesheet rules only (approximate).</li><li>No focus style was found on buttons, links or inputs.</li><li>Extracted from one page in its light theme. Hover and focus states are not included.</li></ul></section>
+</main>
+<script>
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var v=b.getAttribute('data-copy');if(navigator.clipboard){navigator.clipboard.writeText(v).catch(function(){});}var s=document.getElementById('status');s.textContent='Copied '+v;});
+var t=document.getElementById('theme');if(t){t.addEventListener('click',function(){var r=document.documentElement;var dark=r.getAttribute('data-theme')!=='dark';r.setAttribute('data-theme',dark?'dark':'light');t.setAttribute('aria-pressed',String(dark));t.textContent=dark?'Show light theme':'Show dark theme';});}
+</script>
+</body>
+</html>

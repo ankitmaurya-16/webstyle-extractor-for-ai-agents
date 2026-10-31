@@ -7,6 +7,7 @@ import { cssValue, findToken, modesOf, primaryModeOf, semanticRows } from '../mo
 import { captureDate, collectTokens, prepare, pxString } from './common.js';
 import { describeFocusRing, describeStyles, recipeTitle } from './describe.js';
 import { exportCssVars, gradientCss } from './css-vars.js';
+import { notes } from './design-md.js';
 import { confidentFrameworks, confidentIcons, frameworkLabel } from './rules.js';
 
 const esc = (s) =>
@@ -16,7 +17,10 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 /** Keeps page-derived CSS values from closing the style element. */
-const cssSafe = (s) => String(s ?? '').replace(/</g, '\\3c ').replace(/[{}]/g, '');
+const cssSafe = (s) =>
+  String(s ?? '')
+    .replace(/</g, '\\3c ')
+    .replace(/[{}]/g, '');
 
 const STATES = ['default', 'hover', 'focus', 'focus-visible', 'active'];
 
@@ -32,7 +36,11 @@ export function exportStyleguide(design, version, ctx = {}) {
   const primary = primaryModeOf(d);
   const paired = modes.length > 1;
   const sections = [];
-  const section = (id, title, body) => body && sections.push(`<section aria-labelledby="${id}"><h2 id="${id}">${esc(title)}</h2>${body}</section>`);
+  const section = (id, title, body) =>
+    body &&
+    sections.push(
+      `<section aria-labelledby="${id}"><h2 id="${id}">${esc(title)}</h2>${body}</section>`,
+    );
   const swatch = (hex, label) =>
     `<button type="button" class="swatch${hex.length === 9 ? ' checker' : ''}" data-copy="${esc(hex)}" aria-label="Copy ${esc(label)} ${esc(hex)}"><span style="background:${cssSafe(hex)}"></span></button>`;
 
@@ -55,17 +63,26 @@ export function exportStyleguide(design, version, ctx = {}) {
   }
   if (t.opaque.length) {
     colors += `<h3>Scales</h3><ul class="grid">${t.opaque
-      .map((c) => `<li>${swatch(c.hex, c.name)}<code>${esc(c.name)}</code><code>${esc(c.hex)}</code></li>`)
+      .map(
+        (c) =>
+          `<li>${swatch(c.hex, c.name)}<code>${esc(c.name)}</code><code>${esc(c.hex)}</code></li>`,
+      )
       .join('')}</ul>`;
   }
   if (t.translucent.length) {
     colors += `<h3>Translucent</h3><ul class="grid">${t.translucent
-      .map((c) => `<li>${swatch(c.hex, c.name)}<code>${esc(c.name)}</code><code>${esc(c.hex)}</code><small>looks like ${esc(c.effectiveHex)}</small></li>`)
+      .map(
+        (c) =>
+          `<li>${swatch(c.hex, c.name)}<code>${esc(c.name)}</code><code>${esc(c.hex)}</code><small>looks like ${esc(c.effectiveHex)}</small></li>`,
+      )
       .join('')}</ul>`;
   }
   if (t.gradients.length) {
     colors += `<h3>Gradients</h3><ul class="stack">${t.gradients
-      .map((g) => `<li><span class="strip" style="background-image:${cssSafe(gradientCss(d, g, (c) => c.hex))}"></span><code>${esc(g.name)}</code></li>`)
+      .map(
+        (g) =>
+          `<li><span class="strip" style="background-image:${cssSafe(gradientCss(d, g, (c) => c.hex))}"></span><code>${esc(g.name)}</code></li>`,
+      )
       .join('')}</ul>`;
   }
   section('colors', 'Colors', colors);
@@ -74,7 +91,10 @@ export function exportStyleguide(design, version, ctx = {}) {
   let type = '';
   if (t.families.length) {
     type += `<h3>Families</h3><ul class="stack">${t.families
-      .map((f) => `<li><code>${esc(f.name)}</code> <span style="font-family:${cssSafe(formatFontStack(f.stack))}">${esc(f.stack[0])}</span> <small>${f.webFont ? 'web font' : 'system font'}</small></li>`)
+      .map(
+        (f) =>
+          `<li><code>${esc(f.name)}</code> <span style="font-family:${cssSafe(formatFontStack(f.stack))}">${esc(f.stack[0])}</span> <small>${f.webFont ? 'web font' : 'system font'}</small></li>`,
+      )
       .join('')}</ul>`;
   }
   if (t.textStyles.length) {
@@ -97,7 +117,10 @@ export function exportStyleguide(design, version, ctx = {}) {
   }
   if (t.sizes.length) {
     type += `<h3>Scale</h3><ul class="stack">${t.sizes
-      .map((s) => `<li><code>${esc(s.name)}</code> <span style="font-size:${Math.min(s.sizePx, 48)}px;line-height:1.2">Aa</span> <small>${pxString(s.sizePx)}</small></li>`)
+      .map(
+        (s) =>
+          `<li><code>${esc(s.name)}</code> <span style="font-size:${Math.min(s.sizePx, 48)}px;line-height:1.2">Aa</span> <small>${pxString(s.sizePx)}</small></li>`,
+      )
       .join('')}</ul>`;
   }
   section('typography', 'Typography', type);
@@ -109,18 +132,27 @@ export function exportStyleguide(design, version, ctx = {}) {
     'Spacing',
     t.spacing.length
       ? `<p>${d.spacing.baseUnitPx ? `Base unit ${d.spacing.baseUnitPx}px` : 'No base unit'}</p><ul class="stack">${t.spacing
-          .map((s) => `<li><code>${esc(s.name)}</code><span class="bar" style="width:${Math.max(2, (s.px / maxSpace) * 100)}%"></span><small>${pxString(s.px)}</small></li>`)
+          .map(
+            (s) =>
+              `<li><code>${esc(s.name)}</code><span class="bar" style="width:${Math.max(2, (s.px / maxSpace) * 100)}%"></span><small>${pxString(s.px)}</small></li>`,
+          )
           .join('')}</ul>`
       : '',
   );
   let layout = '';
-  if (t.containers.length) layout += `<h3>Containers</h3><p>${t.containers.map((c) => `<code>${esc(c.name)}</code> ${pxString(c.px)}`).join(' · ')}</p>`;
-  if (t.gridColumns.length) layout += `<h3>Grid columns</h3><p>${t.gridColumns.map((g) => `${g.value}`).join(' · ')}</p>`;
-  if (t.gaps.length) layout += `<h3>Gaps</h3><p>${t.gaps.map((g) => `<code>${esc(g.name)}</code> ${pxString(g.px)}`).join(' · ')}</p>`;
+  if (t.containers.length)
+    layout += `<h3>Containers</h3><p>${t.containers.map((c) => `<code>${esc(c.name)}</code> ${pxString(c.px)}`).join(' · ')}</p>`;
+  if (t.gridColumns.length)
+    layout += `<h3>Grid columns</h3><p>${t.gridColumns.map((g) => `${g.value}`).join(' · ')}</p>`;
+  if (t.gaps.length)
+    layout += `<h3>Gaps</h3><p>${t.gaps.map((g) => `<code>${esc(g.name)}</code> ${pxString(g.px)}`).join(' · ')}</p>`;
   if (d.responsive) {
     const w = d.responsive.widths;
     layout += `<h3>Responsive</h3><table><thead><tr><th scope="col">Text</th>${w.map((x) => `<th scope="col">${x}px</th>`).join('')}</tr></thead><tbody>${d.responsive.textSizes
-      .map((r) => `<tr><th scope="row">${esc(r.label)}</th>${w.map((x) => `<td>${r.byWidth[x] ?? '-'}</td>`).join('')}</tr>`)
+      .map(
+        (r) =>
+          `<tr><th scope="row">${esc(r.label)}</th>${w.map((x) => `<td>${r.byWidth[x] ?? '-'}</td>`).join('')}</tr>`,
+      )
       .join('')}</tbody></table>`;
   }
   section('layout', 'Layout', layout);
@@ -155,7 +187,12 @@ export function exportStyleguide(design, version, ctx = {}) {
   section(
     'z-index',
     'Z-index',
-    t.zIndex.length ? `<ol class="stack" reversed>${[...t.zIndex].reverse().map((z) => `<li><code>${esc(z.name)}</code> ${z.value}</li>`).join('')}</ol>` : '',
+    t.zIndex.length
+      ? `<ol class="stack" reversed>${[...t.zIndex]
+          .reverse()
+          .map((z) => `<li><code>${esc(z.name)}</code> ${z.value}</li>`)
+          .join('')}</ol>`
+      : '',
   );
   section(
     'motion',
@@ -166,7 +203,13 @@ export function exportStyleguide(design, version, ctx = {}) {
           .join('')}</ul>`
       : '',
   );
-  section('breakpoints', 'Breakpoints', t.breakpoints.length ? `<p>${t.breakpoints.map((b) => `<code>${esc(b.name)}</code> ${pxString(b.px)}`).join(' · ')}</p>` : '');
+  section(
+    'breakpoints',
+    'Breakpoints',
+    t.breakpoints.length
+      ? `<p>${t.breakpoints.map((b) => `<code>${esc(b.name)}</code> ${pxString(b.px)}`).join(' · ')}</p>`
+      : '',
+  );
 
   // ---- Components: states side by side, as static examples (AC-F34.4) ----
   const recipes = d.components.filter((r) => !r.excluded);
@@ -196,14 +239,24 @@ export function exportStyleguide(design, version, ctx = {}) {
       'Accessibility',
       `<table><thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">Level</th></tr></thead><tbody>${d.contrast
         .slice(0, 20)
-        .map((c) => `<tr><td>${esc(`${name(c.textTokenId)} on ${name(c.backgroundTokenId)}${paired ? ` (${c.mode})` : ''}`)}</td><td>${c.ratio}:1</td><td>${esc(c.level)}</td></tr>`)
+        .map(
+          (c) =>
+            `<tr><td>${esc(`${name(c.textTokenId)} on ${name(c.backgroundTokenId)}${paired ? ` (${c.mode})` : ''}`)}</td><td>${c.ratio}:1</td><td>${esc(c.level)}</td></tr>`,
+        )
         .join('')}</tbody></table>`,
     );
   }
 
+  // ---- Notes ----
+  const noteList = notes(d, modes);
+  if (noteList.length)
+    section('notes', 'Notes', `<ul>${noteList.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>`);
+
   const stack = [
     ...confidentFrameworks(d).map(frameworkLabel),
-    ...confidentIcons(d).slice(0, 1).map((i) => `${i.name} icons`),
+    ...confidentIcons(d)
+      .slice(0, 1)
+      .map((i) => `${i.name} icons`),
     ...(d.meta.webFonts ?? []).filter((f) => f.loaded).map((f) => f.family),
   ];
   const vars = exportCssVars(design, version, ctx)
@@ -261,12 +314,19 @@ function previewHtml(d, recipe, styles) {
   const css = [];
   const set = (prop, value) => value && value !== 'none' && css.push(`${prop}:${cssSafe(value)}`);
   set('background-color', styles['background-color'] && cssValue(d, styles['background-color']));
-  if (styles['background-image'] && styles['background-image'] !== 'none') set('background-image', cssValue(d, styles['background-image']));
+  if (styles['background-image'] && styles['background-image'] !== 'none')
+    set('background-image', cssValue(d, styles['background-image']));
   set('color', styles.color && cssValue(d, styles.color));
   if (styles.border) css.push(`border:${cssSafe(styles.border === 'none' ? '0' : styles.border)}`);
   set('border-radius', styles['border-radius'] && cssValue(d, styles['border-radius']));
   set('padding', styles.padding);
-  set('font-family', styles['font-family'] && (typeof styles['font-family'] === 'object' ? styles['font-family'].raw : styles['font-family']));
+  set(
+    'font-family',
+    styles['font-family'] &&
+      (typeof styles['font-family'] === 'object'
+        ? styles['font-family'].raw
+        : styles['font-family']),
+  );
   set('font-size', styles['font-size'] && cssValue(d, styles['font-size']));
   set('font-weight', styles['font-weight']);
   set('line-height', styles['line-height']);
@@ -287,7 +347,10 @@ function previewHtml(d, recipe, styles) {
     table: 'Cell · Cell',
     heading: `Heading ${recipe.variant.slice(1)}`,
   }[recipe.kind];
-  const tag = recipe.kind === 'link' ? 'span style="text-decoration:underline;' : 'span style="display:inline-block;';
+  const tag =
+    recipe.kind === 'link'
+      ? 'span style="text-decoration:underline;'
+      : 'span style="display:inline-block;';
   return `<${tag}${css.join(';')}">${esc(label)}</span>`;
 }
 

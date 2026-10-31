@@ -1,0 +1,17 @@
+<!-- webstyle:start -->
+## Design system
+
+This project follows DESIGN.md, extracted from http://127.0.0.1:4173/classic.html on 2026-10-18 with WebStyle Extractor v2.0.0.
+Theme tokens: design/theme.css.
+
+1. Use only the tokens in DESIGN.md. Do not add new colors, font sizes, spacing, radii, shadows, durations or z-index values.
+2. In components, prefer semantic tokens (background, text, primary, border) over scale tokens.
+3. Spacing uses a 4px base unit. Use the spacing scale, never arbitrary values.
+4. Body text is `text` on `background`; secondary text is `text-muted`. Use only the safe text pairs in Accessibility.
+5. Match the component recipes below, including their hover, focus and active states.
+6. Every interactive element shows the focus ring on `:focus-visible`: outline 2px solid focus-ring (blue-600), offset 2px.
+7. Support light and dark themes with the paired semantic tokens. The site switches themes with the `.dark` class on `<html>`.
+8. Load Helvetica Neue rather than substituting.
+9. Animate with the motion tokens below and honor `prefers-reduced-motion`.
+10. If a needed value is missing, use the nearest existing token and leave a TODO comment.
+<!-- webstyle:end -->
