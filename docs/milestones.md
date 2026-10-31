@@ -1,6 +1,6 @@
 # Milestones
 
-The build runs in eight milestones, each small enough for one Claude Code session and each ending with tests that prove its acceptance criteria. Do them in order; later milestones assume earlier ones are done.
+v1 was built in eight milestones (M0 to M7) and v2 in fourteen more (M8 to M21). Each is small enough for one Claude Code session and ends with tests that prove its acceptance criteria. Do them in order; later milestones assume earlier ones are done. The v2 milestones are specified in full, with their Read lists and prompts, in [docs/v2-spec.md](v2-spec.md) section 12.
 
 | Milestone | Delivers | Acceptance criteria |
 | --- | --- | --- |
@@ -13,9 +13,28 @@ The build runs in eight milestones, each small enough for one Claude Code sessio
 | M6 Exporters | Five formats, Export tab, copy, download, zip | AC-F7.1 to F7.9 |
 | M7 Hardening and release | Budgets, accessibility, no-network proof, store assets | Every budget in non-functional.md |
 
+## v2 milestones
+
+| Milestone | Delivers | Acceptance criteria | Release |
+| --- | --- | --- | --- |
+| M8 | Schema v2, migration, stable ids, edit log, translucent colors | F9 | |
+| M9 | Site variable names, framework detection, Insights tab | F10, F11 | v1.1.0 |
+| M10 | Motion, text styles, layout structure, layout values, gradients, web fonts | F14 to F19 | |
+| M11 | Interaction states and themes from stylesheets, paired exports | F12 (stylesheet path), F13 (Path A) | |
+| M12 | More components, icon detection, coverage | F20, F21, F22 | v1.2.0 |
+| M13 | Advanced capture: deep scan, dark emulation, forced states, widths | F23, F24, the rest of F12 and F13 | |
+| M14 | Contrast, confidence, consistency report | F27, F28, F29 | v1.3.0 |
+| M15 | shadcn, agent rules, compact prompt, style guide, Figma, final DESIGN.md | F31 to F35 | |
+| M16 | Write to project, snapshot import and export, Settings | F37, F40 | v1.4.0 |
+| M17 | Multi-page merge, element picker, highlight, screenshots | F25, F26, F30, F36 | |
+| M18 | Map to my tokens, snapshot diff | F38, F39 | v1.5.0 |
+| M19 | Headless CLI | F41 | |
+| M20 | Panel light theme, localization, Firefox and Edge | F42, F43, F44 | |
+| M21 | Hardening and the v2.0 release | v2 spec section 13 | v2.0.0 |
+
 ## Prompts for each session
 
-Start in plan mode (Shift+Tab twice) and paste this, replacing M1 with the milestone:
+For M8 to M21, use the prompts in v2 spec section 12.1. For the v1 milestones, start in plan mode (Shift+Tab twice) and paste this, replacing M1 with the milestone:
 
 ```text
 Read CLAUDE.md, the M1 section of docs/milestones.md and every doc it lists under Read.
@@ -27,7 +46,7 @@ contradictory. Do not write code yet.
 After you have corrected and approved the plan, leave plan mode and paste:
 
 ```text
-Implement the approved plan. Run pnpm lint, pnpm typecheck and pnpm test (and
+Implement the approved plan. Run pnpm lint, pnpm format:check and pnpm test (and
 pnpm test:e2e if the milestone touches the browser). Tick the criteria you completed in
 docs/user-flows.md. Stop at the end of the milestone and summarize what changed.
 ```
@@ -36,8 +55,8 @@ docs/user-flows.md. Stop at the end of the milestone and summarize what changed.
 
 Read: architecture.md, conventions.md, the color and type tokens in ui.md.
 
-- Scaffold WXT with React and TypeScript using pnpm; add every package in the architecture.md stack table.
-- Write `wxt.config.ts` as specified, and `theme.css` with the ui.md tokens and fonts.
+- Scaffold WXT with React in JavaScript using pnpm; add every package in the architecture.md stack table.
+- Write `wxt.config.js` as specified, and `theme.css` with the ui.md tokens and fonts.
 - The service worker calls `chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })`.
 - The panel shows the header and an empty Home screen in the dark theme.
 - Add the CI workflow, the manifest permission test, LICENSE (MIT) and a README stub.
@@ -48,7 +67,7 @@ Done when AC-F1.1 passes, a production build loads unpacked, and CI is green.
 
 Read: api.md (messages, module APIs, error codes), sequences.md flows 1, 2 and 4.
 
-- Write `src/messaging.ts`, the `src/platform/` wrappers and the error classifier with unit tests.
+- Write `src/messaging.js`, the `src/platform/` wrappers and the error classifier with unit tests.
 - Add an extractor stub whose `main()` returns a RawSnapshot with only `elementsSampled` filled; the real collector comes in M2.
 - Implement the EXTRACT round trip, the 10 s timeout, page-change detection, the `requestId` guard and the shortcut with `pendingExtract`.
 - Show plain, unstyled state screens; M4 styles them.
@@ -105,3 +124,20 @@ Read: non-functional.md, the success criteria in product-brief.md.
 - Walk the edge-case table and fix anything that fails.
 - Run the 20-site accuracy check by hand and tune the start values if needed, updating the docs.
 - Write the README with screenshots and CONTRIBUTING, prepare the store listing text and 1280 x 800 screenshots, and build the 1.0.0 zip.
+
+## M8 to M21 in one line each
+
+- **M8:** v2 types, the IndexedDB version 2 upgrade with v1 migration, value-based token ids, the edit log with replay and stale-edit counting, and translucent colors end to end.
+- **M9:** variable collection and name matching, name-based roles, `src/detect/framework.js`, the Insights tab with the Framework card and DESIGN.md's Stack section.
+- **M10:** collectors, analysis, tokens, UI and exports for motion, text styles, containers, grids, gaps, z-index, opacity, border widths, gradients and web fonts.
+- **M11:** specificity and state-rule matching, the focus ring, the state switcher, theme-mechanism detection, Path A captures, ModeRefs, the Light / Dark switch and paired exports.
+- **M12:** card, badge, navbar, tabs, alert and table recipes; `src/detect/icons.js`; open shadow roots, same-origin frames and auto-scroll.
+- **M13:** the `self.__webstyle` injection API, `CdpClient` over chrome.debugger, the capture plan with every cleanup path and restart safety, the optional permission flow and the first Settings screen.
+- **M14:** `src/contrast/`, the confidence module, `src/audit/`, the full Insights tab, "(verify)" marks and `audit.md`.
+- **M15:** shadcn, AGENTS.md, Cursor rules, CLAUDE.md, prompt, style guide and Figma exporters, the file-map zip, the export checklist, "Copy prompt" and the final DESIGN.md.
+- **M16:** the `projects` store, folder linking, file maps and the writer with marked-block merging; zod import and export; the Projects and Exports settings.
+- **M17:** "Add this page" with pooling and the page list, "Allow on this site", the picker and component snapshots, the highlighter, and screenshots.
+- **M18:** token-file parsers and matching with the Map screen and `mapping.md`; `src/diff/`, History's select mode and the Diff screen with `diff.md`.
+- **M19:** the `cli/` package with tsup and the IIFE collector, the Playwright runner and `CdpClient`, the three commands, output writing and exit codes.
+- **M20:** light tokens and the Appearance setting, `messages.json` with `t()`, the Firefox build, feature hiding, `web-ext lint` and the Edge smoke test.
+- **M21:** budgets, the no-network test across every feature, repeated cleanup tests, accessibility in both themes, the 20-site check, these docs, README, CONTRIBUTING, store listings and the v2.0.0 packages.
