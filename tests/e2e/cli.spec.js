@@ -134,3 +134,69 @@ test('AC-F41.6 diff and map produce the extension formats', async () => {
   expect(map.code).toBe(0);
   expect(map.stdout).toContain('# Token mapping');
 });
+
+test('AC-F41.5 AC-F24.7 states and widths use the shared Advanced capture plan', async () => {
+  const out = await mkdtemp(join(tmpdir(), 'webstyle-adv-'));
+  const result = await webstyle([
+    'extract',
+    `${FIXTURES}/responsive.html`,
+    '--states',
+    '--widths',
+    '375,768',
+    '--out',
+    out,
+  ]);
+  expect(result.code).toBe(0);
+  const record = JSON.parse(await readFile(join(out, 'snapshot.webstyle.json'), 'utf8'))
+    .snapshots[0];
+  expect(record.extracted.meta.capture.advanced).toBe(true);
+  expect(record.captures.filter((c) => c.kind === 'width').map((c) => c.viewportWidth)).toEqual([
+    375, 768,
+  ]);
+  expect(record.extracted.responsive.widths).toEqual(expect.arrayContaining([375, 768]));
+  expect(await readFile(join(out, 'DESIGN.md'), 'utf8')).toContain('## Responsive');
+
+  const states = await mkdtemp(join(tmpdir(), 'webstyle-states-'));
+  expect(
+    (
+      await webstyle([
+        'extract',
+        `${FIXTURES}/states.html`,
+        '--states',
+        '--no-dark',
+        '--out',
+        states,
+      ])
+    ).code,
+  ).toBe(0);
+  const stateRecord = JSON.parse(await readFile(join(states, 'snapshot.webstyle.json'), 'utf8'))
+    .snapshots[0];
+  expect(stateRecord.extracted.components.some((r) => r.stateSource === 'forced')).toBe(true);
+});
+
+test('AC-F40.8 an extension export opens in the CLI and a CLI snapshot imports into the extension', async ({
+  ext,
+}) => {
+  const { tabId } = await openFixture(ext.context, ext.worker, 'classic.html');
+  const panel = await openPanel(ext.context, ext.extensionId, tabId);
+  await extractFrom(panel);
+  const [download] = await Promise.all([
+    panel.waitForEvent('download'),
+    panel
+      .getByRole('button', { name: 'Menu' })
+      .click()
+      .then(() => panel.getByRole('menuitem', { name: 'Export snapshot' }).click()),
+  ]);
+  const fromExtension = await download.path();
+  const dir = await mkdtemp(join(tmpdir(), 'webstyle-io-'));
+  await webstyle(['extract', `${FIXTURES}/utility.html`, '--no-dark', '--out', dir]);
+  const diff = await webstyle(['diff', fromExtension, join(dir, 'snapshot.webstyle.json')]);
+  expect(diff.code).toBe(0);
+  expect(diff.stdout).toContain('# 127.0.0.1 vs 127.0.0.1');
+
+  await panel.getByRole('button', { name: 'Back' }).first().click();
+  await panel.getByRole('button', { name: 'History' }).click();
+  await panel.locator('input[type=file]').setInputFiles(join(dir, 'snapshot.webstyle.json'));
+  await expect(panel.getByText('Imported 1 snapshots.')).toBeVisible();
+  await expect(panel.locator('[data-snapshot]')).toHaveCount(2);
+});

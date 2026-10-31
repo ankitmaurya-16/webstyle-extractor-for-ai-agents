@@ -115,13 +115,14 @@ describe('Firefox manifest (F43)', () => {
     expect(m.browser_specific_settings.gecko).toEqual({
       id: 'webstyle-extractor@example.invalid',
       strict_min_version: '128.0',
+      // Firefox's built-in consent: the extension collects nothing.
+      data_collection_permissions: { required: ['none'] },
     });
     expect(m.name).toBe('__MSG_extName__');
     expect(m.default_locale).toBe('en');
   });
 
-  // Blocked: README.md has no release checklist naming the gecko id placeholder (not owned by agent E).
-  it.skip('AC-F43.8 the gecko id placeholder is flagged in the README release checklist', () => {
+  it('AC-F43.8 the gecko id placeholder is flagged in the README release checklist', () => {
     const readme = readFileSync(resolve(process.cwd(), 'README.md'), 'utf8');
     expect(readme).toContain('webstyle-extractor@example.invalid');
   });
