@@ -1065,14 +1065,28 @@ export const useStore = create((set, get) => ({
    */
   async addPickedToSnapshot(targetId) {
     const source = get().record;
-    const recipe = source?.kind === 'component' ? source.edited.components.find((r) => !r.excluded) : null;
+    const recipe =
+      source?.kind === 'component' ? source.edited.components.find((r) => !r.excluded) : null;
     if (!recipe) return;
     const target = await getSnapshot(targetId).catch(() => undefined);
     if (!target) return;
-    const picked = { ...structuredClone(recipe), id: `component:${recipe.kind}:picked`, variant: 'picked', screenshotIds: [] };
-    const place = (design) => ({ ...design, components: [...design.components.filter((r) => r.id !== picked.id), picked] });
+    const picked = {
+      ...structuredClone(recipe),
+      id: `component:${recipe.kind}:picked`,
+      variant: 'picked',
+      screenshotIds: [],
+    };
+    const place = (design) => ({
+      ...design,
+      components: [...design.components.filter((r) => r.id !== picked.id), picked],
+    });
     try {
-      await saveSnapshot({ ...target, extracted: place(target.extracted), edited: place(target.edited), updatedAt: Date.now() });
+      await saveSnapshot({
+        ...target,
+        extracted: place(target.extracted),
+        edited: place(target.edited),
+        updatedAt: Date.now(),
+      });
       get().toast('ADDED', t('toast_added_to_snapshot', target.hostname));
       await get().loadRecent();
     } catch {
@@ -1144,7 +1158,8 @@ export const useStore = create((set, get) => ({
   toast(kind, text) {
     const id = crypto.randomUUID();
     const message = text ?? t(TOAST_KEYS[kind] ?? 'toast_storage_failed');
-    const quiet = kind === 'COPIED' || kind === 'IMPORTED' || kind === 'MIGRATED' || kind === 'ADDED';
+    const quiet =
+      kind === 'COPIED' || kind === 'IMPORTED' || kind === 'MIGRATED' || kind === 'ADDED';
     set({
       toasts: [
         ...get().toasts,

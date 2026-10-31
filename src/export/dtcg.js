@@ -145,9 +145,16 @@ export function exportDtcgFiles(design, version, ctx = {}) {
           fontSize: dimension(s.sizePx),
           fontWeight: s.fontWeight,
           letterSpacing: dimension(s.letterSpacingEm * s.sizePx),
-          lineHeight: s.lineHeightPx === null ? 1.2 : round3(s.lineHeightPx / s.sizePx),
+          // "normal" has no number on the page, so none is invented; the extension records it.
+          ...(s.lineHeightPx === null ? {} : { lineHeight: round3(s.lineHeightPx / s.sizePx) }),
         },
-        $extensions: { 'com.webstyle': { textTransform: s.textTransform, usedFor: s.usedFor } },
+        $extensions: {
+          'com.webstyle': {
+            textTransform: s.textTransform,
+            usedFor: s.usedFor,
+            ...(s.lineHeightPx === null ? { lineHeight: 'normal' } : {}),
+          },
+        },
       };
     }
   }

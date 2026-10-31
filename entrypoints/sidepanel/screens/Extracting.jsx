@@ -13,7 +13,10 @@ export function Extracting() {
       <Header />
       <main className="p-4" aria-busy="true">
         <h1 className="mb-4 truncate text-lg">{tab?.hostname ?? t('current_tab')}</h1>
-        <ProgressList stages={run?.stages ?? ['reading', 'analyzing', 'saving']} stage={run?.stage ?? 'reading'} />
+        <ProgressList
+          stages={run?.stages ?? ['reading', 'analyzing', 'saving']}
+          stage={run?.stage ?? 'reading'}
+        />
         <Button variant="secondary" className="mt-4" onClick={cancel}>
           {t('cancel')}
         </Button>

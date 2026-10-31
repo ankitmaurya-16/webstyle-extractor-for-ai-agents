@@ -14,7 +14,12 @@ export const DEFAULT_SETTINGS = Object.freeze({
   includeScreenshots: false,
   autoScroll: false,
   advancedEnabled: false,
-  advancedDefaults: Object.freeze({ dark: true, states: true, widths: [375, 768, 1280], deepScan: true }),
+  advancedDefaults: Object.freeze({
+    dark: true,
+    states: true,
+    widths: [375, 768, 1280],
+    deepScan: true,
+  }),
   highlightEnabled: false,
 });
 
@@ -23,15 +28,25 @@ export function normalizeSettings(stored) {
   const s = { ...DEFAULT_SETTINGS, ...(stored && typeof stored === 'object' ? stored : {}) };
   if (!EXPORT_FORMATS.includes(s.lastExportFormat)) s.lastExportFormat = 'design-md';
   if (!Array.isArray(s.exportSelection)) s.exportSelection = DEFAULT_EXPORT_SELECTION;
-  s.exportSelection = s.exportSelection.filter((f) => EXPORT_FORMATS.includes(f) || f === 'screenshots');
+  s.exportSelection = s.exportSelection.filter(
+    (f) => EXPORT_FORMATS.includes(f) || f === 'screenshots',
+  );
   if (!['system', 'dark', 'light'].includes(s.panelTheme)) s.panelTheme = 'system';
   if (!['oklch', 'hsl'].includes(s.shadcnFormat)) s.shadcnFormat = 'oklch';
   s.advancedDefaults = { ...DEFAULT_SETTINGS.advancedDefaults, ...(s.advancedDefaults ?? {}) };
-  s.advancedDefaults.widths = (Array.isArray(s.advancedDefaults.widths) ? s.advancedDefaults.widths : [])
+  s.advancedDefaults.widths = (
+    Array.isArray(s.advancedDefaults.widths) ? s.advancedDefaults.widths : []
+  )
     .map(Number)
     .filter((w) => w >= 320 && w <= 1920)
     .slice(0, 4);
-  for (const key of ['useSiteVariableNames', 'includeScreenshots', 'autoScroll', 'advancedEnabled', 'highlightEnabled']) {
+  for (const key of [
+    'useSiteVariableNames',
+    'includeScreenshots',
+    'autoScroll',
+    'advancedEnabled',
+    'highlightEnabled',
+  ]) {
     s[key] = Boolean(s[key]);
   }
   return s;

@@ -9,7 +9,9 @@ export const FIXTURE_NAMES = ['classic', 'dark', 'utility', 'cross-origin', 'lar
 /** A Capture around a raw snapshot, the way the panel builds one (v2 spec 6.1). */
 export function captureOf(raw, extra = {}) {
   return {
-    id: extra.id ?? `capture-${raw.url}-${extra.kind ?? 'base'}-${extra.mode ?? raw.colorScheme ?? 'light'}`,
+    id:
+      extra.id ??
+      `capture-${raw.url}-${extra.kind ?? 'base'}-${extra.mode ?? raw.colorScheme ?? 'light'}`,
     pageUrl: raw.url,
     mode: raw.colorScheme === 'dark' ? 'dark' : 'light',
     viewportWidth: raw.viewport?.width ?? 1280,
@@ -29,7 +31,14 @@ export function capturesFor(raw, { pathA = true } = {}) {
   const base = captureOf(raw);
   const override = pathA ? buildOverrideRaw(raw) : null;
   if (!override) return [base];
-  return [base, captureOf(override, { mode: base.mode === 'dark' ? 'light' : 'dark', method: 'stylesheet-override', kind: 'theme' })];
+  return [
+    base,
+    captureOf(override, {
+      mode: base.mode === 'dark' ? 'light' : 'dark',
+      method: 'stylesheet-override',
+      kind: 'theme',
+    }),
+  ];
 }
 
 /** Analyzes one raw snapshot the way the extension does. */

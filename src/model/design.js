@@ -53,7 +53,9 @@ export function rolesOf(design, tokenId, mode) {
 
 /** Roles a token holds in any theme. */
 export function anyRolesOf(design, tokenId) {
-  return SEMANTIC_ROLES.filter((role) => Object.values(design.semantic?.[role] ?? {}).includes(tokenId));
+  return SEMANTIC_ROLES.filter((role) =>
+    Object.values(design.semantic?.[role] ?? {}).includes(tokenId),
+  );
 }
 
 export const modesOf = (design) => design.meta?.modes ?? [design.meta?.colorScheme ?? 'light'];
@@ -72,9 +74,10 @@ export function semanticPairs(design, mode) {
 /** Roles held in any theme, in order, with the token per theme. */
 export function semanticRows(design) {
   const modes = modesOf(design);
-  return SEMANTIC_ROLES.map((role) => ({ role, byMode: Object.fromEntries(modes.map((m) => [m, roleToken(design, role, m)])) })).filter(
-    (row) => Object.values(row.byMode).some(Boolean),
-  );
+  return SEMANTIC_ROLES.map((role) => ({
+    role,
+    byMode: Object.fromEntries(modes.map((m) => [m, roleToken(design, role, m)])),
+  })).filter((row) => Object.values(row.byMode).some(Boolean));
 }
 
 /**
@@ -117,7 +120,9 @@ export const ascending = (list, key) => visible(list).sort((a, b) => a[key] - b[
 
 /** Strips the category prefix from a token name: radius-md becomes md. */
 export const stripPrefix = (name, prefix) =>
-  name.startsWith(`${prefix}-`) && name.length > prefix.length + 1 ? name.slice(prefix.length + 1) : name;
+  name.startsWith(`${prefix}-`) && name.length > prefix.length + 1
+    ? name.slice(prefix.length + 1)
+    : name;
 
 /** Every recipe value of a component across themes and states, with a callback per value. */
 export function forEachRecipeValue(recipe, fn) {

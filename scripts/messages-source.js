@@ -2,7 +2,10 @@
 // editing. Keys are snake_case; $1 to $9 are substitutions.
 
 export const MESSAGES = {
-  extName: ['WebStyle Extractor for AI Agents', 'Extension name in the Chrome Web Store and toolbar'],
+  extName: [
+    'WebStyle Extractor for AI Agents',
+    'Extension name in the Chrome Web Store and toolbar',
+  ],
   extDescription: [
     "Extract any website's colors, fonts and spacing into a DESIGN.md your AI coding agent can follow. Free, open source, local.",
     'Store description',
@@ -33,11 +36,14 @@ export const MESSAGES = {
   advanced_capture: ['Advanced capture', 'Capture switch'],
   advanced_options: ['Options', 'Opens the Advanced capture options'],
   advanced_help: [
-    "Uses Chrome's debugger to read every stylesheet, the other theme, hover and focus states and other widths. Chrome shows a \"started debugging this browser\" bar while it runs.",
+    'Uses Chrome\'s debugger to read every stylesheet, the other theme, hover and focus states and other widths. Chrome shows a "started debugging this browser" bar while it runs.',
     'Explains Advanced capture before first use',
   ],
   include_screenshots: ['Include screenshots', 'Capture switch'],
-  include_screenshots_help: ['Saves pictures of components on this page, on this computer only.', 'Screenshot switch description'],
+  include_screenshots_help: [
+    'Saves pictures of components on this page, on this computer only.',
+    'Screenshot switch description',
+  ],
   deep_scan: ['Deep scan', 'Advanced option'],
   dark_theme: ['Dark theme', 'Advanced option'],
   states_option: ['Hover and focus states', 'Advanced option'],
@@ -86,14 +92,26 @@ export const MESSAGES = {
   light: ['Light', 'Theme'],
   dark: ['Dark', 'Theme'],
   theme_switch: ['Theme', 'Label of the Light / Dark switch'],
-  banner_migrated: ['Captured with v1. Re-run to read states, themes and more.', 'Banner on migrated snapshots'],
+  banner_migrated: [
+    'Captured with v1. Re-run to read states, themes and more.',
+    'Banner on migrated snapshots',
+  ],
   banner_partial: ["Some details couldn't be captured: $1.", 'CAPTURE_PARTIAL banner'],
-  banner_stale: ["$1 edits no longer match a token.", 'Stale edits banner'],
+  banner_stale: ['$1 edits no longer match a token.', 'Stale edits banner'],
   clear_stale: ['Clear edits that no longer apply', 'Button'],
-  banner_class_theme: ['This site switches themes with a class; the other theme comes from its stylesheets.', 'Theme note'],
-  banner_screenshot_failed: ["Screenshots couldn't be taken on this page.", 'SCREENSHOT_FAILED note'],
+  banner_class_theme: [
+    'This site switches themes with a class; the other theme comes from its stylesheets.',
+    'Theme note',
+  ],
+  banner_screenshot_failed: [
+    "Screenshots couldn't be taken on this page.",
+    'SCREENSHOT_FAILED note',
+  ],
   dismiss: ['Dismiss', 'Banner close button'],
-  migration_notice: ['Upgraded $1 snapshots; $2 edits could not be carried over.', 'One-time migration toast'],
+  migration_notice: [
+    'Upgraded $1 snapshots; $2 edits could not be carried over.',
+    'One-time migration toast',
+  ],
 
   semantic: ['Semantic', 'Section label'],
   scales: ['Scales', 'Section label'],
@@ -244,37 +262,73 @@ export const MESSAGES = {
   use_generated_name: ['Use generated name', 'Menu item'],
   rename_label: ['New name', 'Input label'],
   save: ['Save', 'Button'],
-  error_invalid_name: ['Use lowercase letters, digits and hyphens, starting with a letter.', 'Edit error'],
+  error_invalid_name: [
+    'Use lowercase letters, digits and hyphens, starting with a letter.',
+    'Edit error',
+  ],
   error_name_taken: ['That name is already used in this category.', 'Edit error'],
   error_not_found: ['That token no longer exists.', 'Edit error'],
   error_same_token: ["A token can't merge into itself.", 'Edit error'],
 
-  toast_storage_failed: ["Couldn't save to history. Your results stay here until you close the panel.", 'STORAGE_FAILED'],
+  toast_storage_failed: [
+    "Couldn't save to history. Your results stay here until you close the panel.",
+    'STORAGE_FAILED',
+  ],
   toast_clipboard_failed: ['Copy failed. Use Download instead.', 'CLIPBOARD_FAILED'],
-  toast_debugger_denied: ["Advanced capture needs permission to use Chrome's debugger. Basic extraction still works.", 'DEBUGGER_DENIED'],
-  toast_site_access_denied: ['Without access to this site, click the toolbar icon on each page instead.', 'SITE_ACCESS_DENIED'],
+  toast_debugger_denied: [
+    "Advanced capture needs permission to use Chrome's debugger. Basic extraction still works.",
+    'DEBUGGER_DENIED',
+  ],
+  toast_site_access_denied: [
+    'Without access to this site, click the toolbar icon on each page instead.',
+    'SITE_ACCESS_DENIED',
+  ],
   toast_pick_failed: ["Couldn't start the element picker on this page.", 'PICK_FAILED'],
   toast_highlight_empty: ['No matching elements are visible on this page.', 'HIGHLIGHT_EMPTY'],
-  toast_fs_permission_denied: ['Folder access was not allowed. Choose the folder again in Settings.', 'FS_PERMISSION_DENIED'],
-  toast_highlight_no_access: ['Click the toolbar icon or use "Allow on this site" to highlight on this page.', 'Highlight without access'],
+  toast_fs_permission_denied: [
+    'Folder access was not allowed. Choose the folder again in Settings.',
+    'FS_PERMISSION_DENIED',
+  ],
+  toast_highlight_no_access: [
+    'Click the toolbar icon or use "Allow on this site" to highlight on this page.',
+    'Highlight without access',
+  ],
   toast_too_many_pages: ['A snapshot holds at most 20 pages.', 'Page limit'],
   toast_imported: ['Imported $1 snapshots.', 'Import summary'],
   toast_added_to_snapshot: ['Added to $1.', 'Picked component added'],
 
   title_restricted: ["Can't read this page", 'State title'],
-  body_restricted: ["Chrome doesn't allow extensions to read this page. Open a regular website and try again.", 'RESTRICTED_PAGE'],
-  body_file_access: ['To read local files, turn on "Allow access to file URLs" for this extension in chrome://extensions.', 'FILE_ACCESS'],
+  body_restricted: [
+    "Chrome doesn't allow extensions to read this page. Open a regular website and try again.",
+    'RESTRICTED_PAGE',
+  ],
+  body_file_access: [
+    'To read local files, turn on "Allow access to file URLs" for this extension in chrome://extensions.',
+    'FILE_ACCESS',
+  ],
   title_no_access: ['Give access to this tab', 'State title'],
-  body_no_access: ['Click the WebStyle icon in the toolbar, or press Alt+Shift+D, to give access to this tab.', 'NO_ACCESS'],
+  body_no_access: [
+    'Click the WebStyle icon in the toolbar, or press Alt+Shift+D, to give access to this tab.',
+    'NO_ACCESS',
+  ],
   title_error: ['Something went wrong', 'State title'],
-  body_timeout: ['This page took too long to read. Wait for it to finish loading, then retry.', 'TIMEOUT'],
+  body_timeout: [
+    'This page took too long to read. Wait for it to finish loading, then retry.',
+    'TIMEOUT',
+  ],
   title_thin: ['Too little to read', 'State title'],
-  body_empty_page: ["Found too little to read. Scroll to load the content, then re-run. Pages drawn on a canvas can't be read.", 'EMPTY_PAGE'],
+  body_empty_page: [
+    "Found too little to read. Scroll to load the content, then re-run. Pages drawn on a canvas can't be read.",
+    'EMPTY_PAGE',
+  ],
   body_page_changed: ['The page changed while it was being read. Try again.', 'PAGE_CHANGED'],
   body_injection_failed: ["Couldn't read this page.", 'INJECTION_FAILED'],
   body_analysis_failed: ['Something went wrong while analyzing.', 'ANALYSIS_FAILED'],
   title_debugger_attach_failed: ["Couldn't start Advanced capture", 'State title'],
-  body_debugger_attach_failed: ["Couldn't start Advanced capture on this tab. Close other debugging tools and retry, or run a basic extraction.", 'DEBUGGER_ATTACH_FAILED'],
+  body_debugger_attach_failed: [
+    "Couldn't start Advanced capture on this tab. Close other debugging tools and retry, or run a basic extraction.",
+    'DEBUGGER_ATTACH_FAILED',
+  ],
   run_basic: ['Run basic extraction', 'Button'],
   retry: ['Retry', 'Button'],
   copy_details: ['Copy details', 'Button'],
@@ -282,7 +336,10 @@ export const MESSAGES = {
   history_empty_body: ['Extract a page and it appears here.', 'History empty state'],
 
   confirm_reset_title: ['Reset to extracted?', 'Dialog'],
-  confirm_reset_body: ['Your edits to this snapshot are cleared and the original analysis is restored.', 'Dialog'],
+  confirm_reset_body: [
+    'Your edits to this snapshot are cleared and the original analysis is restored.',
+    'Dialog',
+  ],
   confirm_reset: ['Reset', 'Dialog button'],
   confirm_delete_title: ['Delete this snapshot?', 'Dialog'],
   confirm_delete_body: ['It is removed from history on this computer.', 'Dialog'],
@@ -294,9 +351,15 @@ export const MESSAGES = {
   add_anyway: ['Add anyway', 'Dialog button'],
   import_invalid_title: ['Import failed', 'Dialog'],
   import_invalid: ["This file isn't a valid WebStyle snapshot: $1.", 'IMPORT_INVALID'],
-  import_too_new: ['This file was made with a newer version of WebStyle Extractor. Update the extension to open it.', 'IMPORT_TOO_NEW'],
+  import_too_new: [
+    'This file was made with a newer version of WebStyle Extractor. Update the extension to open it.',
+    'IMPORT_TOO_NEW',
+  ],
   fs_write_failed: ["Some files couldn't be written: $1.", 'FS_WRITE_FAILED'],
-  mapping_parse_failed: ["Couldn't read tokens from $1. Supported: DTCG JSON, CSS custom properties, Tailwind v4 @theme.", 'MAPPING_PARSE_FAILED'],
+  mapping_parse_failed: [
+    "Couldn't read tokens from $1. Supported: DTCG JSON, CSS custom properties, Tailwind v4 @theme.",
+    'MAPPING_PARSE_FAILED',
+  ],
   choose_snapshot: ['Choose a snapshot', 'Dialog title'],
   include_screenshots_export: ['Include screenshots', 'Export dialog checkbox'],
   export_title: ['Export snapshots', 'Dialog title'],
@@ -327,7 +390,10 @@ export const MESSAGES = {
   use_site_names: ['Use site variable names', 'Setting'],
   exports: ['Exports', 'Settings section'],
   highlight_on_page: ['Highlight on page', 'Setting'],
-  highlight_help: ['Draws temporary outlines on the page. Nothing else on the page changes.', 'Setting description'],
+  highlight_help: [
+    'Draws temporary outlines on the page. Nothing else on the page changes.',
+    'Setting description',
+  ],
   allowed_sites: ['Allowed sites', 'Settings section'],
   no_allowed_sites: ['No sites allowed yet.', 'Empty state'],
   remove: ['Remove', 'Button'],

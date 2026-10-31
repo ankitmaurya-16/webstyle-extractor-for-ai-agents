@@ -569,14 +569,12 @@ describe('Picking, Diff, Map and state screens', () => {
     const { unmount } = ui(<MapScreen />);
     expect(screen.getAllByText(t('map_title')).length).toBeGreaterThan(0);
     unmount();
-    const entries = record.edited.colors
-      .slice(0, 2)
-      .map((c, i) => ({
-        tokenId: c.id,
-        userToken: i ? null : '--brand',
-        status: i ? 'none' : 'exact',
-        delta: i ? null : 0,
-      }));
+    const entries = record.edited.colors.slice(0, 2).map((c, i) => ({
+      tokenId: c.id,
+      userToken: i ? null : '--brand',
+      status: i ? 'none' : 'exact',
+      delta: i ? null : 0,
+    }));
     useStore.setState({
       record: {
         ...record,

@@ -18,7 +18,9 @@ const size = (file) => readFileSync(join(dir, file)).length;
 const html = readFileSync(join(dir, 'sidepanel.html'), 'utf8');
 const initial = [...html.matchAll(/(?:src|href)="\/?([^"]+\.js)"/g)].map((m) => m[1]);
 const panelGzip = initial.reduce((sum, f) => sum + gzipSync(readFileSync(join(dir, f))).length, 0);
-const worker = readdirSync(join(dir, 'assets')).find((f) => f.startsWith('worker') && f.endsWith('.js'));
+const worker = readdirSync(join(dir, 'assets')).find(
+  (f) => f.startsWith('worker') && f.endsWith('.js'),
+);
 
 const checks = [
   ['Extractor bundle (minified)', size('extractor.js'), 70 * 1024],
@@ -32,5 +34,8 @@ for (const [label, value, budget] of checks) {
   failed ||= !ok;
   console.log(`${ok ? 'ok  ' : 'FAIL'} ${label}: ${kb(value)} (budget ${kb(budget)})`);
 }
-if (worker) console.log(`info Analysis worker (gzipped): ${kb(gzipSync(readFileSync(join(dir, 'assets', worker))).length)}`);
+if (worker)
+  console.log(
+    `info Analysis worker (gzipped): ${kb(gzipSync(readFileSync(join(dir, 'assets', worker))).length)}`,
+  );
 process.exit(failed ? 1 : 0);

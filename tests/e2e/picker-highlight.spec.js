@@ -10,7 +10,9 @@ async function startPicking(ext, fixture = 'components.html') {
   return { ...fx, panel };
 }
 
-test('AC-F26.1 AC-F26.11 the picker outlines the element under the pointer and reports tag and size', async ({ ext }) => {
+test('AC-F26.1 AC-F26.11 the picker outlines the element under the pointer and reports tag and size', async ({
+  ext,
+}) => {
   const { page, panel } = await startPicking(ext);
   await expect(panel.getByTestId('pick-current')).toContainText('Current:');
   const button = page.locator('button.b').first();
@@ -19,7 +21,9 @@ test('AC-F26.1 AC-F26.11 the picker outlines the element under the pointer and r
   await expect(panel.getByTestId('pick-current')).toContainText('button');
 });
 
-test('AC-F26.2 AC-F26.5 AC-F26.7 a click picks without reaching the page and saves a component snapshot', async ({ ext }) => {
+test('AC-F26.2 AC-F26.5 AC-F26.7 a click picks without reaching the page and saves a component snapshot', async ({
+  ext,
+}) => {
   const { page, panel } = await startPicking(ext);
   await page.evaluate(() => {
     window.pageClicks = 0;
@@ -72,7 +76,9 @@ test('AC-F30.1 eye buttons appear only when Highlight on page is on', async ({ e
   await expect(panel.getByRole('button', { name: /Where is .* used\?/ })).toHaveCount(0);
 });
 
-test('AC-F30.3 AC-F30.6 highlighting shows a count and outlines without changing the page', async ({ ext }) => {
+test('AC-F30.3 AC-F30.6 highlighting shows a count and outlines without changing the page', async ({
+  ext,
+}) => {
   const { page, panel } = await highlightReady(ext);
   const before = await page.evaluate(() => document.body.outerHTML);
   const eye = panel.getByRole('button', { name: 'Where is white used?' }).first();

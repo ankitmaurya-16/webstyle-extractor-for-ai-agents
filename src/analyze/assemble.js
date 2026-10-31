@@ -16,7 +16,14 @@ export function withOverrideCapture(captures, newId) {
   if (!override) return captures;
   return [
     ...captures,
-    { ...base, id: newId(), mode: base.mode === 'dark' ? 'light' : 'dark', method: 'stylesheet-override', kind: 'theme', raw: override },
+    {
+      ...base,
+      id: newId(),
+      mode: base.mode === 'dark' ? 'light' : 'dark',
+      method: 'stylesheet-override',
+      kind: 'theme',
+      raw: override,
+    },
   ];
 }
 

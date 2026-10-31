@@ -8,7 +8,12 @@ import { diffDesigns } from '../diff/index.js';
 import { MSG } from '../messaging.js';
 
 const fail = (requestId, code, error) =>
-  self.postMessage({ type: MSG.ERROR, requestId, code, detail: error instanceof Error ? error.message : String(error) });
+  self.postMessage({
+    type: MSG.ERROR,
+    requestId,
+    code,
+    detail: error instanceof Error ? error.message : String(error),
+  });
 
 self.onmessage = (event) => {
   const message = event.data;
@@ -34,7 +39,11 @@ self.onmessage = (event) => {
     }
   } else if (message.type === MSG.DIFF) {
     try {
-      self.postMessage({ type: MSG.DIFF_RESULT, requestId, diff: diffDesigns(message.a, message.b) });
+      self.postMessage({
+        type: MSG.DIFF_RESULT,
+        requestId,
+        diff: diffDesigns(message.a, message.b),
+      });
     } catch (error) {
       fail(requestId, 'ANALYSIS_FAILED', error);
     }

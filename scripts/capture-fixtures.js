@@ -11,7 +11,16 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { launch, openFixture } from '../tests/e2e/harness.js';
 import { startServers } from '../tests/e2e/server.js';
 
-export const DEFAULT_NAMES = ['classic', 'dark', 'utility', 'cross-origin', 'large', 'lazy', 'canvas', 'components'];
+export const DEFAULT_NAMES = [
+  'classic',
+  'dark',
+  'utility',
+  'cross-origin',
+  'large',
+  'lazy',
+  'canvas',
+  'components',
+];
 const CAPTURE_OPTIONS = { coverage: { autoScroll: true }, lazy: { autoScroll: false } };
 const CAPTURED_AT = Date.UTC(2026, 9, 18, 12, 0, 0);
 const out = new URL('../tests/unit/fixtures/', import.meta.url);
@@ -32,7 +41,10 @@ try {
     const { page, tabId } = await openFixture(context, worker, `${name}.html`);
     const raw = await worker.evaluate(
       async ({ id, options }) => {
-        await chrome.scripting.executeScript({ target: { tabId: id, allFrames: true }, files: ['/extractor.js'] });
+        await chrome.scripting.executeScript({
+          target: { tabId: id, allFrames: true },
+          files: ['/extractor.js'],
+        });
         const results = await chrome.scripting.executeScript({
           target: { tabId: id, frameIds: [0] },
           func: (opts) => self.__webstyle.collect(opts),
@@ -43,7 +55,10 @@ try {
       { id: tabId, options: CAPTURE_OPTIONS[name] ?? {} },
     );
     raw.capturedAt = CAPTURED_AT;
-    writeFileSync(new URL(`${name.replace(/\//g, '-')}.raw.json`, out), `${JSON.stringify(raw, null, 1)}\n`);
+    writeFileSync(
+      new URL(`${name.replace(/\//g, '-')}.raw.json`, out),
+      `${JSON.stringify(raw, null, 1)}\n`,
+    );
     console.log(`${name}: ${raw.elementsSampled} elements`);
     await page.close();
   }

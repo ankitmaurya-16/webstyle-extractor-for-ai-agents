@@ -14,13 +14,20 @@ export async function turnOnAdvanced(panel) {
 
 /** Debugger targets attached to a tab, as Chrome reports them. */
 export const attachedTo = (worker, tabId) =>
-  worker.evaluate(async (id) => (await chrome.debugger.getTargets()).filter((t) => t.tabId === id && t.attached).length, tabId);
+  worker.evaluate(
+    async (id) =>
+      (await chrome.debugger.getTargets()).filter((t) => t.tabId === id && t.attached).length,
+    tabId,
+  );
 
 export async function expectDetached(worker, tabId) {
   await expect.poll(() => attachedTo(worker, tabId), { timeout: 10_000 }).toBe(0);
 }
 
-export const activeCapture = (worker) => worker.evaluate(async () => (await chrome.storage.session.get('activeCapture')).activeCapture ?? null);
+export const activeCapture = (worker) =>
+  worker.evaluate(
+    async () => (await chrome.storage.session.get('activeCapture')).activeCapture ?? null,
+  );
 
 /** The newest snapshot record in the panel's IndexedDB. */
 export const latestRecord = (panel) =>
@@ -31,12 +38,14 @@ export const latestRecord = (panel) =>
         open.onerror = () => reject(open.error);
         open.onsuccess = () => {
           const req = open.result.transaction('snapshots').objectStore('snapshots').getAll();
-          req.onsuccess = () => resolve(req.result.sort((a, b) => b.updatedAt - a.updatedAt)[0] ?? null);
+          req.onsuccess = () =>
+            resolve(req.result.sort((a, b) => b.updatedAt - a.updatedAt)[0] ?? null);
         };
       }),
   );
 
-export const overlayCount = (page) => page.evaluate(() => document.querySelectorAll('webstyle-overlay').length);
+export const overlayCount = (page) =>
+  page.evaluate(() => document.querySelectorAll('webstyle-overlay').length);
 
 export async function setSetting(panel, patch) {
   await panel.evaluate(async (p) => {

@@ -47,16 +47,43 @@ async function readRecipe(tabId, selector) {
 export function mergeFrames(top, frames) {
   const merged = { ...top };
   const lists = [
-    'colors', 'fontFamilies', 'fontSizes', 'fontWeights', 'lineHeights', 'letterSpacings', 'textTransforms',
-    'textStyles', 'spacing', 'radii', 'shadows', 'borderWidths', 'borderStyles', 'opacities', 'durations',
-    'easings', 'transitionProperties', 'gradients', 'containers', 'gridColumns', 'gaps', 'iconSizes',
-    'iconStrokes', 'contrastSamples', 'samples', 'zIndices', 'frameworkSignals', 'iconSignals', 'variableDefs',
+    'colors',
+    'fontFamilies',
+    'fontSizes',
+    'fontWeights',
+    'lineHeights',
+    'letterSpacings',
+    'textTransforms',
+    'textStyles',
+    'spacing',
+    'radii',
+    'shadows',
+    'borderWidths',
+    'borderStyles',
+    'opacities',
+    'durations',
+    'easings',
+    'transitionProperties',
+    'gradients',
+    'containers',
+    'gridColumns',
+    'gaps',
+    'iconSizes',
+    'iconStrokes',
+    'contrastSamples',
+    'samples',
+    'zIndices',
+    'frameworkSignals',
+    'iconSignals',
+    'variableDefs',
   ];
   for (const frame of frames) {
     for (const key of lists) merged[key] = [...(merged[key] ?? []), ...(frame[key] ?? [])];
     merged.elementsSampled += frame.elementsSampled;
     merged.fontFaces = [...(merged.fontFaces ?? []), ...(frame.fontFaces ?? [])];
-    merged.breakpoints = [...new Set([...(merged.breakpoints ?? []), ...(frame.breakpoints ?? [])])];
+    merged.breakpoints = [
+      ...new Set([...(merged.breakpoints ?? []), ...(frame.breakpoints ?? [])]),
+    ];
   }
   const total = top.frameCount ?? frames.length;
   merged.coverage = {
@@ -115,7 +142,8 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
   const restricted = classifyUrl(url);
   if (restricted) return extractError(restricted, url, requestId);
 
-  const basicTimeout = (timeoutMs ?? EXTRACT_TIMEOUT_MS) + (request.autoScroll ? AUTO_SCROLL_EXTRA_MS : 0);
+  const basicTimeout =
+    (timeoutMs ?? EXTRACT_TIMEOUT_MS) + (request.autoScroll ? AUTO_SCROLL_EXTRA_MS : 0);
   let stopWatching = () => {};
   let timer;
   let navigated = false;
@@ -144,22 +172,30 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
       onProgress(request.autoScroll ? 'scrolling' : 'reading');
       let results;
       try {
-        results = await collectIn(tabId, allFrames, { autoScroll: request.autoScroll, rootSelector: request.rootSelector ?? null });
+        results = await collectIn(tabId, allFrames, {
+          autoScroll: request.autoScroll,
+          rootSelector: request.rootSelector ?? null,
+        });
       } catch (error) {
         return extractError(classifyInjectionError(error, url), errorMessage(error), requestId);
       }
       if (request.autoScroll) onProgress('reading');
       const top = results?.find((r) => r.frameId === 0)?.result;
-      if (!top || typeof top !== 'object') return extractError('INJECTION_FAILED', 'No result', requestId);
+      if (!top || typeof top !== 'object')
+        return extractError('INJECTION_FAILED', 'No result', requestId);
       // A navigation that lands before the script runs is not seen by the tab listener, but the
       // snapshot then comes from a different page.
-      if (url && top.url && !sameDocument(top.url, url)) return extractError('PAGE_CHANGED', top.url, requestId);
+      if (url && top.url && !sameDocument(top.url, url))
+        return extractError('PAGE_CHANGED', top.url, requestId);
       const frames = results.filter((r) => r.frameId !== 0 && r.result).map((r) => r.result);
       return { raw: mergeFrames(top, frames) };
     })();
     let timedOut;
     const timeout = new Promise((resolve) => {
-      timer = setTimeout(() => resolve((timedOut = extractError('TIMEOUT', undefined, requestId))), basicTimeout);
+      timer = setTimeout(
+        () => resolve((timedOut = extractError('TIMEOUT', undefined, requestId))),
+        basicTimeout,
+      );
     });
     let outcome = await Promise.race([basic, pageChanged, timeout, cancelled]);
     clearTimeout(timer);
@@ -168,7 +204,9 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
       if (outcome.code === 'INJECTION_FAILED' && outcome.detail === 'No result' && !timedOut) {
         // Chrome resolves with a null result when the document is torn down mid-run, a moment
         // before the tab reports the navigation. Wait briefly for that report.
-        const grace = new Promise((resolve) => setTimeout(() => resolve(outcome), NAVIGATION_GRACE_MS));
+        const grace = new Promise((resolve) =>
+          setTimeout(() => resolve(outcome), NAVIGATION_GRACE_MS),
+        );
         outcome = await Promise.race([pageChanged, grace]);
       }
       return outcome;
@@ -182,7 +220,13 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
     const screenshots = [];
     if (request.screenshots) {
       const shot = await screenshot(tab.windowId);
-      if (shot) screenshots.push({ mode: base.colorScheme, ...shot, dpr: base.devicePixelRatio ?? 1, representatives: base.representatives });
+      if (shot)
+        screenshots.push({
+          mode: base.colorScheme,
+          ...shot,
+          dpr: base.devicePixelRatio ?? 1,
+          representatives: base.representatives,
+        });
     }
 
     // ---- Advanced capture (F23) ----
@@ -197,13 +241,21 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
       } catch (error) {
         return extractError('DEBUGGER_ATTACH_FAILED', errorMessage(error), requestId);
       }
-      await setActiveCapture({ tabId, debuggerAttached: true, overlays: [], startedAt: Date.now() });
+      await setActiveCapture({
+        tabId,
+        debuggerAttached: true,
+        overlays: [],
+        startedAt: Date.now(),
+      });
       const detached = new Promise((resolve) => {
         const listener = (source) => {
-          if (source.tabId === tabId) resolve(extractError('PAGE_CHANGED', 'Debugger detached', requestId));
+          if (source.tabId === tabId)
+            resolve(extractError('PAGE_CHANGED', 'Debugger detached', requestId));
         };
         api().debugger.onDetach?.addListener(listener);
-        signal?.addEventListener('abort', () => api().debugger.onDetach?.removeListener(listener), { once: true });
+        signal?.addEventListener('abort', () => api().debugger.onDetach?.removeListener(listener), {
+          once: true,
+        });
       });
       const controller = new AbortController();
       signal?.addEventListener('abort', () => controller.abort(), { once: true });
@@ -212,7 +264,11 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
         baseRaw: base,
         options: request.advanced,
         collect: async (opts) => {
-          const [r] = await collectIn(tabId, false, { ...opts, autoScroll: false, rootSelector: request.rootSelector ?? null });
+          const [r] = await collectIn(tabId, false, {
+            ...opts,
+            autoScroll: false,
+            rootSelector: request.rootSelector ?? null,
+          });
           return r?.result ?? null;
         },
         readRecipe: (selector) => readRecipe(tabId, selector),
@@ -225,7 +281,13 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
           const gap = Date.now() - last;
           if (gap < 500) await new Promise((r) => setTimeout(r, 500 - gap));
           const shot = await screenshot(tab.windowId);
-          if (shot) screenshots.push({ mode, ...shot, dpr: base.devicePixelRatio ?? 1, representatives: base.representatives });
+          if (shot)
+            screenshots.push({
+              mode,
+              ...shot,
+              dpr: base.devicePixelRatio ?? 1,
+              representatives: base.representatives,
+            });
           return null;
         },
       });
@@ -240,7 +302,14 @@ export async function handleExtract(msg, { signal, onProgress = () => {}, timeou
       }
       captures = [
         toCapture(result.base),
-        ...result.extra.map((e) => toCapture(e.raw, { mode: e.mode, kind: e.kind, method: e.method, viewportWidth: e.viewportWidth })),
+        ...result.extra.map((e) =>
+          toCapture(e.raw, {
+            mode: e.mode,
+            kind: e.kind,
+            method: e.method,
+            viewportWidth: e.viewportWidth,
+          }),
+        ),
       ];
       warnings.push(...result.failed);
       onProgress('detach');
@@ -270,7 +339,9 @@ export async function recoverActiveCapture() {
   }
   if (!record) return;
   if (record.debuggerAttached && api().debugger) {
-    await api().debugger.detach({ tabId: record.tabId }).catch(() => {});
+    await api()
+      .debugger.detach({ tabId: record.tabId })
+      .catch(() => {});
   }
   await cleanupOverlays(record.tabId);
   await setActiveCapture(null);

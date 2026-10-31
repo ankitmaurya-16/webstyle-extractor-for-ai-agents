@@ -14,13 +14,21 @@ for (const name of ['classic', 'dark', 'utility']) {
     for (const tab of TABS) {
       await panel.getByRole('tab', { name: tab }).click();
       await expect(panel.getByRole('tab', { name: tab, selected: true })).toBeVisible();
-      if (process.env.SHOTS) await panel.screenshot({ path: `${process.env.SHOTS}/${name}-${tab}.png`, fullPage: true });
+      if (process.env.SHOTS)
+        await panel.screenshot({ path: `${process.env.SHOTS}/${name}-${tab}.png`, fullPage: true });
     }
-    for (const screen of [['Settings', 'settings'], ['History', 'history']]) {
+    for (const screen of [
+      ['Settings', 'settings'],
+      ['History', 'history'],
+    ]) {
       await panel.getByRole('button', { name: 'Back' }).first().click();
       await panel.getByRole('button', { name: screen[0] }).click();
       await panel.waitForSelector(`[data-screen=${screen[1]}]`);
-      if (process.env.SHOTS) await panel.screenshot({ path: `${process.env.SHOTS}/${name}-${screen[1]}.png`, fullPage: true });
+      if (process.env.SHOTS)
+        await panel.screenshot({
+          path: `${process.env.SHOTS}/${name}-${screen[1]}.png`,
+          fullPage: true,
+        });
     }
     expect(errors).toEqual([]);
   });

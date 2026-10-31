@@ -3,6 +3,9 @@
 import { z } from 'zod';
 import { migrateRecord } from '../storage/migrate.js';
 
+// The panel's CSP forbids eval, so zod must not probe new Function() for its JIT (CLAUDE.md).
+z.config({ jitless: true });
+
 export const FORMAT = 'webstyle-snapshots';
 export const VERSION = 2;
 export const MAX_IMPORT_BYTES = 50 * 1024 * 1024;

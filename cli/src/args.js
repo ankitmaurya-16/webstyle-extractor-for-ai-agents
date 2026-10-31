@@ -3,7 +3,17 @@
 import { parseArgs } from 'node:util';
 import { EXPORT_FORMATS } from '../../src/model/types.js';
 
-export const DEFAULT_FORMATS = ['design-md', 'prompt', 'dtcg', 'tailwind-v4', 'css-vars', 'shadcn', 'agents-md', 'cursor-rules', 'claude-md'];
+export const DEFAULT_FORMATS = [
+  'design-md',
+  'prompt',
+  'dtcg',
+  'tailwind-v4',
+  'css-vars',
+  'shadcn',
+  'agents-md',
+  'cursor-rules',
+  'claude-md',
+];
 
 export class UsageError extends Error {
   constructor(message) {
@@ -34,16 +44,23 @@ const EXTRACT_OPTIONS = {
 
 const number = (value, name, { min = 0, max = Infinity } = {}) => {
   const n = Number(value);
-  if (!Number.isInteger(n) || n < min || n > max) throw new UsageError(`--${name} must be a whole number from ${min} to ${max}`);
+  if (!Number.isInteger(n) || n < min || n > max)
+    throw new UsageError(`--${name} must be a whole number from ${min} to ${max}`);
   return n;
 };
 
 function parseFormats(value) {
   if (!value) return DEFAULT_FORMATS;
   if (value === 'all') return [...EXPORT_FORMATS, 'screenshots'];
-  const list = value.split(',').map((f) => f.trim()).filter(Boolean);
+  const list = value
+    .split(',')
+    .map((f) => f.trim())
+    .filter(Boolean);
   const unknown = list.filter((f) => !EXPORT_FORMATS.includes(f) && f !== 'screenshots');
-  if (unknown.length) throw new UsageError(`Unknown format: ${unknown.join(', ')}. Use one of ${EXPORT_FORMATS.join(', ')} or all`);
+  if (unknown.length)
+    throw new UsageError(
+      `Unknown format: ${unknown.join(', ')}. Use one of ${EXPORT_FORMATS.join(', ')} or all`,
+    );
   return list;
 }
 
@@ -56,7 +73,8 @@ function parseUrls(list) {
     } catch {
       throw new UsageError(`Not a URL: ${value}`);
     }
-    if (!['http:', 'https:', 'file:'].includes(url.protocol)) throw new UsageError(`Unsupported URL: ${value}`);
+    if (!['http:', 'https:', 'file:'].includes(url.protocol))
+      throw new UsageError(`Unsupported URL: ${value}`);
     return url.href;
   });
 }
@@ -68,14 +86,23 @@ function parseUrls(list) {
  */
 export function parseCommand(argv) {
   const [command, ...rest] = argv;
-  if (!command || command === '--help' || command === '-h' || command === 'help') return { command: 'help' };
+  if (!command || command === '--help' || command === '-h' || command === 'help')
+    return { command: 'help' };
   if (command === '--version' || command === '-v') return { command: 'version' };
   try {
     if (command === 'extract') {
-      const { values, positionals } = parseArgs({ args: rest, options: EXTRACT_OPTIONS, allowPositionals: true, strict: true });
-      if (values.dark && values['no-dark']) throw new UsageError('Use --dark or --no-dark, not both');
-      if (values['site-names'] && values['no-site-names']) throw new UsageError('Use --site-names or --no-site-names, not both');
-      if (!['oklch', 'hsl'].includes(values['shadcn-format'])) throw new UsageError('--shadcn-format must be oklch or hsl');
+      const { values, positionals } = parseArgs({
+        args: rest,
+        options: EXTRACT_OPTIONS,
+        allowPositionals: true,
+        strict: true,
+      });
+      if (values.dark && values['no-dark'])
+        throw new UsageError('Use --dark or --no-dark, not both');
+      if (values['site-names'] && values['no-site-names'])
+        throw new UsageError('Use --site-names or --no-site-names, not both');
+      if (!['oklch', 'hsl'].includes(values['shadcn-format']))
+        throw new UsageError('--shadcn-format must be oklch or hsl');
       const widths = values.widths
         ? values.widths.split(',').map((w) => number(w.trim(), 'widths', { min: 320, max: 1920 }))
         : [];
@@ -103,7 +130,12 @@ export function parseCommand(argv) {
       };
     }
     if (command === 'diff') {
-      const { values, positionals } = parseArgs({ args: rest, options: { out: { type: 'string' } }, allowPositionals: true, strict: true });
+      const { values, positionals } = parseArgs({
+        args: rest,
+        options: { out: { type: 'string' } },
+        allowPositionals: true,
+        strict: true,
+      });
       if (positionals.length !== 2) throw new UsageError('diff needs two snapshot files');
       return { command: 'diff', a: positionals[0], b: positionals[1], out: values.out ?? null };
     }
@@ -116,7 +148,12 @@ export function parseCommand(argv) {
       });
       if (positionals.length !== 1) throw new UsageError('map needs one snapshot file');
       if (!values.tokens) throw new UsageError('map needs --tokens <file>');
-      return { command: 'map', snapshot: positionals[0], tokens: values.tokens, out: values.out ?? null };
+      return {
+        command: 'map',
+        snapshot: positionals[0],
+        tokens: values.tokens,
+        out: values.out ?? null,
+      };
     }
   } catch (error) {
     if (error instanceof UsageError) throw error;

@@ -2,7 +2,12 @@ import { useStore } from '../store.js';
 import { t } from '../../../src/i18n.js';
 import { ConfirmDialog } from './ConfirmDialog.jsx';
 
-const STATUS = { new: 'status_new', updated: 'status_updated', unchanged: 'status_unchanged', failed: 'status_failed' };
+const STATUS = {
+  new: 'status_new',
+  updated: 'status_updated',
+  unchanged: 'status_unchanged',
+  failed: 'status_failed',
+};
 
 /** Store-driven dialogs: cross-site pages, write summaries and import or mapping errors. */
 export function Dialogs() {
@@ -36,7 +41,9 @@ export function Dialogs() {
             {dialog.results.map((r) => (
               <li key={r.path} className="flex gap-2">
                 <span className="min-w-0 flex-1 truncate text-text">{r.path}</span>
-                <span className={r.status === 'failed' ? 'text-danger' : 'text-faint'}>{t(STATUS[r.status])}</span>
+                <span className={r.status === 'failed' ? 'text-danger' : 'text-faint'}>
+                  {t(STATUS[r.status])}
+                </span>
               </li>
             ))}
           </ul>
@@ -49,11 +56,22 @@ export function Dialogs() {
           open
           onOpenChange={onOpenChange}
           title={t('import_invalid_title')}
-          body={dialog.code === 'IMPORT_TOO_NEW' ? t('import_too_new') : t('import_invalid', dialog.problem)}
+          body={
+            dialog.code === 'IMPORT_TOO_NEW'
+              ? t('import_too_new')
+              : t('import_invalid', dialog.problem)
+          }
         />
       );
     case 'mapping-error':
-      return <ConfirmDialog open onOpenChange={onOpenChange} title={t('map_title')} body={t('mapping_parse_failed', dialog.file)} />;
+      return (
+        <ConfirmDialog
+          open
+          onOpenChange={onOpenChange}
+          title={t('map_title')}
+          body={t('mapping_parse_failed', dialog.file)}
+        />
+      );
     default:
       return null;
   }

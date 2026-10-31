@@ -15,7 +15,8 @@ export function themeMechanism(signals) {
   if (cls) return { mechanism: 'class', selector: cls };
   const attr = dark.find((s) => s.startsWith('['));
   if (attr) return { mechanism: 'attribute', selector: attr };
-  if (signals?.darkMedia) return { mechanism: 'media', selector: '@media (prefers-color-scheme: dark)' };
+  if (signals?.darkMedia)
+    return { mechanism: 'media', selector: '@media (prefers-color-scheme: dark)' };
   return { mechanism: 'none', selector: null };
 }
 
@@ -34,8 +35,10 @@ export function buildOverrideRaw(raw) {
   const active = raw.themeSignals?.activeMode ?? raw.colorScheme ?? 'light';
   const target = otherMode(active);
   const defs = raw.variableDefs ?? [];
-  const inTarget = (scope) => (target === 'dark' ? isDarkScope(scope) : scope === 'root' || scope === 'light-selector');
-  const inActive = (scope) => (active === 'dark' ? isDarkScope(scope) : scope === 'root' || scope === 'light-selector');
+  const inTarget = (scope) =>
+    target === 'dark' ? isDarkScope(scope) : scope === 'root' || scope === 'light-selector';
+  const inActive = (scope) =>
+    active === 'dark' ? isDarkScope(scope) : scope === 'root' || scope === 'light-selector';
 
   const activeValues = new Map();
   const targetValues = new Map();
@@ -58,12 +61,21 @@ export function buildOverrideRaw(raw) {
     if (!c) continue;
     const mapped = swap.get(c.hex);
     if (!mapped) continue;
-    colors.push({ ...stat, value: mapped, effectiveHex: mapped.length === 9 ? stat.effectiveHex : mapped, backdropHex: stat.backdropHex });
+    colors.push({
+      ...stat,
+      value: mapped,
+      effectiveHex: mapped.length === 9 ? stat.effectiveHex : mapped,
+      backdropHex: stat.backdropHex,
+    });
   }
 
   // Root-level rules in the target theme scope (html, body, :root colors).
-  const totalText = (raw.colors ?? []).filter((s) => s.contexts.includes('text')).reduce((n, s) => n + s.weight, 0);
-  const totalFill = (raw.colors ?? []).filter((s) => s.contexts.includes('background')).reduce((n, s) => n + s.weight, 0);
+  const totalText = (raw.colors ?? [])
+    .filter((s) => s.contexts.includes('text'))
+    .reduce((n, s) => n + s.weight, 0);
+  const totalFill = (raw.colors ?? [])
+    .filter((s) => s.contexts.includes('background'))
+    .reduce((n, s) => n + s.weight, 0);
   for (const rule of raw.themeRootRules ?? []) {
     if (!inTarget(rule.scope)) continue;
     const value = resolveSimpleVar(rule.value, targetValues, activeValues);
@@ -137,7 +149,13 @@ export function emptyRaw(raw) {
     cssVariables: {},
     variableDefs: [],
     variableUsage: {},
-    themeSignals: raw.themeSignals ?? { darkMedia: false, darkSelectors: [], lightSelectors: [], activeMode: raw.colorScheme ?? 'light', colorSchemeProperty: 'normal' },
+    themeSignals: raw.themeSignals ?? {
+      darkMedia: false,
+      darkSelectors: [],
+      lightSelectors: [],
+      activeMode: raw.colorScheme ?? 'light',
+      colorSchemeProperty: 'normal',
+    },
     themeRootRules: [],
     frameworkSignals: [],
     iconSignals: [],
@@ -150,6 +168,10 @@ export function emptyRaw(raw) {
     stylesheets: raw.stylesheets ?? { readable: 0, unreadable: 0 },
     samples: [],
     canvasHex: raw.canvasHex ?? null,
-    coverage: raw.coverage ?? { frames: { read: 0, skipped: 0 }, shadowRoots: 0, autoScrolled: false },
+    coverage: raw.coverage ?? {
+      frames: { read: 0, skipped: 0 },
+      shadowRoots: 0,
+      autoScrolled: false,
+    },
   };
 }

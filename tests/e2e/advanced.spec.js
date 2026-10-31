@@ -1,13 +1,23 @@
 import { expect, openFixture, openPanel, test } from './harness.js';
-import { activeCapture, expectDetached, extractFrom, latestRecord, turnOnAdvanced } from './v2-helpers.js';
+import {
+  activeCapture,
+  expectDetached,
+  extractFrom,
+  latestRecord,
+  turnOnAdvanced,
+} from './v2-helpers.js';
 
-test('AC-F23.10 the Advanced capture switch explains the debugging bar before first use', async ({ ext }) => {
+test('AC-F23.10 the Advanced capture switch explains the debugging bar before first use', async ({
+  ext,
+}) => {
   const { tabId } = await openFixture(ext.context, ext.worker, 'classic.html');
   const panel = await openPanel(ext.context, ext.extensionId, tabId);
   await expect(panel.getByText(/started debugging this browser/)).toBeVisible();
 });
 
-test('AC-F23.5 AC-F13.3 AC-F23.6 stages run in order, the other theme is emulated and the debugger detaches after success', async ({ ext }) => {
+test('AC-F23.5 AC-F13.3 AC-F23.6 stages run in order, the other theme is emulated and the debugger detaches after success', async ({
+  ext,
+}) => {
   const { page, tabId } = await openFixture(ext.context, ext.worker, 'dark-media.html');
   const panel = await openPanel(ext.context, ext.extensionId, tabId);
   await turnOnAdvanced(panel);
@@ -21,7 +31,9 @@ test('AC-F23.5 AC-F13.3 AC-F23.6 stages run in order, the other theme is emulate
   });
   await extractFrom(panel);
   const order = [...new Set(seen)];
-  const expected = ['reading', 'attach', 'deep-scan', 'dark', 'states', 'analyzing'].filter((s) => order.includes(s));
+  const expected = ['reading', 'attach', 'deep-scan', 'dark', 'states', 'analyzing'].filter((s) =>
+    order.includes(s),
+  );
   expect(order.filter((s) => expected.includes(s))).toEqual(expected);
   expect(order).toContain('deep-scan');
   await expect(panel.getByRole('group', { name: 'Theme' })).toBeVisible();
@@ -44,7 +56,9 @@ test('AC-F23.4 deep scan recovers breakpoints on the cross-origin fixture', asyn
   await expectDetached(ext.worker, tabId);
 });
 
-test('AC-F12.5 forced states replace stylesheet states and are cleared afterwards', async ({ ext }) => {
+test('AC-F12.5 forced states replace stylesheet states and are cleared afterwards', async ({
+  ext,
+}) => {
   const { page, tabId } = await openFixture(ext.context, ext.worker, 'states.html');
   const panel = await openPanel(ext.context, ext.extensionId, tabId);
   await turnOnAdvanced(panel);
@@ -53,16 +67,22 @@ test('AC-F12.5 forced states replace stylesheet states and are cleared afterward
   expect(record.extracted.components.some((r) => r.stateSource === 'forced')).toBe(true);
   await expectDetached(ext.worker, tabId);
   // No element is left in a forced :hover state.
-  expect(await page.evaluate(() => document.querySelectorAll(':hover').length)).toBeLessThanOrEqual(3);
+  expect(await page.evaluate(() => document.querySelectorAll(':hover').length)).toBeLessThanOrEqual(
+    3,
+  );
 });
 
-test('AC-F24.1 AC-F24.5 widths are captured and the device metrics override is cleared', async ({ ext }) => {
+test('AC-F24.1 AC-F24.5 widths are captured and the device metrics override is cleared', async ({
+  ext,
+}) => {
   const { page, tabId } = await openFixture(ext.context, ext.worker, 'responsive.html');
   const panel = await openPanel(ext.context, ext.extensionId, tabId);
   await turnOnAdvanced(panel);
   await extractFrom(panel);
   const record = await latestRecord(panel);
-  expect(record.captures.filter((c) => c.kind === 'width').map((c) => c.viewportWidth)).toEqual(expect.arrayContaining([375, 768]));
+  expect(record.captures.filter((c) => c.kind === 'width').map((c) => c.viewportWidth)).toEqual(
+    expect.arrayContaining([375, 768]),
+  );
   expect(await page.evaluate(() => window.innerWidth)).toBe(1280);
   await panel.getByRole('tab', { name: 'Layout' }).click();
   await expect(panel.getByText('Responsive', { exact: true })).toBeVisible();
@@ -76,7 +96,15 @@ async function startAdvancedRun(ext, fixture = 'large.html') {
   await panel.getByRole('button', { name: 'Extract design system' }).click();
   // Wait until the debugger is attached.
   await expect
-    .poll(() => ext.worker.evaluate(async (id) => (await chrome.debugger.getTargets()).some((t) => t.tabId === id && t.attached), fx.tabId), { timeout: 15_000 })
+    .poll(
+      () =>
+        ext.worker.evaluate(
+          async (id) =>
+            (await chrome.debugger.getTargets()).some((t) => t.tabId === id && t.attached),
+          fx.tabId,
+        ),
+      { timeout: 15_000 },
+    )
     .toBe(true);
   return { ...fx, panel };
 }
@@ -103,16 +131,27 @@ test('AC-F23.6 the debugger detaches when the page navigates', async ({ ext }) =
 test('AC-F23.6 the debugger detaches when the tab closes', async ({ ext }) => {
   const { page, tabId } = await startAdvancedRun(ext);
   await page.close();
-  await expect.poll(() => ext.worker.evaluate(async (id) => (await chrome.debugger.getTargets()).filter((t) => t.tabId === id).length, tabId)).toBe(0);
+  await expect
+    .poll(() =>
+      ext.worker.evaluate(
+        async (id) => (await chrome.debugger.getTargets()).filter((t) => t.tabId === id).length,
+        tabId,
+      ),
+    )
+    .toBe(0);
   await expect.poll(() => activeCapture(ext.worker)).toBeNull();
 });
 
-test('AC-F23.7 a service worker restart during a capture detaches and clears activeCapture', async ({ ext }) => {
+test('AC-F23.7 a service worker restart during a capture detaches and clears activeCapture', async ({
+  ext,
+}) => {
   const { tabId } = await openFixture(ext.context, ext.worker, 'classic.html');
   // Leave the state a killed worker would: debugger attached and activeCapture recorded.
   await ext.worker.evaluate(async (id) => {
     await chrome.debugger.attach({ tabId: id }, '1.3');
-    await chrome.storage.session.set({ activeCapture: { tabId: id, debuggerAttached: true, overlays: [], startedAt: Date.now() } });
+    await chrome.storage.session.set({
+      activeCapture: { tabId: id, debuggerAttached: true, overlays: [], startedAt: Date.now() },
+    });
   }, tabId);
   const panel = await openPanel(ext.context, ext.extensionId, tabId);
   const cdp = await ext.context.newCDPSession(panel);
@@ -120,7 +159,8 @@ test('AC-F23.7 a service worker restart during a capture detaches and clears act
   await cdp.send('ServiceWorker.stopAllWorkers');
   // Any message wakes the worker, which runs its start-up recovery.
   await panel.evaluate(() => chrome.runtime.sendMessage({ type: 'PING' }).catch(() => {}));
-  const worker = ext.context.serviceWorkers().at(-1) ?? (await ext.context.waitForEvent('serviceworker'));
+  const worker =
+    ext.context.serviceWorkers().at(-1) ?? (await ext.context.waitForEvent('serviceworker'));
   await expectDetached(worker, tabId);
   await expect.poll(() => activeCapture(worker)).toBeNull();
 });

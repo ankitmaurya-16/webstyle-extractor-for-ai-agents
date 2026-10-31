@@ -1,6 +1,6 @@
 {
   "name": "webstyle-extractor",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Extract a website's design system into DESIGN.md and token files for AI coding agents, from the command line.",
   "type": "module",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "playwright": "1.64.1"
   },
   "devDependencies": {
-    "tsup": "8.5.0"
+    "tsup": "9.0.0"
   },
   "repository": {
     "type": "git",

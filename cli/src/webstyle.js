@@ -55,7 +55,11 @@ export async function main(argv) {
     for (const result of results) {
       const host = result.record.hostname || 'local';
       // With several separate snapshots each gets its own folder inside --out.
-      const dir = options.out ? (results.length > 1 ? join(options.out, host) : options.out) : join('webstyle-output', host);
+      const dir = options.out
+        ? results.length > 1
+          ? join(options.out, host)
+          : options.out
+        : join('webstyle-output', host);
       await writeOutput(dir, result);
       err(`Wrote ${result.files.length + 1} files to ${dir}`);
     }

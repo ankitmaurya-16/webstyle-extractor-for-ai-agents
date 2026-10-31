@@ -10,24 +10,33 @@ const require = createRequire(import.meta.url);
 let n = 0;
 const newId = () => `e2e-${(n += 1)}`;
 const classic = () => {
-  const raw = JSON.parse(readFileSync(new URL('../unit/fixtures/classic.raw.json', import.meta.url), 'utf8'));
+  const raw = JSON.parse(
+    readFileSync(new URL('../unit/fixtures/classic.raw.json', import.meta.url), 'utf8'),
+  );
   return analyze(withOverrideCapture([toCapture(raw, newId)], newId));
 };
 
 const axeSource = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
-test('AC-F23.3 every v2 feature together makes zero network requests from the extension', async ({ ext }) => {
+test('AC-F23.3 every v2 feature together makes zero network requests from the extension', async ({
+  ext,
+}) => {
   const origin = `chrome-extension://${ext.extensionId}`;
   const requests = [];
   ext.context.on('request', (request) => {
-    let frameUrl = '';
+    let frameUrl;
     try {
       frameUrl = request.frame().url();
     } catch {
       frameUrl = '';
     }
     const fromExtension = frameUrl.startsWith(origin) || request.serviceWorker() !== null;
-    if (fromExtension && !request.url().startsWith(origin) && !request.url().startsWith('data:') && !request.url().startsWith('blob:')) {
+    if (
+      fromExtension &&
+      !request.url().startsWith(origin) &&
+      !request.url().startsWith('data:') &&
+      !request.url().startsWith('blob:')
+    ) {
       requests.push(request.url());
     }
   });
@@ -40,12 +49,18 @@ test('AC-F23.3 every v2 feature together makes zero network requests from the ex
     await panel.getByRole('tab', { name: tab }).click();
   }
   await panel.getByRole('tab', { name: 'Colors' }).click();
-  await panel.getByRole('button', { name: /Where is .* used\?/ }).first().click();
+  await panel
+    .getByRole('button', { name: /Where is .* used\?/ })
+    .first()
+    .click();
   await panel.getByRole('tab', { name: 'Export' }).click();
   for (const format of ['styleguide', 'figma', 'shadcn', 'prompt']) {
     await panel.locator('#export-format').selectOption(format);
   }
-  await Promise.all([panel.waitForEvent('download'), panel.getByRole('button', { name: 'Download all (.zip)' }).click()]);
+  await Promise.all([
+    panel.waitForEvent('download'),
+    panel.getByRole('button', { name: 'Download all (.zip)' }).click(),
+  ]);
   await panel.getByRole('button', { name: 'Back' }).first().click();
   await panel.getByRole('button', { name: 'Pick element' }).click();
   await page.keyboard.press('Escape');
@@ -64,8 +79,12 @@ test('AC-F34.1 AC-F34.5 the style guide makes no requests and passes axe-core', 
   await page.setContent(html, { waitUntil: 'load' });
   expect(attempted).toEqual([]);
   await page.addScriptTag({ content: axeSource });
-  const result = await page.evaluate(async () => window.axe.run(document, { resultTypes: ['violations'] }));
-  const serious = result.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  const result = await page.evaluate(async () =>
+    window.axe.run(document, { resultTypes: ['violations'] }),
+  );
+  const serious = result.violations.filter(
+    (v) => v.impact === 'serious' || v.impact === 'critical',
+  );
   expect(serious.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
 });
 
@@ -76,7 +95,10 @@ for (const theme of ['dark', 'light']) {
     await setSetting(panel, { panelTheme: theme });
     await expect(panel.locator('html')).toHaveAttribute('data-theme', theme);
     const shots = [];
-    const shot = async (name) => shots.push(await panel.screenshot({ path: info.outputPath(`${theme}-${name}.png`), fullPage: true }));
+    const shot = async (name) =>
+      shots.push(
+        await panel.screenshot({ path: info.outputPath(`${theme}-${name}.png`), fullPage: true }),
+      );
     await shot('home');
     await extractFrom(panel);
     for (const tab of ['Colors', 'Type', 'Layout', 'Motion', 'Components', 'Insights', 'Export']) {

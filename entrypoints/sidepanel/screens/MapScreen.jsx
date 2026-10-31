@@ -45,18 +45,34 @@ export function MapScreen() {
         {mapping && (
           <>
             <p className="mt-3 text-text">
-              <span className="font-mono">{mapping.sourceName}</span> · {t('map_counts', counts.exact, counts.close, counts.none)}
+              <span className="font-mono">{mapping.sourceName}</span> ·{' '}
+              {t('map_counts', counts.exact, counts.close, counts.none)}
             </p>
             <div className="mt-2">
-              <SwitchRow id="map-unmatched" label={t('unmatched_only')} checked={unmatchedOnly} onChange={setUnmatchedOnly} />
+              <SwitchRow
+                id="map-unmatched"
+                label={t('unmatched_only')}
+                checked={unmatchedOnly}
+                onChange={setUnmatchedOnly}
+              />
             </div>
             <ul className="mt-2 flex flex-col">
               {entries.map((e) => {
                 const token = findToken(record.edited, e.tokenId)?.token;
                 if (!token) return null;
                 return (
-                  <li key={e.tokenId} className="flex min-h-8 items-center gap-1.5 px-1 font-mono text-sm" data-status={e.status}>
-                    {token.hex && <span className="size-3 shrink-0 rounded-swatch ring-1 ring-swatch-ring ring-inset" style={{ background: token.hex }} aria-hidden />}
+                  <li
+                    key={e.tokenId}
+                    className="flex min-h-8 items-center gap-1.5 px-1 font-mono text-sm"
+                    data-status={e.status}
+                  >
+                    {token.hex && (
+                      <span
+                        className="size-3 shrink-0 rounded-swatch ring-1 ring-swatch-ring ring-inset"
+                        style={{ background: token.hex }}
+                        aria-hidden
+                      />
+                    )}
                     <span className="shrink-0 text-text">{token.name}</span>
                     <ArrowRight size={12} className="shrink-0 text-faint" aria-hidden />
                     <span className="min-w-0 flex-1 truncate text-muted">{e.userToken ?? '—'}</span>
@@ -67,7 +83,12 @@ export function MapScreen() {
               })}
             </ul>
             <div className="mt-4">
-              <SwitchRow id="map-use-names" label={t('use_my_names')} checked={mapping.useMyNames} onChange={setUseMyNames} />
+              <SwitchRow
+                id="map-use-names"
+                label={t('use_my_names')}
+                checked={mapping.useMyNames}
+                onChange={setUseMyNames}
+              />
             </div>
             <Button variant="secondary" className="mt-3" onClick={exportMapping}>
               <Download size={16} aria-hidden />

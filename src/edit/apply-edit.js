@@ -112,7 +112,8 @@ function setExcluded(design, tokenId, excluded) {
   if (excluded && found?.category === 'color') {
     // Excluding a color clears its roles in every theme (AC-F6.5).
     for (const role of Object.keys(design.semantic ?? {})) {
-      for (const [mode, id] of Object.entries(design.semantic[role])) if (id === tokenId) delete design.semantic[role][mode];
+      for (const [mode, id] of Object.entries(design.semantic[role]))
+        if (id === tokenId) delete design.semantic[role][mode];
       if (Object.keys(design.semantic[role]).length === 0) delete design.semantic[role];
     }
   }
@@ -134,12 +135,15 @@ function merge(design, sourceId, targetId) {
     t.modes = [...new Set([...t.modes, ...s.modes])].sort();
     // Roles the source held move to the target so no role is lost.
     for (const role of Object.keys(design.semantic ?? {})) {
-      for (const [mode, id] of Object.entries(design.semantic[role])) if (id === sourceId) design.semantic[role][mode] = targetId;
+      for (const [mode, id] of Object.entries(design.semantic[role]))
+        if (id === sourceId) design.semantic[role][mode] = targetId;
     }
     for (const c of design.colors) if (c.baseTokenId === sourceId) c.baseTokenId = targetId;
-    for (const g of design.gradients ?? []) for (const stop of g.stops) if (stop.colorTokenId === sourceId) stop.colorTokenId = targetId;
+    for (const g of design.gradients ?? [])
+      for (const stop of g.stops) if (stop.colorTokenId === sourceId) stop.colorTokenId = targetId;
   }
-  if (source.category === 'text') t.headings = [...new Set([...(t.headings ?? []), ...(s.headings ?? [])])].sort();
+  if (source.category === 'text')
+    t.headings = [...new Set([...(t.headings ?? []), ...(s.headings ?? [])])].sort();
   const list = categories(design)[source.category];
   list.splice(list.indexOf(s), 1);
   for (const recipe of design.components ?? []) {

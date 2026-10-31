@@ -12,13 +12,16 @@ export async function cropScreenshots(shots, recipes, snapshotId) {
   for (const shot of shots ?? []) {
     let bitmap;
     try {
-      bitmap = await createImageBitmap(await (await fetch(shot.dataUrl)).blob());
+      // Decoded by hand: the store build's CSP (connect-src 'none') blocks fetch() of data URLs.
+      bitmap = await createImageBitmap(base64ToBlob(shot.dataUrl));
     } catch {
       continue;
     }
     const mode = shot.mode === 'dark' ? 'dark' : 'light';
     for (const recipe of recipes) {
-      const rep = (shot.representatives ?? []).find((r) => r.variant === recipe.sampleKey && r.inViewport);
+      const rep = (shot.representatives ?? []).find(
+        (r) => r.variant === recipe.sampleKey && r.inViewport,
+      );
       if (!rep || rep.rect.width < 4 || rep.rect.height < 4) continue;
       const scale = shot.dpr || 1;
       const sx = Math.round(rep.rect.x * scale);
@@ -29,7 +32,16 @@ export async function cropScreenshots(shots, recipes, snapshotId) {
       const canvas = new OffscreenCanvas(w, h);
       canvas.getContext('2d').drawImage(bitmap, sx, sy, w, h, 0, 0, w, h);
       const blob = await canvas.convertToBlob({ type: 'image/png' });
-      items.push({ snapshotId, id: `${recipe.id}:${mode}`, recipeId: recipe.id, mode, state: 'default', blob, width: w, height: h });
+      items.push({
+        snapshotId,
+        id: `${recipe.id}:${mode}`,
+        recipeId: recipe.id,
+        mode,
+        state: 'default',
+        blob,
+        width: w,
+        height: h,
+      });
     }
     bitmap.close?.();
   }
@@ -43,7 +55,8 @@ export async function blobToBytes(blob) {
 export async function blobToDataUrl(blob) {
   const bytes = await blobToBytes(blob);
   let binary = '';
-  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  for (let i = 0; i < bytes.length; i += 0x8000)
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return `data:${blob.type || 'image/png'};base64,${btoa(binary)}`;
 }
 

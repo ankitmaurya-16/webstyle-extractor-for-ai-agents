@@ -14,7 +14,11 @@ function Section({ label, list, render, empty, count = true }) {
   return (
     <>
       <SectionLabel count={count ? shown.length : undefined}>{label}</SectionLabel>
-      {shown.length === 0 && empty ? <p className="px-1 text-muted">{empty}</p> : <ul className="flex flex-col">{render.sorted(list).map(render.row)}</ul>}
+      {shown.length === 0 && empty ? (
+        <p className="px-1 text-muted">{empty}</p>
+      ) : (
+        <ul className="flex flex-col">{render.sorted(list).map(render.row)}</ul>
+      )}
       <ExcludedGroup tokens={(list ?? []).filter((x) => x.excluded)} render={render.row} />
     </>
   );
@@ -23,7 +27,10 @@ function Section({ label, list, render, empty, count = true }) {
 function Bar({ value, max }) {
   return (
     <span className="h-2 min-w-0 flex-1" aria-hidden>
-      <span className="block h-2 rounded-swatch bg-accent/60" style={{ width: `${Math.max(2, (value / max) * 100)}%` }} />
+      <span
+        className="block h-2 rounded-swatch bg-accent/60"
+        style={{ width: `${Math.max(2, (value / max) * 100)}%` }}
+      />
     </span>
   );
 }
@@ -38,7 +45,18 @@ export function LayoutTab({ design }) {
 
   const px = (key, list, category, extra = {}) => ({
     sorted: sortBy(key),
-    row: (x) => <TokenRow key={x.id} token={x} category={category} siblings={list} detail={extra.detail ? extra.detail(x) : `${x[key]}px`} leading={extra.leading?.(x)}>{extra.children?.(x)}</TokenRow>,
+    row: (x) => (
+      <TokenRow
+        key={x.id}
+        token={x}
+        category={category}
+        siblings={list}
+        detail={extra.detail ? extra.detail(x) : `${x[key]}px`}
+        leading={extra.leading?.(x)}
+      >
+        {extra.children?.(x)}
+      </TokenRow>
+    ),
   });
 
   return (
@@ -49,12 +67,16 @@ export function LayoutTab({ design }) {
       <Section
         label={`${t('spacing')} · ${design.spacing.baseUnitPx ? t('base_unit', design.spacing.baseUnitPx) : t('no_base')}`}
         list={spacing}
-        render={px('px', spacing, 'space', { children: (s) => <Bar value={s.px} max={maxSpace} /> })}
+        render={px('px', spacing, 'space', {
+          children: (s) => <Bar value={s.px} max={maxSpace} />,
+        })}
       />
       <Section
         label={t('containers')}
         list={layout.containers}
-        render={px('px', layout.containers, 'container', { children: (s) => <Bar value={s.px} max={maxContainer} /> })}
+        render={px('px', layout.containers, 'container', {
+          children: (s) => <Bar value={s.px} max={maxContainer} />,
+        })}
       />
       <Section
         label={t('grid')}
@@ -76,14 +98,28 @@ export function LayoutTab({ design }) {
         list={design.radii}
         render={px('px', design.radii, 'radius', {
           detail: (r) => (r.px >= FULL ? 'full' : `${r.px}px`),
-          leading: (r) => <span className="size-5 shrink-0 border border-border-strong bg-surface-3" style={{ borderRadius: Math.min(r.px, 10) }} aria-hidden />,
+          leading: (r) => (
+            <span
+              className="size-5 shrink-0 border border-border-strong bg-surface-3"
+              style={{ borderRadius: Math.min(r.px, 10) }}
+              aria-hidden
+            />
+          ),
         })}
       />
       <Section
-        label={design.meta.borderStyle ? `${t('borders')} · ${design.meta.borderStyle}` : t('borders')}
+        label={
+          design.meta.borderStyle ? `${t('borders')} · ${design.meta.borderStyle}` : t('borders')
+        }
         list={design.borderWidths}
         render={px('px', design.borderWidths, 'border', {
-          leading: (b) => <span className="size-5 shrink-0 rounded-swatch border-border-strong" style={{ borderWidth: Math.min(b.px, 4), borderStyle: 'solid' }} aria-hidden />,
+          leading: (b) => (
+            <span
+              className="size-5 shrink-0 rounded-swatch border-border-strong"
+              style={{ borderWidth: Math.min(b.px, 4), borderStyle: 'solid' }}
+              aria-hidden
+            />
+          ),
         })}
       />
       <Section
@@ -92,7 +128,10 @@ export function LayoutTab({ design }) {
         render={px('blurPx', design.shadows, 'shadow', {
           detail: (s) => s.value,
           leading: (s) => (
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-swatch bg-preview" aria-hidden>
+            <span
+              className="flex size-7 shrink-0 items-center justify-center rounded-swatch bg-preview"
+              aria-hidden
+            >
               <span className="size-4 rounded-[3px] bg-preview" style={{ boxShadow: s.value }} />
             </span>
           ),
@@ -103,7 +142,13 @@ export function LayoutTab({ design }) {
         list={design.opacities}
         render={px('value', design.opacities, 'opacity', {
           detail: (o) => String(o.value),
-          leading: (o) => <span className="size-5 shrink-0 rounded-swatch bg-text" style={{ opacity: o.value }} aria-hidden />,
+          leading: (o) => (
+            <span
+              className="size-5 shrink-0 rounded-swatch bg-text"
+              style={{ opacity: o.value }}
+              aria-hidden
+            />
+          ),
         })}
       />
       <Section
@@ -111,7 +156,15 @@ export function LayoutTab({ design }) {
         list={design.zIndex}
         render={{
           sorted: (list) => visible(list).sort((a, b) => b.value - a.value),
-          row: (z) => <TokenRow key={z.id} token={z} category="z" siblings={design.zIndex} detail={String(z.value)} />,
+          row: (z) => (
+            <TokenRow
+              key={z.id}
+              token={z}
+              category="z"
+              siblings={design.zIndex}
+              detail={String(z.value)}
+            />
+          ),
         }}
       />
       <Section
@@ -128,7 +181,11 @@ export function LayoutTab({ design }) {
 function ResponsiveTable({ table, design }) {
   const sizeName = (id) => design.typography.sizes.find((s) => s.id === id)?.name;
   const rows = [
-    ...table.textSizes.map((r) => [r.label + (sizeName(r.tokenId) ? ` (${sizeName(r.tokenId)})` : ''), r.byWidth, 'px']),
+    ...table.textSizes.map((r) => [
+      r.label + (sizeName(r.tokenId) ? ` (${sizeName(r.tokenId)})` : ''),
+      r.byWidth,
+      'px',
+    ]),
     [t('container_label'), table.containers, 'px'],
     [t('grid_columns_label'), table.gridColumns, ''],
     [t('spacing_base_label'), table.spacingBase, 'px'],
@@ -158,7 +215,9 @@ function ResponsiveTable({ table, design }) {
                 </th>
                 {table.widths.map((w) => (
                   <td key={w} className="px-2 py-1 text-right text-text">
-                    {byWidth?.[w] === null || byWidth?.[w] === undefined ? '—' : `${byWidth[w]}${unit}`}
+                    {byWidth?.[w] === null || byWidth?.[w] === undefined
+                      ? '—'
+                      : `${byWidth[w]}${unit}`}
                   </td>
                 ))}
               </tr>

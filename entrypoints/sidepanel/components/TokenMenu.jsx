@@ -66,7 +66,11 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
                       className={ITEM}
                       checked={roles.includes(role)}
                       onSelect={() =>
-                        edit(roles.includes(role) ? { kind: 'clearRole', role, mode } : { kind: 'setRole', tokenId: token.id, role, mode })
+                        edit(
+                          roles.includes(role)
+                            ? { kind: 'clearRole', role, mode }
+                            : { kind: 'setRole', tokenId: token.id, role, mode },
+                        )
                       }
                     >
                       <span className="w-4" aria-hidden>
@@ -90,7 +94,13 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
                       className={`${ITEM} gap-2 font-mono text-sm`}
                       onSelect={() => edit({ kind: 'merge', sourceId: token.id, targetId: x.id })}
                     >
-                      {x.hex && <span className="size-3 rounded-swatch ring-1 ring-swatch-ring ring-inset" style={{ background: x.hex }} aria-hidden />}
+                      {x.hex && (
+                        <span
+                          className="size-3 rounded-swatch ring-1 ring-swatch-ring ring-inset"
+                          style={{ background: x.hex }}
+                          aria-hidden
+                        />
+                      )}
                       {x.name}
                     </Menu.Item>
                   ))}
@@ -101,12 +111,19 @@ export function TokenMenu({ token, category, siblings, onRename, alwaysVisible =
           {!token.excluded && token.siteName && (
             <Menu.Item
               className={ITEM}
-              onSelect={() => edit({ kind: 'useSiteName', tokenId: token.id, use: token.name !== token.siteName })}
+              onSelect={() =>
+                edit({ kind: 'useSiteName', tokenId: token.id, use: token.name !== token.siteName })
+              }
             >
               {token.name === token.siteName ? t('use_generated_name') : t('use_site_name')}
             </Menu.Item>
           )}
-          <Menu.Item className={ITEM} onSelect={() => edit({ kind: token.excluded ? 'include' : 'exclude', tokenId: token.id })}>
+          <Menu.Item
+            className={ITEM}
+            onSelect={() =>
+              edit({ kind: token.excluded ? 'include' : 'exclude', tokenId: token.id })
+            }
+          >
             {token.excluded ? t('include') : t('exclude')}
           </Menu.Item>
         </Menu.Content>

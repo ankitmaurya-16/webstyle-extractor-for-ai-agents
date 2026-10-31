@@ -70,7 +70,12 @@ export function historyDate(ts, now = Date.now()) {
   const d = new Date(ts);
   const n = new Date(now);
   if (d.toDateString() === n.toDateString()) return t('today_at', timeOfDay(ts));
-  return new Intl.DateTimeFormat(uiLocale(), { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
+  return new Intl.DateTimeFormat(uiLocale(), {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(d);
 }
 
 export function formatBytes(bytes) {

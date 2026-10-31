@@ -19,11 +19,18 @@ export function ExportTab({ design, record }) {
   const shots = useStore((s) => s.screenshots);
   const store = useStore.getState();
   const ctx = useMemo(
-    () => ({ mapping: record?.mapping ?? null, shadcnFormat: settings.shadcnFormat, screenshots: shots.map((s) => ({ recipeId: s.recipeId, mode: s.mode })) }),
+    () => ({
+      mapping: record?.mapping ?? null,
+      shadcnFormat: settings.shadcnFormat,
+      screenshots: shots.map((s) => ({ recipeId: s.recipeId, mode: s.mode })),
+    }),
     [record?.mapping, settings.shadcnFormat, shots],
   );
   // The preview is exactly the text that Copy and Download use (AC-F7.2).
-  const text = useMemo(() => exportFile(format, design, version, ctx), [format, design, version, ctx]);
+  const text = useMemo(
+    () => exportFile(format, design, version, ctx),
+    [format, design, version, ctx],
+  );
   const lines = text.replace(/\n$/, '').split('\n').length;
   const bytes = new TextEncoder().encode(text).length;
   const selection = settings.exportSelection;
@@ -78,7 +85,9 @@ export function ExportTab({ design, record }) {
       <p className="mt-2 text-sm text-faint" data-testid="export-footer">
         {t('lines_and_size', lines, formatBytes(bytes))}
       </p>
-      {record?.screenshotFailed && <p className="mt-1 text-sm text-warning">{t('banner_screenshot_failed')}</p>}
+      {record?.screenshotFailed && (
+        <p className="mt-1 text-sm text-warning">{t('banner_screenshot_failed')}</p>
+      )}
 
       <SectionLabel>{t('include_in_zip')}</SectionLabel>
       <ul className="grid grid-cols-2 gap-x-2 gap-y-1" aria-label={t('include_in_zip')}>
@@ -92,7 +101,9 @@ export function ExportTab({ design, record }) {
                 onChange={() => store.toggleExportSelection(f)}
                 className="size-3.5 accent-accent"
               />
-              <span className="truncate">{f === 'screenshots' ? t('screenshots_format') : EXPORT_LABELS[f]}</span>
+              <span className="truncate">
+                {f === 'screenshots' ? t('screenshots_format') : EXPORT_LABELS[f]}
+              </span>
             </label>
           </li>
         ))}
@@ -102,7 +113,9 @@ export function ExportTab({ design, record }) {
           <FileArchive size={16} aria-hidden />
           {t('download_all')}
         </Button>
-        {fsSupported && projects.length > 0 && <WriteButton projects={projects} onWrite={store.writeProject} />}
+        {fsSupported && projects.length > 0 && (
+          <WriteButton projects={projects} onWrite={store.writeProject} />
+        )}
       </div>
     </>
   );

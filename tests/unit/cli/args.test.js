@@ -32,9 +32,27 @@ describe('webstyle argument parsing', () => {
   it('AC-F41.3 parses every extract option', () => {
     expect(
       extract(
-        '--out', 'site', '--formats', 'design-md,prompt', '--merge', '--allow-cross-site', '--no-dark',
-        '--states', '--deep', '--widths', '375,768,1280', '--scroll', '--screenshots',
-        '--no-site-names', '--shadcn-format', 'hsl', '--wait', '500', '--timeout', '10000', '--json',
+        '--out',
+        'site',
+        '--formats',
+        'design-md,prompt',
+        '--merge',
+        '--allow-cross-site',
+        '--no-dark',
+        '--states',
+        '--deep',
+        '--widths',
+        '375,768,1280',
+        '--scroll',
+        '--screenshots',
+        '--no-site-names',
+        '--shadcn-format',
+        'hsl',
+        '--wait',
+        '500',
+        '--timeout',
+        '10000',
+        '--json',
       ),
     ).toEqual({
       out: 'site',
@@ -60,7 +78,9 @@ describe('webstyle argument parsing', () => {
   });
 
   it('AC-F41.3 takes several URLs', () => {
-    expect(parseCommand(['extract', 'https://a.example.com', 'https://b.example.com/x']).urls).toHaveLength(2);
+    expect(
+      parseCommand(['extract', 'https://a.example.com', 'https://b.example.com/x']).urls,
+    ).toHaveLength(2);
   });
 
   it.each([
@@ -82,8 +102,18 @@ describe('webstyle argument parsing', () => {
   });
 
   it('AC-F41.3 diff and map commands', () => {
-    expect(parseCommand(['diff', 'a.json', 'b.json', '--out', 'd.md'])).toEqual({ command: 'diff', a: 'a.json', b: 'b.json', out: 'd.md' });
-    expect(parseCommand(['map', 's.json', '--tokens', 't.css'])).toEqual({ command: 'map', snapshot: 's.json', tokens: 't.css', out: null });
+    expect(parseCommand(['diff', 'a.json', 'b.json', '--out', 'd.md'])).toEqual({
+      command: 'diff',
+      a: 'a.json',
+      b: 'b.json',
+      out: 'd.md',
+    });
+    expect(parseCommand(['map', 's.json', '--tokens', 't.css'])).toEqual({
+      command: 'map',
+      snapshot: 's.json',
+      tokens: 't.css',
+      out: null,
+    });
   });
 
   it('help and version', () => {

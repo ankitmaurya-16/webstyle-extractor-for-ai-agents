@@ -26,7 +26,9 @@ export function RoleBadge({ role, tone = 'neutral' }) {
     danger: 'bg-surface-3 text-danger',
   };
   return (
-    <span className={`inline-flex h-[18px] shrink-0 items-center rounded-full px-2 text-xs ${tones[tone]}`}>
+    <span
+      className={`inline-flex h-[18px] shrink-0 items-center rounded-full px-2 text-xs ${tones[tone]}`}
+    >
       {role}
     </span>
   );
@@ -39,7 +41,10 @@ export function UsageBar({ share }) {
   return (
     <span className="flex shrink-0 items-center gap-1.5" aria-label={label}>
       <span className="h-1 w-10 overflow-hidden rounded-full bg-surface-3 max-[379px]:hidden">
-        <span className="block h-full bg-muted" style={{ width: `${Math.min(100, Math.max(2, pct))}%` }} />
+        <span
+          className="block h-full bg-muted"
+          style={{ width: `${Math.min(100, Math.max(2, pct))}%` }}
+        />
       </span>
       <span className="w-8 text-right font-mono text-[11px] text-faint">{label}</span>
     </span>
@@ -50,8 +55,15 @@ export function UsageBar({ share }) {
 export function Banner({ children, tone = 'warning', onDismiss, action }) {
   const Icon = tone === 'info' ? Info : AlertTriangle;
   return (
-    <div role="status" className="mt-4 flex items-start gap-2 rounded-card border border-border bg-surface-2 p-3 text-muted">
-      <Icon size={16} className={`mt-0.5 shrink-0 ${tone === 'info' ? 'text-accent' : 'text-warning'}`} aria-hidden />
+    <div
+      role="status"
+      className="mt-4 flex items-start gap-2 rounded-card border border-border bg-surface-2 p-3 text-muted"
+    >
+      <Icon
+        size={16}
+        className={`mt-0.5 shrink-0 ${tone === 'info' ? 'text-accent' : 'text-warning'}`}
+        aria-hidden
+      />
       <span className="min-w-0 flex-1">
         {children}
         {action && <span className="mt-2 block">{action}</span>}
@@ -78,7 +90,12 @@ export function ProgressList({ stages, stage }) {
       {stages.map((s, i) => {
         const state = i < index ? 'done' : i === index ? 'active' : 'pending';
         return (
-          <li key={s} className="flex h-8 items-center gap-3" aria-current={state === 'active' ? 'step' : undefined} data-stage={s}>
+          <li
+            key={s}
+            className="flex h-8 items-center gap-3"
+            aria-current={state === 'active' ? 'step' : undefined}
+            data-stage={s}
+          >
             <span className="flex size-4 items-center justify-center" aria-hidden>
               {state === 'done' && <Check size={16} className="text-success" />}
               {state === 'active' && <Loader2 size={16} className="animate-spin text-accent" />}
@@ -88,7 +105,11 @@ export function ProgressList({ stages, stage }) {
               {stageLabel(s)}
               <span className="sr-only">
                 {' '}
-                {state === 'done' ? t('stage_done', '') : state === 'active' ? t('in_progress') : t('stage_pending')}
+                {state === 'done'
+                  ? t('stage_done', '')
+                  : state === 'active'
+                    ? t('in_progress')
+                    : t('stage_pending')}
               </span>
             </span>
           </li>
@@ -101,7 +122,10 @@ export function ProgressList({ stages, stage }) {
 /** Centered icon, title, one line of body and an action. */
 export function StateBlock({ icon: Icon, iconClass = 'text-faint', title, body, children }) {
   return (
-    <section className="flex flex-col items-center px-4 py-12 text-center" aria-labelledby="state-title">
+    <section
+      className="flex flex-col items-center px-4 py-12 text-center"
+      aria-labelledby="state-title"
+    >
       {Icon && <Icon size={24} className={iconClass} aria-hidden />}
       <h1 id="state-title" className="mt-3 text-md font-semibold">
         {title}
@@ -115,7 +139,10 @@ export function StateBlock({ icon: Icon, iconClass = 'text-faint', title, body, 
 /** Top-five color strip used in Recent and History. */
 export function ColorStrip({ colors }) {
   return (
-    <span className="flex shrink-0 overflow-hidden rounded-swatch ring-1 ring-swatch-ring ring-inset" aria-hidden>
+    <span
+      className="flex shrink-0 overflow-hidden rounded-swatch ring-1 ring-swatch-ring ring-inset"
+      aria-hidden
+    >
       {colors.slice(0, 5).map((hex, i) => (
         <span key={`${hex}-${i}`} className="block h-4 w-3" style={{ background: hex }} />
       ))}
@@ -160,7 +187,10 @@ export function ConfidenceDot({ confidence }) {
 export function CheckerSwatch({ hex, effectiveHex, size = 20 }) {
   return (
     <span className="flex shrink-0 items-center gap-1" aria-hidden>
-      <span className="checker relative overflow-hidden rounded-swatch" style={{ width: size, height: size }}>
+      <span
+        className="checker relative overflow-hidden rounded-swatch"
+        style={{ width: size, height: size }}
+      >
         <span className="absolute inset-0" style={{ background: hex }} />
         <span className="pointer-events-none absolute inset-0 rounded-swatch ring-1 ring-swatch-ring ring-inset" />
       </span>
@@ -175,7 +205,11 @@ export function CheckerSwatch({ hex, effectiveHex, size = 20 }) {
 
 export function GradientStrip({ css }) {
   return (
-    <span className="relative block h-4 w-full rounded-swatch" style={{ backgroundImage: css }} aria-hidden>
+    <span
+      className="relative block h-4 w-full rounded-swatch"
+      style={{ backgroundImage: css }}
+      aria-hidden
+    >
       <span className="pointer-events-none absolute inset-0 rounded-swatch ring-1 ring-swatch-ring ring-inset" />
     </span>
   );
@@ -183,7 +217,8 @@ export function GradientStrip({ css }) {
 
 /** 48 x 32 px SVG of an easing curve; the dot travels it on hover unless reduced motion. */
 export function CurvePreview({ bezier }) {
-  if (!bezier) return <span className="h-8 w-12 shrink-0 rounded-swatch bg-surface-2" aria-hidden />;
+  if (!bezier)
+    return <span className="h-8 w-12 shrink-0 rounded-swatch bg-surface-2" aria-hidden />;
   const [x1, y1, x2, y2] = bezier;
   const W = 44;
   const H = 28;
@@ -191,9 +226,21 @@ export function CurvePreview({ bezier }) {
   const py = (y) => 2 + (1 - y) * H;
   const d = `M${px(0)},${py(0)} C${px(x1)},${py(y1)} ${px(x2)},${py(y2)} ${px(1)},${py(1)}`;
   return (
-    <svg width="48" height="32" viewBox="0 0 48 32" className="curve shrink-0 overflow-visible rounded-swatch bg-surface-2" aria-hidden>
+    <svg
+      width="48"
+      height="32"
+      viewBox="0 0 48 32"
+      className="curve shrink-0 overflow-visible rounded-swatch bg-surface-2"
+      aria-hidden
+    >
       <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent" />
-      <circle r="2" cx="0" cy="0" className="curve-dot fill-text" style={{ offsetPath: `path('${d}')` }} />
+      <circle
+        r="2"
+        cx="0"
+        cy="0"
+        className="curve-dot fill-text"
+        style={{ offsetPath: `path('${d}')` }}
+      />
     </svg>
   );
 }
@@ -261,7 +308,9 @@ export function StatCard({ label, items }) {
         className="flex min-h-8 w-full items-center gap-2 px-3 py-1.5 text-left text-text disabled:cursor-default"
       >
         <span className="min-w-0 flex-1">{label}</span>
-        {expandable && <ChevronRight size={14} className={`text-faint ${open ? 'rotate-90' : ''}`} aria-hidden />}
+        {expandable && (
+          <ChevronRight size={14} className={`text-faint ${open ? 'rotate-90' : ''}`} aria-hidden />
+        )}
       </button>
       {open && (
         <ul className="border-t border-border px-3 py-2 font-mono text-sm text-muted">
@@ -280,7 +329,9 @@ export function PermissionRow({ label, granted, onGrant, onRevoke }) {
     <div className="flex min-h-8 items-center gap-2">
       <span className="min-w-0 flex-1">
         <span className="block text-text">{label}</span>
-        <span className="block text-sm text-faint">{granted ? t('permission_granted') : t('permission_not_granted')}</span>
+        <span className="block text-sm text-faint">
+          {granted ? t('permission_granted') : t('permission_not_granted')}
+        </span>
       </span>
       <button
         type="button"

@@ -10,8 +10,10 @@ export default defineConfig([
     target: 'node20',
     outDir: 'dist',
     clean: true,
-    noExternal: [/^(?!playwright)/],
-    banner: { js: "import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);" },
+    noExternal: [/^(?!playwright|@playwright)/],
+    banner: {
+      js: "import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);",
+    },
   },
   {
     entry: { 'collector.iife': 'src/page-entry.js' },

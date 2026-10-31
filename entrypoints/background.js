@@ -1,7 +1,17 @@
 import { MSG, PANEL_PORT, PENDING_EXTRACT_KEY, isExtractRequest } from '../src/messaging.js';
-import { cleanupOverlays, handleExtract, recoverActiveCapture } from '../src/platform/extract-handler.js';
+import {
+  cleanupOverlays,
+  handleExtract,
+  recoverActiveCapture,
+} from '../src/platform/extract-handler.js';
 import { openPanelFromGesture, openPanelOnAction } from '../src/platform/chrome.js';
-import { clearHighlight, showHighlight, startPicker, stopPicker, pickerKey } from '../src/platform/overlays.js';
+import {
+  clearHighlight,
+  showHighlight,
+  startPicker,
+  stopPicker,
+  pickerKey,
+} from '../src/platform/overlays.js';
 
 export default defineBackground(() => {
   openPanelOnAction();
@@ -47,7 +57,8 @@ export default defineBackground(() => {
           runs.set(msg.requestId, controller);
           handleExtract(msg, {
             signal: controller.signal,
-            onProgress: (stage) => post({ type: MSG.EXTRACT_PROGRESS, requestId: msg.requestId, stage }),
+            onProgress: (stage) =>
+              post({ type: MSG.EXTRACT_PROGRESS, requestId: msg.requestId, stage }),
           }).then((reply) => {
             runs.delete(msg.requestId);
             if (reply.type !== 'CANCELLED') post({ ...reply, requestId: msg.requestId });
@@ -67,7 +78,9 @@ export default defineBackground(() => {
           pickerKey(msg.tabId, msg.key);
           return;
         case MSG.HIGHLIGHT_SHOW:
-          showHighlight(msg.tabId, msg.match).then((reply) => post({ ...reply, tokenId: msg.tokenId }));
+          showHighlight(msg.tabId, msg.match).then((reply) =>
+            post({ ...reply, tokenId: msg.tokenId }),
+          );
           return;
         case MSG.HIGHLIGHT_CLEAR:
           clearHighlight(msg.tabId);

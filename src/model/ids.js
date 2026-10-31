@@ -7,7 +7,8 @@ import { fnv1a } from '../collect/aggregate.js';
 const r = (n, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
 
 export const ids = {
-  color: (hex, alpha = 1) => (alpha >= 1 ? `color:${hex.slice(0, 7)}` : `color:${hex.slice(0, 7)}@${Math.round(alpha * 100)}`),
+  color: (hex, alpha = 1) =>
+    alpha >= 1 ? `color:${hex.slice(0, 7)}` : `color:${hex.slice(0, 7)}@${Math.round(alpha * 100)}`,
   space: (px) => `space:${r(px)}`,
   radius: (px) => `radius:${r(px)}`,
   border: (px) => `border:${r(px)}`,
