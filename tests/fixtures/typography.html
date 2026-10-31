@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Typography fixture</title>
+    <style>
+      /* Self-hosted face: local() resolves without any request on most systems. */
+      @font-face {
+        font-family: 'Brand Sans';
+        src:
+          local('DejaVu Sans'),
+          local('Liberation Sans'),
+          local('Arial'),
+          url('/fonts/brand-sans.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Brand Sans';
+        src:
+          local('DejaVu Sans Bold'),
+          local('Liberation Sans Bold'),
+          local('Arial Bold'),
+          url('/fonts/brand-sans-bold.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+      }
+      /* The faces below are never used by an element, so the browser never requests them. */
+      @font-face {
+        font-family: 'Hosted Serif';
+        src: url('https://fonts.gstatic.com/s/hostedserif/v1/hosted-serif.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Hosted Serif';
+        src: url('https://fonts.gstatic.com/s/hostedserif/v1/hosted-serif-italic.woff2')
+          format('woff2');
+        font-weight: 400;
+        font-style: italic;
+      }
+      @font-face {
+        font-family: 'Kit Display';
+        src: url('https://use.typekit.net/af/kit-display/l?primer=7&fvd=n6') format('woff2');
+        font-weight: 600;
+      }
+      @font-face {
+        font-family: 'Other Grotesk';
+        src: url('https://cdn.fonts-example.net/grotesk.woff2') format('woff2');
+        font-weight: 300 500;
+      }
+      body {
+        font-family: 'Brand Sans', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #111827;
+        background: #ffffff;
+        margin: 0;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 40px;
+        line-height: 48px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+      h2 {
+        font-size: 30px;
+        line-height: 36px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+      h3 {
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 700;
+      }
+      .display {
+        font-size: 60px;
+        line-height: 64px;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+      }
+      .overline {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      label {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 500;
+        letter-spacing: 0.025em;
+      }
+      button {
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 8px 16px;
+      }
+      code {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .small {
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .caption {
+        font-size: 12px;
+        line-height: 16px;
+      }
+      /* 2 px on 20 px text is 0.1 em: px letter spacing converts through the font size. */
+      .tracked-px {
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: 2px;
+      }
+      .eyebrow {
+        font-size: 16px;
+        letter-spacing: 0.15em;
+      }
+      .capitalized {
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="overline">Typography overline</p>
+    <p class="display">Display headline text</p>
+    <h1>Main heading of the typography fixture</h1>
+    <p>
+      Body paragraph text. This paragraph is the most used style on the page, so it becomes the base
+      size and the body text style. It runs long on purpose so its character count dominates the
+      totals that weight every typography statistic.
+    </p>
+    <p>
+      A second body paragraph continues with more ordinary words, again set in the brand family at
+      sixteen pixels with a twenty-four pixel line height and the regular weight.
+    </p>
+    <h2>Section heading</h2>
+    <p>
+      Third paragraph with more body copy, written so that body text clearly outweighs every other
+      style in the fixture and anchors the type scale on sixteen pixels.
+    </p>
+    <h3>Subsection heading</h3>
+    <p class="small">
+      Smaller supporting paragraph text set at fourteen pixels for secondary copy.
+    </p>
+    <p class="caption">Caption text at twelve pixels.</p>
+    <form>
+      <label for="email">Email address</label>
+      <input id="email" type="email" />
+      <button type="button">Subscribe</button>
+    </form>
+    <p>Install with <code>pnpm add example</code> and run <code>pnpm dev</code>.</p>
+    <p class="tracked-px">Tracked in pixels</p>
+    <p class="eyebrow">Custom tracking eyebrow</p>
+    <p class="capitalized">capitalized words here</p>
+  </body>
+</html>

@@ -27,7 +27,8 @@ export function normalizeEasing(value) {
   const m = /^cubic-bezier\(\s*([^)]+)\)$/i.exec(v);
   if (m) {
     const nums = m[1].split(',').map((n) => r3(Number(n)));
-    if (nums.length === 4 && nums.every(Number.isFinite)) return { css: `cubic-bezier(${nums.join(', ')})`, bezier: nums };
+    if (nums.length === 4 && nums.every(Number.isFinite))
+      return { css: `cubic-bezier(${nums.join(', ')})`, bezier: nums };
   }
   if (KEYWORD_BEZIER[v]) return { css: v, bezier: KEYWORD_BEZIER[v] };
   return { css: v, bezier: null };
@@ -45,7 +46,14 @@ export function analyzeMotion(raw) {
     .sort((a, b) => b[1] - a[1] || a[0] - b[0])
     .slice(0, MAX_DURATIONS)
     .sort((a, b) => a[0] - b[0])
-    .map(([ms, w]) => ({ id: ids.duration(ms), name: `duration-${ms}`, ms, usageShare: round4(w / dTotal), count: w, excluded: false }));
+    .map(([ms, w]) => ({
+      id: ids.duration(ms),
+      name: `duration-${ms}`,
+      ms,
+      usageShare: round4(w / dTotal),
+      count: w,
+      excluded: false,
+    }));
 
   const easingMap = new Map();
   for (const s of raw.easings ?? []) {
@@ -64,12 +72,22 @@ export function analyzeMotion(raw) {
       let name;
       if (KEYWORD_BEZIER[e.css]) name = e.css;
       else if (e.bezier) {
-        const tw = TAILWIND_CURVES.find(([, b]) => b.every((v, i) => Math.abs(v - e.bezier[i]) < 0.001));
+        const tw = TAILWIND_CURVES.find(([, b]) =>
+          b.every((v, i) => Math.abs(v - e.bezier[i]) < 0.001),
+        );
         name = tw ? tw[0] : null;
       }
       if (!name || used.has(name)) name = `ease-custom-${(custom += 1)}`;
       used.add(name);
-      return { id: ids.easing(e.css), name, css: e.css, bezier: e.bezier, usageShare: round4(e.count / eTotal), count: e.count, excluded: false };
+      return {
+        id: ids.easing(e.css),
+        name,
+        css: e.css,
+        bezier: e.bezier,
+        usageShare: round4(e.count / eTotal),
+        count: e.count,
+        excluded: false,
+      };
     });
 
   const props = [...(raw.transitionProperties ?? [])]
