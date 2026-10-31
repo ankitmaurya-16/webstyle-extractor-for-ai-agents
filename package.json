@@ -1,5 +1,5 @@
 {
-  "name": "webstyle-extractor",
+  "name": "webstyle-extractor-extension",
   "description": "Extract any website's colors, fonts and spacing into a DESIGN.md your AI coding agent can follow.",
   "private": true,
   "version": "1.0.0",
@@ -9,12 +9,17 @@
     "dev": "wxt",
     "build": "wxt build",
     "zip": "wxt zip",
+    "build:firefox": "wxt build -b firefox",
+    "zip:firefox": "wxt zip -b firefox",
+    "lint:firefox": "pnpm build:firefox && web-ext lint --source-dir .output/firefox-mv3",
     "test": "vitest run",
     "test:e2e": "pnpm build && playwright test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "size": "node scripts/check-size.js",
+    "cli:build": "pnpm --filter webstyle-extractor build",
+    "messages": "node scripts/build-messages.js",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
