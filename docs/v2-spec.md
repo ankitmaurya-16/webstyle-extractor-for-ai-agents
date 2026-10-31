@@ -685,15 +685,15 @@ Each feature has: why it exists, how it works, the user flow where there is UI, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F9.1 A color with alpha between 0 and 1 is blended over its backdrop: the nearest opaque ancestor background with translucent ancestors composited in between, else the root background, else `#ffffff` (light) or `#121212` (dark).
-- [ ] AC-F9.2 Blending is per-channel sRGB, verified on known pairs (`rgba(0,0,0,0.1)` on `#ffffff` gives `#e6e6e6`).
-- [ ] AC-F9.3 Translucent values with the same base (OKLab distance under 0.02) and alpha (rounded to 0.05) merge into one token.
-- [ ] AC-F9.4 Translucent tokens are named `<base>/<alpha%>`; no opaque base token is created unless that opaque color exists on the page.
-- [ ] AC-F9.5 Roles and contrast use effective colors; translucent tokens can hold text-muted, border and overlay.
-- [ ] AC-F9.6 The overlay role goes to the most-used translucent background with alpha of at least 0.3 that covers at least 25% of the viewport (start values).
-- [ ] AC-F9.7 Exports write the original 8-digit hex; DESIGN.md shows alpha and effective color and recommends opacity modifiers for Tailwind.
-- [ ] AC-F9.8 Translucent rows show a checkerboard swatch and the "on X looks like Y" line.
-- [ ] AC-F9.9 Translucent colors measured over a background image get low confidence.
+- [x] AC-F9.1 A color with alpha between 0 and 1 is blended over its backdrop: the nearest opaque ancestor background with translucent ancestors composited in between, else the root background, else `#ffffff` (light) or `#121212` (dark).
+- [x] AC-F9.2 Blending is per-channel sRGB, verified on known pairs (`rgba(0,0,0,0.1)` on `#ffffff` gives `#e6e6e6`).
+- [x] AC-F9.3 Translucent values with the same base (OKLab distance under 0.02) and alpha (rounded to 0.05) merge into one token.
+- [x] AC-F9.4 Translucent tokens are named `<base>/<alpha%>`; no opaque base token is created unless that opaque color exists on the page.
+- [x] AC-F9.5 Roles and contrast use effective colors; translucent tokens can hold text-muted, border and overlay.
+- [x] AC-F9.6 The overlay role goes to the most-used translucent background with alpha of at least 0.3 that covers at least 25% of the viewport (start values).
+- [x] AC-F9.7 Exports write the original 8-digit hex; DESIGN.md shows alpha and effective color and recommends opacity modifiers for Tailwind.
+- [x] AC-F9.8 Translucent rows show a checkerboard swatch and the "on X looks like Y" line.
+- [x] AC-F9.9 Translucent colors measured over a background image get low confidence.
 
 #### F10 Site variable names
 
@@ -715,16 +715,16 @@ Each feature has: why it exists, how it works, the user flow where there is UI, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F10.1 Custom properties are collected from root and theme scopes in readable sheets, with `var()` chains resolved and cycles stopped.
-- [ ] AC-F10.2 `var()` references are counted per variable.
-- [ ] AC-F10.3 Bare HSL triplets and bare RGB channel triplets parse as colors.
-- [ ] AC-F10.4 Variables with excluded prefixes never name tokens.
-- [ ] AC-F10.5 A token takes the matching variable with the most references; ties go to role-word names for semantic tokens, then the shortest name.
-- [ ] AC-F10.6 Derived names strip `--` and the listed prefixes and are lowercase kebab-case; collisions keep the full name.
-- [ ] AC-F10.7 With "Use site variable names" on (default), the derived site name is the token name and the generated name becomes an alias; off reverses this. The `useSiteName` edit overrides per token.
-- [ ] AC-F10.8 Role words in variable names assign semantic roles with high confidence, overriding usage rules.
-- [ ] AC-F10.9 DESIGN.md shows each token's site variable; variables.css writes the original site variable name verbatim for every token that has one.
-- [ ] AC-F10.10 Variables found only through the computed root style are still matched, and `meta.partial` includes `cssVariables`.
+- [x] AC-F10.1 Custom properties are collected from root and theme scopes in readable sheets, with `var()` chains resolved and cycles stopped.
+- [x] AC-F10.2 `var()` references are counted per variable.
+- [x] AC-F10.3 Bare HSL triplets and bare RGB channel triplets parse as colors.
+- [x] AC-F10.4 Variables with excluded prefixes never name tokens.
+- [x] AC-F10.5 A token takes the matching variable with the most references; ties go to role-word names for semantic tokens, then the shortest name.
+- [x] AC-F10.6 Derived names strip `--` and the listed prefixes and are lowercase kebab-case; collisions keep the full name.
+- [x] AC-F10.7 With "Use site variable names" on (default), the derived site name is the token name and the generated name becomes an alias; off reverses this. The `useSiteName` edit overrides per token.
+- [x] AC-F10.8 Role words in variable names assign semantic roles with high confidence, overriding usage rules.
+- [x] AC-F10.9 DESIGN.md shows each token's site variable; variables.css writes the original site variable name verbatim for every token that has one.
+- [x] AC-F10.10 Variables found only through the computed root style are still matched, and `meta.partial` includes `cssVariables`.
 
 #### F11 Framework detection
 
@@ -749,13 +749,13 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F11.1 Up to 5,000 unique class tokens are sampled from walked elements; no text is read.
-- [ ] AC-F11.2 Each framework in the table is detected on its fixture (Tailwind-like, Bootstrap-like, shadcn-like and the others).
-- [ ] AC-F11.3 The plain-CSS fixture detects no framework.
-- [ ] AC-F11.4 A version is reported when the hints allow, otherwise `null`.
-- [ ] AC-F11.5 Confidence follows the rule above. Low-confidence detections appear in Insights but never in DESIGN.md.
-- [ ] AC-F11.6 For medium or high confidence, DESIGN.md's Stack section names the framework and a rule tells the agent to use it.
-- [ ] AC-F11.7 Insights lists every detection with its evidence.
+- [x] AC-F11.1 Up to 5,000 unique class tokens are sampled from walked elements; no text is read.
+- [x] AC-F11.2 Each framework in the table is detected on its fixture (Tailwind-like, Bootstrap-like, shadcn-like and the others).
+- [x] AC-F11.3 The plain-CSS fixture detects no framework.
+- [x] AC-F11.4 A version is reported when the hints allow, otherwise `null`.
+- [x] AC-F11.5 Confidence follows the rule above. Low-confidence detections appear in Insights but never in DESIGN.md.
+- [x] AC-F11.6 For medium or high confidence, DESIGN.md's Stack section names the framework and a rule tells the agent to use it.
+- [x] AC-F11.7 Insights lists every detection with its evidence.
 
 ### Group B: Read more from the page
 
@@ -775,16 +775,16 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F12.1 Up to 3 representative elements per recipe are matched against readable state rules using the selector with state pseudo-classes removed.
-- [ ] AC-F12.2 Conflicts resolve by specificity, then source order; rules in non-matching `@media` blocks are ignored.
-- [ ] AC-F12.3 `var()` values in state rules resolve through the element's computed custom properties.
-- [ ] AC-F12.4 Each state stores only properties that differ from the default.
-- [ ] AC-F12.5 With Advanced capture states on, forced pseudo-states replace the stylesheet results and `stateSource` is `'forced'`; every forced state is cleared afterwards, even on error.
-- [ ] AC-F12.6 The focus ring is captured from `:focus-visible` (preferred) or `:focus` as outline plus offset or a box-shadow ring, and its color takes the focus-ring role.
-- [ ] AC-F12.7 With no focus style, `source` is `'browser-default'`, the report flags it and DESIGN.md says so.
-- [ ] AC-F12.8 The Components tab shows the focus ring card, the state switcher, marked changes and the source label.
-- [ ] AC-F12.9 DESIGN.md recipes list state differences, and a rule tells the agent to show the focus ring on `:focus-visible`.
-- [ ] AC-F12.10 `meta.partial` includes `states` when some stylesheets were unreadable and forced states were not used.
+- [x] AC-F12.1 Up to 3 representative elements per recipe are matched against readable state rules using the selector with state pseudo-classes removed.
+- [x] AC-F12.2 Conflicts resolve by specificity, then source order; rules in non-matching `@media` blocks are ignored.
+- [x] AC-F12.3 `var()` values in state rules resolve through the element's computed custom properties.
+- [x] AC-F12.4 Each state stores only properties that differ from the default.
+- [x] AC-F12.5 With Advanced capture states on, forced pseudo-states replace the stylesheet results and `stateSource` is `'forced'`; every forced state is cleared afterwards, even on error.
+- [x] AC-F12.6 The focus ring is captured from `:focus-visible` (preferred) or `:focus` as outline plus offset or a box-shadow ring, and its color takes the focus-ring role.
+- [x] AC-F12.7 With no focus style, `source` is `'browser-default'`, the report flags it and DESIGN.md says so.
+- [x] AC-F12.8 The Components tab shows the focus ring card, the state switcher, marked changes and the source label.
+- [x] AC-F12.9 DESIGN.md recipes list state differences, and a rule tells the agent to show the focus ring on `:focus-visible`.
+- [x] AC-F12.10 `meta.partial` includes `states` when some stylesheets were unreadable and forced states were not used.
 
 #### F13 Light and dark themes as paired tokens
 
@@ -803,15 +803,15 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F13.1 The mechanism is detected as media, class, attribute or none, with its selector; each has a passing fixture.
-- [ ] AC-F13.2 Path A builds the other theme from variable overrides and root-level rules without changing the page.
-- [ ] AC-F13.3 Path B re-collects the other theme with emulation for the media mechanism, and clears emulation afterwards, even on error.
-- [ ] AC-F13.4 Class and attribute mechanisms never toggle the page; Path A runs and the note is shown.
-- [ ] AC-F13.5 Semantic roles are assigned per mode and stored as ModeRefs.
-- [ ] AC-F13.6 `meta.modes` lists captured themes; `meta.partial` includes `dark` when the second theme came only from stylesheet overrides.
-- [ ] AC-F13.7 Every export writes paired tokens as in section 9.3, using the site's mechanism.
-- [ ] AC-F13.8 The Light / Dark switch appears only when both modes exist; semantic rows show both swatches.
-- [ ] AC-F13.9 A site with no dark support produces one mode and no switch.
+- [x] AC-F13.1 The mechanism is detected as media, class, attribute or none, with its selector; each has a passing fixture.
+- [x] AC-F13.2 Path A builds the other theme from variable overrides and root-level rules without changing the page.
+- [x] AC-F13.3 Path B re-collects the other theme with emulation for the media mechanism, and clears emulation afterwards, even on error.
+- [x] AC-F13.4 Class and attribute mechanisms never toggle the page; Path A runs and the note is shown.
+- [x] AC-F13.5 Semantic roles are assigned per mode and stored as ModeRefs.
+- [x] AC-F13.6 `meta.modes` lists captured themes; `meta.partial` includes `dark` when the second theme came only from stylesheet overrides.
+- [x] AC-F13.7 Every export writes paired tokens as in section 9.3, using the site's mechanism.
+- [x] AC-F13.8 The Light / Dark switch appears only when both modes exist; semantic rows show both swatches.
+- [x] AC-F13.9 A site with no dark support produces one mode and no switch.
 
 #### F14 Motion: durations and easing
 
@@ -827,13 +827,13 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F14.1 Transition and animation durations and easings are collected per element, aligned with `transition-property`, skipping zero durations.
-- [ ] AC-F14.2 Durations become `duration-<ms>` tokens, at most 6 by usage.
-- [ ] AC-F14.3 Easings follow the naming rules above.
-- [ ] AC-F14.4 DESIGN.md's Motion section summarizes the commonly transitioned properties.
-- [ ] AC-F14.5 `prefers-reduced-motion` support is detected, and a DESIGN.md rule tells the agent to honor reduced motion.
-- [ ] AC-F14.6 The Motion tab shows durations and curves; previews respect reduced motion.
-- [ ] AC-F14.7 Exports follow section 9.
+- [x] AC-F14.1 Transition and animation durations and easings are collected per element, aligned with `transition-property`, skipping zero durations.
+- [x] AC-F14.2 Durations become `duration-<ms>` tokens, at most 6 by usage.
+- [x] AC-F14.3 Easings follow the naming rules above.
+- [x] AC-F14.4 DESIGN.md's Motion section summarizes the commonly transitioned properties.
+- [x] AC-F14.5 `prefers-reduced-motion` support is detected, and a DESIGN.md rule tells the agent to honor reduced motion.
+- [x] AC-F14.6 The Motion tab shows durations and curves; previews respect reduced motion.
+- [x] AC-F14.7 Exports follow section 9.
 
 #### F15 Text styles: letter spacing, text transform and composite styles
 
@@ -849,12 +849,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F15.1 Letter spacing is collected and normalized to em; text-transform is collected.
-- [ ] AC-F15.2 Text-style combinations are weighted by characters and tagged with their contexts.
-- [ ] AC-F15.3 Letter-spacing tokens use Tailwind names within 0.005 em, otherwise `tracking-custom-<n>`.
-- [ ] AC-F15.4 Up to 12 text styles are kept and named by the rules above.
-- [ ] AC-F15.5 The Type tab shows rendered text styles and the letter-spacing list.
-- [ ] AC-F15.6 Exports: Tailwind v4 `--tracking-*` and an `@utility` per text style, Tailwind v3 `letterSpacing`, DTCG `typography` tokens, a DESIGN.md table (section 9).
+- [x] AC-F15.1 Letter spacing is collected and normalized to em; text-transform is collected.
+- [x] AC-F15.2 Text-style combinations are weighted by characters and tagged with their contexts.
+- [x] AC-F15.3 Letter-spacing tokens use Tailwind names within 0.005 em, otherwise `tracking-custom-<n>`.
+- [x] AC-F15.4 Up to 12 text styles are kept and named by the rules above.
+- [x] AC-F15.5 The Type tab shows rendered text styles and the letter-spacing list.
+- [x] AC-F15.6 Exports: Tailwind v4 `--tracking-*` and an `@utility` per text style, Tailwind v3 `letterSpacing`, DTCG `typography` tokens, a DESIGN.md table (section 9).
 
 #### F16 Layout structure: containers, grid columns and gaps
 
@@ -868,12 +868,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F16.1 Centered containers are collected and weighted by area; `ch` and `em` convert to px.
-- [ ] AC-F16.2 Up to 5 container tokens are named sm to 2xl ascending, plus `prose` when detected.
-- [ ] AC-F16.3 Grid column counts come from computed tracks and equal-width flex rows, with usage.
-- [ ] AC-F16.4 Gaps are collected; a gap equal to a spacing token references it.
-- [ ] AC-F16.5 The Layout tab shows containers, grid counts and gaps.
-- [ ] AC-F16.6 DESIGN.md gets a Layout section, and exports follow section 9.
+- [x] AC-F16.1 Centered containers are collected and weighted by area; `ch` and `em` convert to px.
+- [x] AC-F16.2 Up to 5 container tokens are named sm to 2xl ascending, plus `prose` when detected.
+- [x] AC-F16.3 Grid column counts come from computed tracks and equal-width flex rows, with usage.
+- [x] AC-F16.4 Gaps are collected; a gap equal to a spacing token references it.
+- [x] AC-F16.5 The Layout tab shows containers, grid counts and gaps.
+- [x] AC-F16.6 DESIGN.md gets a Layout section, and exports follow section 9.
 
 #### F17 Layout values: z-index, opacity and border widths
 
@@ -887,12 +887,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F17.1 Z-index values are collected from positioned elements with layer hints from roles and position.
-- [ ] AC-F17.2 Z-index tokens take layer names when a hint dominates, otherwise `z-<value>`; at most 8.
-- [ ] AC-F17.3 Opacity values between 0 and 1 are collected, rounded to 0.05 and named `opacity-<percent>`; disabled opacity becomes `opacity-disabled`.
-- [ ] AC-F17.4 Border widths become `border-<px>` tokens; the dominant border style is noted.
-- [ ] AC-F17.5 The Layout tab shows the three new sections.
-- [ ] AC-F17.6 Exports follow section 9; for Tailwind v4 these are plain CSS variables used with the `z-(--z-dialog)` syntax, since v4 has no theme namespace for them.
+- [x] AC-F17.1 Z-index values are collected from positioned elements with layer hints from roles and position.
+- [x] AC-F17.2 Z-index tokens take layer names when a hint dominates, otherwise `z-<value>`; at most 8.
+- [x] AC-F17.3 Opacity values between 0 and 1 are collected, rounded to 0.05 and named `opacity-<percent>`; disabled opacity becomes `opacity-disabled`.
+- [x] AC-F17.4 Border widths become `border-<px>` tokens; the dominant border style is noted.
+- [x] AC-F17.5 The Layout tab shows the three new sections.
+- [x] AC-F17.6 Exports follow section 9; for Tailwind v4 these are plain CSS variables used with the `z-(--z-dialog)` syntax, since v4 has no theme namespace for them.
 
 #### F18 Gradients
 
@@ -906,12 +906,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F18.1 All four gradient types, including repeating and multi-layer backgrounds, are parsed into type, direction and stops.
-- [ ] AC-F18.2 Stop colors join the palette at reduced weight and never take a semantic role on gradient usage alone.
-- [ ] AC-F18.3 At most 6 gradient tokens are kept, named by site variable or `gradient-<n>`.
-- [ ] AC-F18.4 Exported gradients reference color tokens for stops that match one.
-- [ ] AC-F18.5 The Gradients section shows previews.
-- [ ] AC-F18.6 Exports follow section 9 (CSS variable, Tailwind v3 `backgroundImage`, DTCG `gradient`, a DESIGN.md table).
+- [x] AC-F18.1 All four gradient types, including repeating and multi-layer backgrounds, are parsed into type, direction and stops.
+- [x] AC-F18.2 Stop colors join the palette at reduced weight and never take a semantic role on gradient usage alone.
+- [x] AC-F18.3 At most 6 gradient tokens are kept, named by site variable or `gradient-<n>`.
+- [x] AC-F18.4 Exported gradients reference color tokens for stops that match one.
+- [x] AC-F18.5 The Gradients section shows previews.
+- [x] AC-F18.6 Exports follow section 9 (CSS variable, Tailwind v3 `backgroundImage`, DTCG `gradient`, a DESIGN.md table).
 
 #### F19 Web fonts (names only)
 
@@ -926,12 +926,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F19.1 Font faces are read from `document.fonts` with family, weights, styles and loaded status.
-- [ ] AC-F19.2 The provider is identified from host names only; no URL or file is stored or exported anywhere.
-- [ ] AC-F19.3 Weights and styles are aggregated per family.
-- [ ] AC-F19.4 Family tokens link to their web font; unloaded families are labeled system fonts.
-- [ ] AC-F19.5 The Web fonts card shows every family.
-- [ ] AC-F19.6 DESIGN.md lists web fonts with weights and provider, and a rule tells the agent to load the same families and weights rather than substitute.
+- [x] AC-F19.1 Font faces are read from `document.fonts` with family, weights, styles and loaded status.
+- [x] AC-F19.2 The provider is identified from host names only; no URL or file is stored or exported anywhere.
+- [x] AC-F19.3 Weights and styles are aggregated per family.
+- [x] AC-F19.4 Family tokens link to their web font; unloaded families are labeled system fonts.
+- [x] AC-F19.5 The Web fonts card shows every family.
+- [x] AC-F19.6 DESIGN.md lists web fonts with weights and provider, and a rule tells the agent to load the same families and weights rather than substitute.
 
 #### F20 More component types
 
@@ -950,14 +950,14 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F20.1 Each kind is detected by the rules in the table on the component fixture page.
-- [ ] AC-F20.2 Pages without a kind produce no recipe for it.
-- [ ] AC-F20.3 Badge and alert variants are grouped by background hue family.
-- [ ] AC-F20.4 Tabs record default and selected styles; navbars record the active-link style.
-- [ ] AC-F20.5 Tables record header, body, divider and zebra styles.
-- [ ] AC-F20.6 At most 3 variants per kind, by usage.
-- [ ] AC-F20.7 Recipe values reference tokens where they match; previews use generic labels and never page text.
-- [ ] AC-F20.8 DESIGN.md includes a recipe for every kind found.
+- [x] AC-F20.1 Each kind is detected by the rules in the table on the component fixture page.
+- [x] AC-F20.2 Pages without a kind produce no recipe for it.
+- [x] AC-F20.3 Badge and alert variants are grouped by background hue family.
+- [x] AC-F20.4 Tabs record default and selected styles; navbars record the active-link style.
+- [x] AC-F20.5 Tables record header, body, divider and zebra styles.
+- [x] AC-F20.6 At most 3 variants per kind, by usage.
+- [x] AC-F20.7 Recipe values reference tokens where they match; previews use generic labels and never page text.
+- [x] AC-F20.8 DESIGN.md includes a recipe for every kind found.
 
 #### F21 Icon library detection
 
@@ -978,12 +978,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F21.1 Each library in the table is detected on the icon fixture page.
-- [ ] AC-F21.2 A page with no icons detects nothing.
-- [ ] AC-F21.3 Confidence follows the F11 rule; Heroicons from attributes alone is low.
-- [ ] AC-F21.4 The most common icon size and stroke width are reported.
-- [ ] AC-F21.5 Insights shows the Icons card.
-- [ ] AC-F21.6 For medium or high confidence, DESIGN.md's Stack section names the library, size and stroke, with a rule to use the same library.
+- [x] AC-F21.1 Each library in the table is detected on the icon fixture page.
+- [x] AC-F21.2 A page with no icons detects nothing.
+- [x] AC-F21.3 Confidence follows the F11 rule; Heroicons from attributes alone is low.
+- [x] AC-F21.4 The most common icon size and stroke width are reported.
+- [x] AC-F21.5 Insights shows the Icons card.
+- [x] AC-F21.6 For medium or high confidence, DESIGN.md's Stack section names the library, size and stroke, with a rule to use the same library.
 
 #### F22 Coverage: open shadow roots, same-origin iframes and auto-scroll
 
@@ -997,13 +997,13 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F22.1 Open shadow roots are walked and their stylesheets read; closed roots are not.
-- [ ] AC-F22.2 Same-origin iframes are read and merged; refused frames are counted as skipped.
-- [ ] AC-F22.3 Frames smaller than 100 x 100 px are ignored.
-- [ ] AC-F22.4 Auto-scroll runs only when switched on and stops by the rules above.
-- [ ] AC-F22.5 The scroll position is restored after auto-scroll, including after an error.
-- [ ] AC-F22.6 `coverage` reports frames read and skipped, shadow roots and whether auto-scroll ran.
-- [ ] AC-F22.7 Insights shows the coverage line; `meta.partial` includes `frames` when any frame was skipped.
+- [x] AC-F22.1 Open shadow roots are walked and their stylesheets read; closed roots are not.
+- [x] AC-F22.2 Same-origin iframes are read and merged; refused frames are counted as skipped.
+- [x] AC-F22.3 Frames smaller than 100 x 100 px are ignored.
+- [x] AC-F22.4 Auto-scroll runs only when switched on and stops by the rules above.
+- [x] AC-F22.5 The scroll position is restored after auto-scroll, including after an error.
+- [x] AC-F22.6 `coverage` reports frames read and skipped, shadow roots and whether auto-scroll ran.
+- [x] AC-F22.7 Insights shows the coverage line; `meta.partial` includes `frames` when any frame was skipped.
 
 ### Group C: Capture modes
 
@@ -1032,16 +1032,16 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F23.1 The debugger permission is requested only from a click on the Advanced capture switch, never at install; declining raises DEBUGGER_DENIED and leaves basic extraction working.
-- [ ] AC-F23.2 The extractor installs `self.__webstyle` once per page and is called with `executeScript({ func, args })`.
-- [ ] AC-F23.3 Deep scan reads every stylesheet's text through the debugger, and the e2e no-network test still passes.
-- [ ] AC-F23.4 On the cross-origin fixture, deep scan recovers the breakpoints and variables that the basic capture marked partial.
-- [ ] AC-F23.5 Stages run in the order above, each reported through EXTRACT_PROGRESS.
-- [ ] AC-F23.6 The debugger is detached after success, error, CANCEL, panel close, tab close and navigation, verified by tests for each.
-- [ ] AC-F23.7 A service worker restart during a capture leads to a detach and a cleared `activeCapture`.
-- [ ] AC-F23.8 A failed stage produces CAPTURE_PARTIAL while the other captures are kept and analyzed.
-- [ ] AC-F23.9 Stages stop at 8 s and the plan at 20 s.
-- [ ] AC-F23.10 The switch's description explains Chrome's debugging bar before the first use.
+- [x] AC-F23.1 The debugger permission is requested only from a click on the Advanced capture switch, never at install; declining raises DEBUGGER_DENIED and leaves basic extraction working.
+- [x] AC-F23.2 The extractor installs `self.__webstyle` once per page and is called with `executeScript({ func, args })`.
+- [x] AC-F23.3 Deep scan reads every stylesheet's text through the debugger, and the e2e no-network test still passes.
+- [x] AC-F23.4 On the cross-origin fixture, deep scan recovers the breakpoints and variables that the basic capture marked partial.
+- [x] AC-F23.5 Stages run in the order above, each reported through EXTRACT_PROGRESS.
+- [x] AC-F23.6 The debugger is detached after success, error, CANCEL, panel close, tab close and navigation, verified by tests for each.
+- [x] AC-F23.7 A service worker restart during a capture leads to a detach and a cleared `activeCapture`.
+- [x] AC-F23.8 A failed stage produces CAPTURE_PARTIAL while the other captures are kept and analyzed.
+- [x] AC-F23.9 Stages stop at 8 s and the plan at 20 s.
+- [x] AC-F23.10 The switch's description explains Chrome's debugging bar before the first use.
 
 #### F24 Responsive capture
 
@@ -1055,13 +1055,13 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F24.1 Each chosen width is captured with device-metrics emulation and the override is always cleared.
-- [ ] AC-F24.2 At most 4 widths between 320 and 1920 px; a width within 50 px of the current one is skipped.
-- [ ] AC-F24.3 Width captures never change token usage shares.
-- [ ] AC-F24.4 The ResponsiveTable holds text sizes for headings and body, containers, grid columns and spacing base per width.
-- [ ] AC-F24.5 The Layout tab shows the Responsive section.
-- [ ] AC-F24.6 DESIGN.md gets a Responsive section with both tables and a mobile-first rule.
-- [ ] AC-F24.7 The CLI (F41) produces the same table using Playwright viewports.
+- [x] AC-F24.1 Each chosen width is captured with device-metrics emulation and the override is always cleared.
+- [x] AC-F24.2 At most 4 widths between 320 and 1920 px; a width within 50 px of the current one is skipped.
+- [x] AC-F24.3 Width captures never change token usage shares.
+- [x] AC-F24.4 The ResponsiveTable holds text sizes for headings and body, containers, grid columns and spacing base per width.
+- [x] AC-F24.5 The Layout tab shows the Responsive section.
+- [x] AC-F24.6 DESIGN.md gets a Responsive section with both tables and a mobile-first rule.
+- [x] AC-F24.7 The CLI (F41) produces the same table using Playwright viewports.
 
 #### F25 Merge several pages into one site snapshot
 
@@ -1081,15 +1081,15 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F25.1 "Add this page" appears only when the tab's URL is new to the snapshot and the tab is accessible.
-- [ ] AC-F25.2 A host outside the same-site rule asks for confirmation before adding.
-- [ ] AC-F25.3 Added pages are pooled with equal weight per page.
-- [ ] AC-F25.4 Variable conflicts keep the most-used value and appear in the consistency report.
-- [ ] AC-F25.5 The edit log is replayed after every merge, and stale edits are reported.
-- [ ] AC-F25.6 The page list removes a page and re-analyzes; the last page cannot be removed.
-- [ ] AC-F25.7 "Allow on this site" requests exactly `<origin>/*` from a click; once granted, adding pages needs no toolbar click.
-- [ ] AC-F25.8 Settings lists allowed sites and removes their permission.
-- [ ] AC-F25.9 A snapshot holds at most 20 pages; the 21st shows a message.
+- [x] AC-F25.1 "Add this page" appears only when the tab's URL is new to the snapshot and the tab is accessible.
+- [x] AC-F25.2 A host outside the same-site rule asks for confirmation before adding.
+- [x] AC-F25.3 Added pages are pooled with equal weight per page.
+- [x] AC-F25.4 Variable conflicts keep the most-used value and appear in the consistency report.
+- [x] AC-F25.5 The edit log is replayed after every merge, and stale edits are reported.
+- [x] AC-F25.6 The page list removes a page and re-analyzes; the last page cannot be removed.
+- [x] AC-F25.7 "Allow on this site" requests exactly `<origin>/*` from a click; once granted, adding pages needs no toolbar click.
+- [x] AC-F25.8 Settings lists allowed sites and removes their permission.
+- [x] AC-F25.9 A snapshot holds at most 20 pages; the 21st shows a message.
 
 #### F26 Element picker
 
@@ -1111,17 +1111,17 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F26.1 The picker outlines the hovered element and shows tag and size.
-- [ ] AC-F26.2 Clicks during picking never reach the page's own handlers.
-- [ ] AC-F26.3 Up and Down arrows move to the parent and first child; Enter confirms; Escape cancels with PICK_CANCELLED.
-- [ ] AC-F26.4 The overlay is removed on every exit path, verified by tests for each.
-- [ ] AC-F26.5 The generated selector matches exactly one element and adds nothing to the page.
-- [ ] AC-F26.6 Component extraction walks only the subtree, within its own cap.
-- [ ] AC-F26.7 The result is saved as a `component` snapshot with a renamable name.
-- [ ] AC-F26.8 Its exports include only tokens used inside the component.
-- [ ] AC-F26.9 "Add to snapshot..." adds the recipe to the chosen snapshot as variant `picked`.
-- [ ] AC-F26.10 The picker bundle is 15 KB or less.
-- [ ] AC-F26.11 Without a mouse, the picker starts with the element at the viewport's center selected, and the arrows and Enter work from there.
+- [x] AC-F26.1 The picker outlines the hovered element and shows tag and size.
+- [x] AC-F26.2 Clicks during picking never reach the page's own handlers.
+- [x] AC-F26.3 Up and Down arrows move to the parent and first child; Enter confirms; Escape cancels with PICK_CANCELLED.
+- [x] AC-F26.4 The overlay is removed on every exit path, verified by tests for each.
+- [x] AC-F26.5 The generated selector matches exactly one element and adds nothing to the page.
+- [x] AC-F26.6 Component extraction walks only the subtree, within its own cap.
+- [x] AC-F26.7 The result is saved as a `component` snapshot with a renamable name.
+- [x] AC-F26.8 Its exports include only tokens used inside the component.
+- [x] AC-F26.9 "Add to snapshot..." adds the recipe to the chosen snapshot as variant `picked`.
+- [x] AC-F26.10 The picker bundle is 15 KB or less.
+- [x] AC-F26.11 Without a mouse, the picker starts with the element at the viewport's center selected, and the arrows and Enter work from there.
 
 ### Group D: Trust and review
 
@@ -1140,14 +1140,14 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F27.1 Contrast samples use effective colors, including translucent text and backgrounds.
-- [ ] AC-F27.2 Ratios match the WCAG 2.x formula on known pairs (black on white is 21:1; `#767676` on white is about 4.54:1).
-- [ ] AC-F27.3 Large-text detection and levels follow the rules above.
-- [ ] AC-F27.4 Results are aggregated by token pair and theme with counts.
-- [ ] AC-F27.5 The focus ring and input borders are checked at 3:1.
-- [ ] AC-F27.6 The Accessibility card shows pairs, levels, the failing filter and the theme switch.
-- [ ] AC-F27.7 DESIGN.md gets an Accessibility section with safe text pairs and pairs to avoid, plus a rule to use only safe pairs for text.
-- [ ] AC-F27.8 The consistency report counts contrast failures.
+- [x] AC-F27.1 Contrast samples use effective colors, including translucent text and backgrounds.
+- [x] AC-F27.2 Ratios match the WCAG 2.x formula on known pairs (black on white is 21:1; `#767676` on white is about 4.54:1).
+- [x] AC-F27.3 Large-text detection and levels follow the rules above.
+- [x] AC-F27.4 Results are aggregated by token pair and theme with counts.
+- [x] AC-F27.5 The focus ring and input borders are checked at 3:1.
+- [x] AC-F27.6 The Accessibility card shows pairs, levels, the failing filter and the theme switch.
+- [x] AC-F27.7 DESIGN.md gets an Accessibility section with safe text pairs and pairs to avoid, plus a rule to use only safe pairs for text.
+- [x] AC-F27.8 The consistency report counts contrast failures.
 
 #### F28 Confidence per token
 
@@ -1165,13 +1165,13 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F28.1 Every token, role, recipe and detection has a score, level and reasons.
-- [ ] AC-F28.2 The formulas and thresholds above are implemented in one module with unit tests.
-- [ ] AC-F28.3 A site-variable match raises confidence; a background-image backdrop lowers it.
-- [ ] AC-F28.4 Rows show the medium and low dots with reasons in a tooltip.
-- [ ] AC-F28.5 Insights lists low-confidence items, and the "Low confidence first" sort works.
-- [ ] AC-F28.6 DESIGN.md marks low-confidence items "(verify)" and lists them in Notes.
-- [ ] AC-F28.7 The compact prompt (F33) leaves out low-confidence tokens that hold no semantic role.
+- [x] AC-F28.1 Every token, role, recipe and detection has a score, level and reasons.
+- [x] AC-F28.2 The formulas and thresholds above are implemented in one module with unit tests.
+- [x] AC-F28.3 A site-variable match raises confidence; a background-image backdrop lowers it.
+- [x] AC-F28.4 Rows show the medium and low dots with reasons in a tooltip.
+- [x] AC-F28.5 Insights lists low-confidence items, and the "Low confidence first" sort works.
+- [x] AC-F28.6 DESIGN.md marks low-confidence items "(verify)" and lists them in Notes.
+- [x] AC-F28.7 The compact prompt (F33) leaves out low-confidence tokens that hold no semantic role.
 
 #### F29 Consistency report
 
@@ -1181,12 +1181,12 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F29.1 The report contains every item listed above.
-- [ ] AC-F29.2 Near-duplicate groups list the kept and merged values.
-- [ ] AC-F29.3 Off-scale spacing lists values with their usage share; with no base unit, this item is omitted.
-- [ ] AC-F29.4 No overall score is computed or shown.
-- [ ] AC-F29.5 The Consistency card shows counts with expandable lists.
-- [ ] AC-F29.6 `audit.md` exports the same content (section 9).
+- [x] AC-F29.1 The report contains every item listed above.
+- [x] AC-F29.2 Near-duplicate groups list the kept and merged values.
+- [x] AC-F29.3 Off-scale spacing lists values with their usage share; with no base unit, this item is omitted.
+- [x] AC-F29.4 No overall score is computed or shown.
+- [x] AC-F29.5 The Consistency card shows counts with expandable lists.
+- [x] AC-F29.6 `audit.md` exports the same content (section 9).
 
 #### F30 "Where is this used?" highlight
 
@@ -1205,15 +1205,15 @@ Confidence: high with two or more independent signal types (variables, classes, 
 
 **Acceptance criteria.**
 
-- [ ] AC-F30.1 The eye buttons appear only when "Highlight on page" is on.
-- [ ] AC-F30.2 Matching follows the rules above for each token kind.
-- [ ] AC-F30.3 At most 200 outlines; the panel shows the total match count.
-- [ ] AC-F30.4 Outlines follow scrolling and resizing.
-- [ ] AC-F30.5 Outlines clear on toggle, another token, navigation and panel close, verified by tests for each.
-- [ ] AC-F30.6 No page element's style or attributes change.
-- [ ] AC-F30.7 Missing access shows the toolbar-icon or "Allow on this site" hint.
-- [ ] AC-F30.8 With no visible match, HIGHLIGHT_EMPTY is shown.
-- [ ] AC-F30.9 The highlighter bundle is 15 KB or less.
+- [x] AC-F30.1 The eye buttons appear only when "Highlight on page" is on.
+- [x] AC-F30.2 Matching follows the rules above for each token kind.
+- [x] AC-F30.3 At most 200 outlines; the panel shows the total match count.
+- [x] AC-F30.4 Outlines follow scrolling and resizing.
+- [x] AC-F30.5 Outlines clear on toggle, another token, navigation and panel close, verified by tests for each.
+- [x] AC-F30.6 No page element's style or attributes change.
+- [x] AC-F30.7 Missing access shows the toolbar-icon or "Allow on this site" hint.
+- [x] AC-F30.8 With no visible match, HIGHLIGHT_EMPTY is shown.
+- [x] AC-F30.9 The highlighter bundle is 15 KB or less.
 
 ### Group E: Outputs
 
@@ -1231,14 +1231,14 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F31.1 Every shadcn variable in section 9.6 is written or carries a TODO comment explaining what is missing.
-- [ ] AC-F31.2 Foregrounds come from recipes or the highest-contrast extracted color; no color is invented.
-- [ ] AC-F31.3 The `.dark` block appears only when a dark theme exists.
-- [ ] AC-F31.4 The `oklch` format writes `oklch()` values with 3 decimals plus the `@theme inline` block; the `hsl` format writes bare `H S% L%` triplets without it.
-- [ ] AC-F31.5 Chart colors are the top saturated colors, preferring distinct hue families.
-- [ ] AC-F31.6 `--radius` is the most-used radius converted to rem.
-- [ ] AC-F31.7 Snapshot tests cover both formats on the shadcn-like and plain fixtures.
-- [ ] AC-F31.8 The Export tab offers the format choice next to the shadcn preview.
+- [x] AC-F31.1 Every shadcn variable in section 9.6 is written or carries a TODO comment explaining what is missing.
+- [x] AC-F31.2 Foregrounds come from recipes or the highest-contrast extracted color; no color is invented.
+- [x] AC-F31.3 The `.dark` block appears only when a dark theme exists.
+- [x] AC-F31.4 The `oklch` format writes `oklch()` values with 3 decimals plus the `@theme inline` block; the `hsl` format writes bare `H S% L%` triplets without it.
+- [x] AC-F31.5 Chart colors are the top saturated colors, preferring distinct hue families.
+- [x] AC-F31.6 `--radius` is the most-used radius converted to rem.
+- [x] AC-F31.7 Snapshot tests cover both formats on the shadcn-like and plain fixtures.
+- [x] AC-F31.8 The Export tab offers the format choice next to the shadcn preview.
 
 #### F32 Agent rule exports: AGENTS.md, .cursor/rules and a CLAUDE.md snippet
 
@@ -1251,13 +1251,13 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F32.1 AGENTS.md and CLAUDE.md outputs are marked blocks with the content above.
-- [ ] AC-F32.2 Writing into an existing file replaces only the text between markers; without markers it appends; nothing else changes (tested on files with and without markers).
-- [ ] AC-F32.3 The `.mdc` front matter is valid YAML with the three fields.
-- [ ] AC-F32.4 The rules in all three outputs are identical to DESIGN.md's rules.
-- [ ] AC-F32.5 The CLAUDE.md block contains the `@DESIGN.md` import line.
-- [ ] AC-F32.6 Paths follow the default file map (section 9.2).
-- [ ] AC-F32.7 Snapshot tests cover all three outputs.
+- [x] AC-F32.1 AGENTS.md and CLAUDE.md outputs are marked blocks with the content above.
+- [x] AC-F32.2 Writing into an existing file replaces only the text between markers; without markers it appends; nothing else changes (tested on files with and without markers).
+- [x] AC-F32.3 The `.mdc` front matter is valid YAML with the three fields.
+- [x] AC-F32.4 The rules in all three outputs are identical to DESIGN.md's rules.
+- [x] AC-F32.5 The CLAUDE.md block contains the `@DESIGN.md` import line.
+- [x] AC-F32.6 Paths follow the default file map (section 9.2).
+- [x] AC-F32.7 Snapshot tests cover all three outputs.
 
 #### F33 Compact prompt export
 
@@ -1267,11 +1267,11 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F33.1 `prompt.md` is 40 lines or fewer on every fixture.
-- [ ] AC-F33.2 It contains every item listed above that exists for the site, in that order.
-- [ ] AC-F33.3 Low-confidence tokens without a role are omitted.
-- [ ] AC-F33.4 "Copy prompt" copies it in one click.
-- [ ] AC-F33.5 Snapshot tests cover it.
+- [x] AC-F33.1 `prompt.md` is 40 lines or fewer on every fixture.
+- [x] AC-F33.2 It contains every item listed above that exists for the site, in that order.
+- [x] AC-F33.3 Low-confidence tokens without a role are omitted.
+- [x] AC-F33.4 "Copy prompt" copies it in one click.
+- [x] AC-F33.5 Snapshot tests cover it.
 
 #### F34 Living style guide (HTML)
 
@@ -1279,13 +1279,13 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F34.1 The file makes no network requests when opened (checked by loading it in Playwright with network blocked and asserting nothing was attempted).
-- [ ] AC-F34.2 Every section above appears when the site has data for it.
-- [ ] AC-F34.3 The Light / Dark toggle appears only with two themes and switches every semantic value.
-- [ ] AC-F34.4 Component states are shown side by side, not via real hover.
-- [ ] AC-F34.5 The page passes an automated accessibility check (axe-core in the e2e test) with no serious violations.
-- [ ] AC-F34.6 Without screenshots the file is 500 KB or less on every fixture.
-- [ ] AC-F34.7 Snapshot tests cover its HTML.
+- [x] AC-F34.1 The file makes no network requests when opened (checked by loading it in Playwright with network blocked and asserting nothing was attempted).
+- [x] AC-F34.2 Every section above appears when the site has data for it.
+- [x] AC-F34.3 The Light / Dark toggle appears only with two themes and switches every semantic value.
+- [x] AC-F34.4 Component states are shown side by side, not via real hover.
+- [x] AC-F34.5 The page passes an automated accessibility check (axe-core in the e2e test) with no serious violations.
+- [x] AC-F34.6 Without screenshots the file is 500 KB or less on every fixture.
+- [x] AC-F34.7 Snapshot tests cover its HTML.
 
 #### F35 Figma variables export
 
@@ -1293,12 +1293,12 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F35.1 Both collections exist with the modes described.
-- [ ] AC-F35.2 Semantic variables alias primitives; a site without dark mode gets the Light mode only.
-- [ ] AC-F35.3 Names use slash groups.
+- [x] AC-F35.1 Both collections exist with the modes described.
+- [x] AC-F35.2 Semantic variables alias primitives; a site without dark mode gets the Light mode only.
+- [x] AC-F35.3 Names use slash groups.
 - [ ] AC-F35.4 The file imports into Figma (or Tokens Studio, if that fallback is used) without errors, checked by hand once in M15 and recorded in the PR.
-- [ ] AC-F35.5 The Export tab's help text states which import path the file targets.
-- [ ] AC-F35.6 Snapshot tests cover the file.
+- [x] AC-F35.5 The Export tab's help text states which import path the file targets.
+- [x] AC-F35.6 Snapshot tests cover the file.
 
 #### F36 Component screenshots
 
@@ -1312,14 +1312,14 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F36.1 Nothing is captured unless the switch is on.
-- [ ] AC-F36.2 Captures are at least 500 ms apart and happen at most once per theme per extraction.
-- [ ] AC-F36.3 Only representatives fully inside the viewport are cropped, at the device pixel ratio.
-- [ ] AC-F36.4 Screenshots are stored in the `screenshots` store and deleted with their snapshot.
-- [ ] AC-F36.5 Zip and project writes place them at the documented paths.
-- [ ] AC-F36.6 DESIGN.md links screenshots only when they are part of the export.
-- [ ] AC-F36.7 A rejected capture raises SCREENSHOT_FAILED and the extraction still succeeds.
-- [ ] AC-F36.8 Snapshot JSON exports leave screenshots out unless included.
+- [x] AC-F36.1 Nothing is captured unless the switch is on.
+- [x] AC-F36.2 Captures are at least 500 ms apart and happen at most once per theme per extraction.
+- [x] AC-F36.3 Only representatives fully inside the viewport are cropped, at the device pixel ratio.
+- [x] AC-F36.4 Screenshots are stored in the `screenshots` store and deleted with their snapshot.
+- [x] AC-F36.5 Zip and project writes place them at the documented paths.
+- [x] AC-F36.6 DESIGN.md links screenshots only when they are part of the export.
+- [x] AC-F36.7 A rejected capture raises SCREENSHOT_FAILED and the extraction still succeeds.
+- [x] AC-F36.8 Snapshot JSON exports leave screenshots out unless included.
 
 #### F37 Write straight to the project folder
 
@@ -1335,16 +1335,16 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F37.1 A folder can be linked, renamed in the list and unlinked; handles persist across panel restarts.
-- [ ] AC-F37.2 File maps are editable per project and validated as relative paths without `..`.
-- [ ] AC-F37.3 Write creates missing folders and writes every selected format to its path.
-- [ ] AC-F37.4 Permission is checked before writing and requested inside the click when needed.
-- [ ] AC-F37.5 AGENTS.md and CLAUDE.md are changed only inside markers (F32).
-- [ ] AC-F37.6 The Tailwind v3 output is written as `design/tailwind.webstyle.js`.
-- [ ] AC-F37.7 Unchanged files are not rewritten, and the summary shows new, updated and unchanged files.
-- [ ] AC-F37.8 No file is ever deleted.
-- [ ] AC-F37.9 Failures raise FS_PERMISSION_DENIED or FS_WRITE_FAILED with the failed files listed.
-- [ ] AC-F37.10 The feature is hidden when the API is unavailable.
+- [x] AC-F37.1 A folder can be linked, renamed in the list and unlinked; handles persist across panel restarts.
+- [x] AC-F37.2 File maps are editable per project and validated as relative paths without `..`.
+- [x] AC-F37.3 Write creates missing folders and writes every selected format to its path.
+- [x] AC-F37.4 Permission is checked before writing and requested inside the click when needed.
+- [x] AC-F37.5 AGENTS.md and CLAUDE.md are changed only inside markers (F32).
+- [x] AC-F37.6 The Tailwind v3 output is written as `design/tailwind.webstyle.js`.
+- [x] AC-F37.7 Unchanged files are not rewritten, and the summary shows new, updated and unchanged files.
+- [x] AC-F37.8 No file is ever deleted.
+- [x] AC-F37.9 Failures raise FS_PERMISSION_DENIED or FS_WRITE_FAILED with the failed files listed.
+- [x] AC-F37.10 The feature is hidden when the API is unavailable.
 
 #### F38 Map to my tokens
 
@@ -1363,15 +1363,15 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F38.1 The three file formats parse on fixture token files; unreadable files raise MAPPING_PARSE_FAILED.
-- [ ] AC-F38.2 DTCG aliases are resolved before matching.
-- [ ] AC-F38.3 Matching follows the type rules and thresholds above.
-- [ ] AC-F38.4 The table shows status chips, the unmatched filter and counts.
-- [ ] AC-F38.5 With "Use my token names" on, every export uses the user's names for matched tokens.
-- [ ] AC-F38.6 DESIGN.md lists unmatched tokens under "Values not in your system" with the rule.
-- [ ] AC-F38.7 `mapping.md` exports the table.
-- [ ] AC-F38.8 The mapping persists on the snapshot and survives re-analysis.
-- [ ] AC-F38.9 Mapping runs in the analysis worker.
+- [x] AC-F38.1 The three file formats parse on fixture token files; unreadable files raise MAPPING_PARSE_FAILED.
+- [x] AC-F38.2 DTCG aliases are resolved before matching.
+- [x] AC-F38.3 Matching follows the type rules and thresholds above.
+- [x] AC-F38.4 The table shows status chips, the unmatched filter and counts.
+- [x] AC-F38.5 With "Use my token names" on, every export uses the user's names for matched tokens.
+- [x] AC-F38.6 DESIGN.md lists unmatched tokens under "Values not in your system" with the rule.
+- [x] AC-F38.7 `mapping.md` exports the table.
+- [x] AC-F38.8 The mapping persists on the snapshot and survives re-analysis.
+- [x] AC-F38.9 Mapping runs in the analysis worker.
 
 #### F39 Snapshot diff
 
@@ -1381,13 +1381,13 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F39.1 Compare is enabled with exactly two snapshots selected.
-- [ ] AC-F39.2 Tokens are matched by name, then by value, per category.
-- [ ] AC-F39.3 Added, removed, changed, renamed and unchanged are reported correctly on fixture pairs.
-- [ ] AC-F39.4 Role changes are reported per theme, and recipe changes per property.
-- [ ] AC-F39.5 Stack changes (framework, icons, fonts) are reported.
-- [ ] AC-F39.6 The Diff screen shows counts, sections and filters.
-- [ ] AC-F39.7 `diff.md` exports the same content.
+- [x] AC-F39.1 Compare is enabled with exactly two snapshots selected.
+- [x] AC-F39.2 Tokens are matched by name, then by value, per category.
+- [x] AC-F39.3 Added, removed, changed, renamed and unchanged are reported correctly on fixture pairs.
+- [x] AC-F39.4 Role changes are reported per theme, and recipe changes per property.
+- [x] AC-F39.5 Stack changes (framework, icons, fonts) are reported.
+- [x] AC-F39.6 The Diff screen shows counts, sections and filters.
+- [x] AC-F39.7 `diff.md` exports the same content.
 
 #### F40 Snapshot import and export (JSON)
 
@@ -1399,14 +1399,14 @@ Formats and file contents are specified in section 9; these sections define beha
 
 **Acceptance criteria.**
 
-- [ ] AC-F40.1 Single, selected and full exports produce the documented file names and structure.
-- [ ] AC-F40.2 Project links are never exported; screenshots only when chosen.
-- [ ] AC-F40.3 Import validates with zod and raises IMPORT_INVALID with the first problem.
-- [ ] AC-F40.4 A higher version raises IMPORT_TOO_NEW.
-- [ ] AC-F40.5 Version 1 records are migrated on import.
-- [ ] AC-F40.6 Id conflicts become copies with new ids.
-- [ ] AC-F40.7 Files over 50 MB are refused with a message.
-- [ ] AC-F40.8 A file exported by the extension imports into the CLI's `diff` command, and the CLI's output imports into the extension.
+- [x] AC-F40.1 Single, selected and full exports produce the documented file names and structure.
+- [x] AC-F40.2 Project links are never exported; screenshots only when chosen.
+- [x] AC-F40.3 Import validates with zod and raises IMPORT_INVALID with the first problem.
+- [x] AC-F40.4 A higher version raises IMPORT_TOO_NEW.
+- [x] AC-F40.5 Version 1 records are migrated on import.
+- [x] AC-F40.6 Id conflicts become copies with new ids.
+- [x] AC-F40.7 Files over 50 MB are refused with a message.
+- [x] AC-F40.8 A file exported by the extension imports into the CLI's `diff` command, and the CLI's output imports into the extension.
 
 ### Group F: Platform
 
@@ -1451,16 +1451,16 @@ webstyle --version | --help
 
 **Acceptance criteria.**
 
-- [ ] AC-F41.1 `webstyle extract` writes the selected formats and `snapshot.webstyle.json` to `--out` using the section 9.2 paths.
-- [ ] AC-F41.2 For the same fixture and options, CLI output is byte-identical to the extension's zip once capture timestamps are normalized.
-- [ ] AC-F41.3 Every option above works, with argument parsing covered by unit tests (`util.parseArgs`).
-- [ ] AC-F41.4 `--merge` produces one site snapshot and enforces the same-site rule unless `--allow-cross-site` is given.
-- [ ] AC-F41.5 Dark, states, deep scan and widths use the shared Advanced capture code through the Playwright `CdpClient`.
-- [ ] AC-F41.6 `diff` and `map` produce the same output as the extension's F39 and F38.
-- [ ] AC-F41.7 Exit codes follow the table; a missing browser prints the install command.
-- [ ] AC-F41.8 `--json` prints valid F40 JSON to stdout and writes no files.
-- [ ] AC-F41.9 The package installs and runs with `npx webstyle-extractor` on Node 20 (CI job on a clean runner).
-- [ ] AC-F41.10 The README documents the CLI, including the line an agent can run.
+- [x] AC-F41.1 `webstyle extract` writes the selected formats and `snapshot.webstyle.json` to `--out` using the section 9.2 paths.
+- [x] AC-F41.2 For the same fixture and options, CLI output is byte-identical to the extension's zip once capture timestamps are normalized.
+- [x] AC-F41.3 Every option above works, with argument parsing covered by unit tests (`util.parseArgs`).
+- [x] AC-F41.4 `--merge` produces one site snapshot and enforces the same-site rule unless `--allow-cross-site` is given.
+- [x] AC-F41.5 Dark, states, deep scan and widths use the shared Advanced capture code through the Playwright `CdpClient`.
+- [x] AC-F41.6 `diff` and `map` produce the same output as the extension's F39 and F38.
+- [x] AC-F41.7 Exit codes follow the table; a missing browser prints the install command.
+- [x] AC-F41.8 `--json` prints valid F40 JSON to stdout and writes no files.
+- [x] AC-F41.9 The package installs and runs with `npx webstyle-extractor` on Node 20 (CI job on a clean runner).
+- [x] AC-F41.10 The README documents the CLI, including the line an agent can run.
 
 #### F42 Panel light theme
 
@@ -1491,11 +1491,11 @@ webstyle --version | --help
 
 **Acceptance criteria.**
 
-- [ ] AC-F42.1 Appearance offers System, Dark and Light; System follows the OS live.
-- [ ] AC-F42.2 Light values match the table and every text token meets 4.5:1 (automated check).
-- [ ] AC-F42.3 Every screen and state renders correctly in both themes (Playwright screenshots of each screen in both themes, reviewed in the PR).
-- [ ] AC-F42.4 No component uses hard-coded colors; switching theme needs no reload.
-- [ ] AC-F42.5 The choice persists in Settings.
+- [x] AC-F42.1 Appearance offers System, Dark and Light; System follows the OS live.
+- [x] AC-F42.2 Light values match the table and every text token meets 4.5:1 (automated check).
+- [x] AC-F42.3 Every screen and state renders correctly in both themes (Playwright screenshots of each screen in both themes, reviewed in the PR).
+- [x] AC-F42.4 No component uses hard-coded colors; switching theme needs no reload.
+- [x] AC-F42.5 The choice persists in Settings.
 
 #### F43 Firefox build and Edge listing
 
@@ -1509,14 +1509,14 @@ webstyle --version | --help
 
 **Acceptance criteria.**
 
-- [ ] AC-F43.1 `pnpm build:firefox` and `pnpm zip:firefox` produce a Firefox MV3 package.
-- [ ] AC-F43.2 `web-ext lint` reports no errors.
+- [x] AC-F43.1 `pnpm build:firefox` and `pnpm zip:firefox` produce a Firefox MV3 package.
+- [x] AC-F43.2 `web-ext lint` reports no errors.
 - [ ] AC-F43.3 The toolbar button and shortcut open the sidebar and extraction works.
-- [ ] AC-F43.4 Advanced capture and Write to project are hidden on Firefox; nothing else is missing.
+- [x] AC-F43.4 Advanced capture and Write to project are hidden on Firefox; nothing else is missing.
 - [ ] AC-F43.5 The manual smoke checklist passes on Firefox and is recorded in the PR.
 - [ ] AC-F43.6 The Chrome build passes the same smoke checklist on current Edge.
-- [ ] AC-F43.7 CI builds Chrome and Firefox packages on every pull request.
-- [ ] AC-F43.8 The gecko id placeholder is flagged in the README's release checklist.
+- [x] AC-F43.7 CI builds Chrome and Firefox packages on every pull request.
+- [x] AC-F43.8 The gecko id placeholder is flagged in the README's release checklist.
 
 #### F44 Localization infrastructure
 
@@ -1531,12 +1531,12 @@ webstyle --version | --help
 
 **Acceptance criteria.**
 
-- [ ] AC-F44.1 No user-visible string remains outside `messages.json`; the lint rule enforces it.
-- [ ] AC-F44.2 `t()` handles substitutions and behaves as described for missing keys.
-- [ ] AC-F44.3 The manifest name and description come from `messages.json`.
-- [ ] AC-F44.4 Exports stay in English whatever the UI language.
-- [ ] AC-F44.5 Dates and numbers format with `Intl`.
-- [ ] AC-F44.6 CONTRIBUTING.md explains adding a language.
+- [x] AC-F44.1 No user-visible string remains outside `messages.json`; the lint rule enforces it.
+- [x] AC-F44.2 `t()` handles substitutions and behaves as described for missing keys.
+- [x] AC-F44.3 The manifest name and description come from `messages.json`.
+- [x] AC-F44.4 Exports stay in English whatever the UI language.
+- [x] AC-F44.5 Dates and numbers format with `Intl`.
+- [x] AC-F44.6 CONTRIBUTING.md explains adding a language.
 
 ---
 

@@ -108,3 +108,37 @@ test('AC-F30.5 outlines clear on navigation and when another token is chosen', a
   await page.reload();
   expect(await overlayCount(page)).toBe(0);
 });
+
+/** Top edges of the highlight outlines, read through CDP because the overlay's root is closed. */
+async function outlineTops(context, page) {
+  const cdp = await context.newCDPSession(page);
+  const { root } = await cdp.send('DOM.getDocument', { depth: -1, pierce: true });
+  const ids = [];
+  const walk = (node) => {
+    if (
+      node.attributes?.includes('class') &&
+      node.attributes[node.attributes.indexOf('class') + 1] === 'o'
+    ) {
+      ids.push(node.nodeId);
+    }
+    for (const child of [...(node.children ?? []), ...(node.shadowRoots ?? [])]) walk(child);
+  };
+  walk(root);
+  const tops = [];
+  for (const nodeId of ids) {
+    const { model } = await cdp.send('DOM.getBoxModel', { nodeId });
+    tops.push(Math.round(model.border[1]));
+  }
+  await cdp.detach();
+  return tops;
+}
+
+test('AC-F30.4 outlines follow scrolling', async ({ ext }) => {
+  const { page, panel } = await highlightReady(ext);
+  await panel.getByRole('button', { name: 'Where is white used?' }).first().click();
+  await expect.poll(() => overlayCount(page)).toBe(1);
+  await expect.poll(async () => (await outlineTops(ext.context, page)).length).toBeGreaterThan(0);
+  const before = await outlineTops(ext.context, page);
+  await page.evaluate(() => window.scrollBy(0, 120));
+  await expect.poll(async () => (await outlineTops(ext.context, page))[0]).toBe(before[0] - 120);
+});

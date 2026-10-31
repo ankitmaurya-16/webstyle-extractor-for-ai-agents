@@ -197,6 +197,6 @@ test('AC-F40.8 an extension export opens in the CLI and a CLI snapshot imports i
   await panel.getByRole('button', { name: 'Back' }).first().click();
   await panel.getByRole('button', { name: 'History' }).click();
   await panel.locator('input[type=file]').setInputFiles(join(dir, 'snapshot.webstyle.json'));
-  await expect(panel.getByText('Imported 1 snapshots.')).toBeVisible();
+  await expect(panel.getByText('Imported 1 snapshots.', { exact: true })).toBeVisible();
   await expect(panel.locator('[data-snapshot]')).toHaveCount(2);
 });
