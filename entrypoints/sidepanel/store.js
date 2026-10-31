@@ -141,6 +141,7 @@ const initialState = {
   version: '0.0.0',
   firefox: false,
   fsSupported: false,
+  sortLowFirst: false, // "Low confidence first" on the token lists (AC-F28.5)
 };
 
 export const useStore = create((set, get) => ({
@@ -568,6 +569,10 @@ export const useStore = create((set, get) => ({
 
   setMode(mode) {
     set({ mode });
+  },
+
+  setSortLowFirst(sortLowFirst) {
+    set({ sortLowFirst: Boolean(sortLowFirst) });
   },
 
   dismissBanner(id) {

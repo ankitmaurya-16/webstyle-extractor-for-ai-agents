@@ -212,6 +212,7 @@ export const MESSAGES = {
   check_first: ['Check these first', 'Section label'],
   none_detected: ['None detected', 'Empty state'],
   failing_only: ['Failing only', 'Filter'],
+  contrast_theme: ['Contrast theme', 'Label of the Light / Dark switch in the Accessibility card'],
   contrast_sample: ['Aa', 'Contrast pair preview text'],
   non_text_checks: ['Non-text contrast', 'Section label'],
   focus_ring_vs_bg: ['Focus ring vs background', 'Non-text check'],

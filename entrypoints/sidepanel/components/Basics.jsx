@@ -4,7 +4,7 @@ import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { AlertTriangle, Check, ChevronRight, Info, Loader2, X } from 'lucide-react';
 import { formatPercent, t } from '../../../src/i18n.js';
-import { stageLabel } from '../store.js';
+import { stageLabel, useStore } from '../store.js';
 
 export function SectionLabel({ children, count, as: Tag = 'h2', action }) {
   return (
@@ -347,4 +347,20 @@ export function PermissionRow({ label, granted, onGrant, onRevoke }) {
 export function LevelBadge({ level }) {
   const tone = level === 'fail' ? 'danger' : level === 'AA-large' ? 'warning' : 'success';
   return <RoleBadge role={level === 'fail' ? t('fail') : level} tone={tone} />;
+}
+
+/** Lowest confidence score first; tokens without a score keep their place at the end (F28). */
+export function lowFirst(list, on) {
+  if (!on) return list;
+  const score = (x) => x.confidence?.score ?? Infinity;
+  return [...list].sort((a, b) => score(a) - score(b));
+}
+
+/** "Low confidence first" switch shared by the token lists; the choice lives in the store. */
+export function LowFirstToggle({ id }) {
+  const checked = useStore((s) => s.sortLowFirst);
+  const setSortLowFirst = useStore((s) => s.setSortLowFirst);
+  return (
+    <SwitchRow id={id} label={t('sort_low_first')} checked={checked} onChange={setSortLowFirst} />
+  );
 }

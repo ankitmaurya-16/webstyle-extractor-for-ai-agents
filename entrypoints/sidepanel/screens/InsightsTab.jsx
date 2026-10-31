@@ -1,7 +1,17 @@
 import { useState } from 'react';
-import { findToken } from '../../../src/model/design.js';
+import { findToken, modesOf } from '../../../src/model/design.js';
 import { formatNumber, t } from '../../../src/i18n.js';
-import { LevelBadge, RoleBadge, SectionLabel, StatCard, SwitchRow } from '../components/Basics.jsx';
+import {
+  LevelBadge,
+  LowFirstToggle,
+  RoleBadge,
+  SectionLabel,
+  Segmented,
+  StatCard,
+  SwitchRow,
+  lowFirst,
+} from '../components/Basics.jsx';
+import { useStore } from '../store.js';
 
 const NON_TEXT = { 'focus-ring': 'focus_ring_vs_bg', 'input-border': 'input_border_vs_bg' };
 
@@ -35,14 +45,36 @@ function Detection({ items, extra }) {
   );
 }
 
-export function InsightsTab({ design }) {
+export function InsightsTab({ design, mode }) {
   const [failingOnly, setFailingOnly] = useState(false);
+  const modes = modesOf(design);
+  const [chosenMode, setContrastMode] = useState(null);
+  const contrastMode = modes.includes(chosenMode)
+    ? chosenMode
+    : modes.includes(mode)
+      ? mode
+      : modes[0];
+  const sortLow = useStore((s) => s.sortLowFirst);
   const name = (id) => findToken(design, id)?.token.name ?? id;
   const hex = (id) => findToken(design, id)?.token.hex;
-  const contrast = (design.contrast ?? []).filter((c) => !failingOnly || c.level === 'fail');
+  const contrast = (design.contrast ?? []).filter(
+    (c) =>
+      (!failingOnly || c.level === 'fail') &&
+      (modes.length < 2 || (c.mode ?? modes[0]) === contrastMode),
+  );
   const audit = design.audit ?? {};
   const coverage = design.meta.coverage ?? {};
-  const lowConfidence = audit.lowConfidence ?? [];
+  const lowConfidence = lowFirst(
+    (audit.lowConfidence ?? []).map((id) => {
+      const found =
+        findToken(design, id) ??
+        (design.components.find((r) => r.id === id)
+          ? { token: design.components.find((r) => r.id === id) }
+          : null);
+      return { id, token: found?.token, confidence: found?.token.confidence };
+    }),
+    sortLow,
+  );
 
   return (
     <>
@@ -63,12 +95,22 @@ export function InsightsTab({ design }) {
 
       <SectionLabel
         action={
-          <SwitchRow
-            id="failing-only"
-            label={t('failing_only')}
-            checked={failingOnly}
-            onChange={setFailingOnly}
-          />
+          <>
+            {modes.length > 1 && (
+              <Segmented
+                label={t('contrast_theme')}
+                value={contrastMode}
+                onChange={setContrastMode}
+                options={modes.map((m) => ({ value: m, label: t(m) }))}
+              />
+            )}
+            <SwitchRow
+              id="failing-only"
+              label={t('failing_only')}
+              checked={failingOnly}
+              onChange={setFailingOnly}
+            />
+          </>
         }
       >
         {t('accessibility')}
@@ -90,7 +132,6 @@ export function InsightsTab({ design }) {
             </span>
             <span className="min-w-0 flex-1 truncate font-mono text-sm text-text">
               {name(c.textTokenId)} / {name(c.backgroundTokenId)}
-              {design.meta.modes?.length > 1 ? ` · ${t(c.mode)}` : ''}
             </span>
             <span className="w-10 shrink-0 text-right font-mono text-sm text-muted">
               {formatNumber(c.ratio, { maximumFractionDigits: 1 })}
@@ -152,23 +193,21 @@ export function InsightsTab({ design }) {
         )}
       </ul>
 
-      <SectionLabel count={lowConfidence.length}>{t('check_first')}</SectionLabel>
+      <SectionLabel
+        count={lowConfidence.length}
+        action={lowConfidence.length > 1 && <LowFirstToggle id="sort-low-insights" />}
+      >
+        {t('check_first')}
+      </SectionLabel>
       {lowConfidence.length === 0 ? (
         <p className="px-1 text-muted">{t('none_detected')}</p>
       ) : (
-        <ul className="flex flex-col">
-          {lowConfidence.slice(0, 12).map((id) => {
-            const found =
-              findToken(design, id) ??
-              (design.components.find((r) => r.id === id)
-                ? { token: design.components.find((r) => r.id === id) }
-                : null);
-            const reasons = found?.token.confidence?.reasons ?? [];
+        <ul className="flex flex-col" aria-label={t('check_first')}>
+          {lowConfidence.slice(0, 12).map(({ id, token }) => {
+            const reasons = token?.confidence?.reasons ?? [];
             return (
-              <li key={id} className="flex min-h-8 items-center gap-2 px-1">
-                <span className="shrink-0 font-mono text-sm text-text">
-                  {found?.token.name ?? id}
-                </span>
+              <li key={id} className="flex min-h-8 items-center gap-2 px-1" data-token-id={id}>
+                <span className="shrink-0 font-mono text-sm text-text">{token?.name ?? id}</span>
                 <span className="min-w-0 flex-1 truncate text-sm text-faint">
                   {reasons.join(' · ')}
                 </span>

@@ -6,7 +6,9 @@ import {
   CheckerSwatch,
   ConfidenceDot,
   GradientStrip,
+  LowFirstToggle,
   RoleBadge,
+  lowFirst,
   SectionLabel,
   UsageBar,
 } from '../components/Basics.jsx';
@@ -14,19 +16,31 @@ import { HighlightButton, TokenRow } from '../components/TokenRow.jsx';
 import { TokenMenu } from '../components/TokenMenu.jsx';
 import { Swatch } from '../components/Swatch.jsx';
 import { ExcludedGroup } from '../components/Excluded.jsx';
+import { useStore } from '../store.js';
+
+const minScore = (list) => Math.min(...list.map((x) => x.confidence?.score ?? Infinity));
 
 export function ColorsTab({ design, mode }) {
   const colors = design.colors;
+  const sortLow = useStore((s) => s.sortLowFirst);
   const shown = visible(colors);
   const opaque = shown.filter((c) => c.alpha >= 1);
   const translucent = shown.filter((c) => c.alpha < 1);
   const modes = modesOf(design);
   const rows = semanticRows(design);
-  const scaled = HUE_FAMILIES.map((family) => [
+  const families = HUE_FAMILIES.map((family) => [
     family,
     opaque.filter((c) => c.family === family && c.step !== null),
   ]).filter(([, list]) => list.length > 0);
-  const others = opaque.filter((c) => c.step === null);
+  // A scale strip keeps its steps in order, so the sort moves whole families instead.
+  const scaled = sortLow
+    ? [...families].sort(([, a], [, b]) => minScore(a) - minScore(b))
+    : families;
+  const others = lowFirst(
+    opaque.filter((c) => c.step === null),
+    sortLow,
+  );
+  const translucentRows = lowFirst(translucent, sortLow);
   const gradients = visible(design.gradients);
   const [selected, setSelected] = useState(null);
   const roles = (token) => rolesOf(design, token.id, mode);
@@ -83,10 +97,12 @@ export function ColorsTab({ design, mode }) {
         <p className="mt-1 px-1 text-muted">{t('no_primary')}</p>
       )}
 
-      <SectionLabel count={opaque.length}>{t('scales')}</SectionLabel>
+      <SectionLabel count={opaque.length} action={<LowFirstToggle id="sort-low-colors" />}>
+        {t('scales')}
+      </SectionLabel>
       <div className="flex flex-col gap-3">
         {scaled.map(([family, list]) => (
-          <div key={family}>
+          <div key={family} data-family={family}>
             <ScaleStrip family={family} tokens={list} selected={selected} onSelect={setSelected} />
             {list
               .filter((x) => x.id === selected)
@@ -134,7 +150,7 @@ export function ColorsTab({ design, mode }) {
         <>
           <SectionLabel count={translucent.length}>{t('translucent')}</SectionLabel>
           <ul className="flex flex-col">
-            {translucent.map((x) => (
+            {translucentRows.map((x) => (
               <TokenRow
                 key={x.id}
                 token={x}
