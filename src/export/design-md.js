@@ -95,6 +95,7 @@ function render(d, version, ctx, { dropScale, dropLow }) {
   // ---- Stack ----
   const frameworks = confidentFrameworks(d);
   const icons = confidentIcons(d);
+  // The Stack lists every loaded face (AC-F19.6); only the rule narrows to faces the text uses.
   const fonts = (d.meta.webFonts ?? []).filter((f) => f.loaded);
   if (frameworks.length || icons.length || fonts.length) {
     out.push('## Stack', '');
