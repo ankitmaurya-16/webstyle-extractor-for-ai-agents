@@ -1,38 +1,86 @@
 {
+ "borderStyles": [],
+ "borderWidths": [],
  "breakpoints": [],
+ "canvasHex": "#000000",
  "capturedAt": 1792324800000,
  "colorScheme": "dark",
  "colors": [
   {
+   "backdropHex": "#000000",
    "contexts": [
     "background"
    ],
    "count": 2,
+   "effectiveHex": "#000000",
+   "maxWeight": 921600,
+   "overImageShare": 0,
    "value": "rgb(0, 0, 0)",
    "weight": 1843200
   }
  ],
+ "containers": [],
+ "contrastSamples": [],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
  "cssVariables": {},
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
  "elementsSampled": 2,
+ "fontFaces": [],
  "fontFamilies": [],
  "fontSizes": [],
  "fontWeights": [],
+ "frameCount": 0,
+ "frameworkSignals": [],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [],
  "lineHeights": [],
+ "opacities": [],
  "radii": [],
+ "reducedMotion": false,
+ "representatives": [],
  "rootFontSizePx": 16,
  "samples": [],
  "shadows": [],
  "spacing": [],
+ "stateSamples": [],
  "stylesheets": {
   "readable": 1,
   "unreadable": 0
  },
  "textStyles": [],
+ "textTransforms": [],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "dark",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
  "title": "Canvas fixture",
+ "transitionProperties": [],
  "truncated": false,
  "url": "http://127.0.0.1:4173/canvas.html",
+ "variableDefs": [],
+ "variableUsage": {},
  "viewport": {
   "height": 720,
   "width": 1280
- }
+ },
+ "zIndices": []
 }

@@ -1,8 +1,44 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { vi } from 'vitest';
+import { analyze } from '../../src/analyze/index.js';
+import { buildOverrideRaw } from '../../src/analyze/themes.js';
 
 export const FIXTURE_NAMES = ['classic', 'dark', 'utility', 'cross-origin', 'large'];
+
+/** A Capture around a raw snapshot, the way the panel builds one (v2 spec 6.1). */
+export function captureOf(raw, extra = {}) {
+  return {
+    id: extra.id ?? `capture-${raw.url}-${extra.kind ?? 'base'}-${extra.mode ?? raw.colorScheme ?? 'light'}`,
+    pageUrl: raw.url,
+    mode: raw.colorScheme === 'dark' ? 'dark' : 'light',
+    viewportWidth: raw.viewport?.width ?? 1280,
+    method: 'computed',
+    kind: 'base',
+    capturedAt: raw.capturedAt,
+    raw,
+    ...extra,
+  };
+}
+
+/**
+ * Captures for one raw snapshot as the panel sends them to analysis: the base capture plus the
+ * stylesheet-override capture of the other theme when the stylesheets define one (Path A).
+ */
+export function capturesFor(raw, { pathA = true } = {}) {
+  const base = captureOf(raw);
+  const override = pathA ? buildOverrideRaw(raw) : null;
+  if (!override) return [base];
+  return [base, captureOf(override, { mode: base.mode === 'dark' ? 'light' : 'dark', method: 'stylesheet-override', kind: 'theme' })];
+}
+
+/** Analyzes one raw snapshot the way the extension does. */
+export function analyzeRaw(raw, options = {}) {
+  return analyze(capturesFor(raw, options), options);
+}
+
+/** Analyzes a captured fixture by name, for example 'classic' or 'frameworks-tailwind'. */
+export const analyzeFixture = (name, options) => analyzeRaw(loadRaw(name), options);
 
 export function loadRaw(name) {
   // Resolved from the project root because jsdom tests give import.meta.url an http origin.
