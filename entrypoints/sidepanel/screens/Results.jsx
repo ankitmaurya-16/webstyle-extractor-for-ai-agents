@@ -28,6 +28,9 @@ const TABS = [
   ['export', ExportTab],
 ];
 
+// Selectors must return stable values, or React re-renders forever.
+const NONE = [];
+
 const PARTIAL_LABELS = { breakpoints: 'breakpoints', cssVariables: 'CSS variables', states: 'states', dark: 'dark', frames: 'frames' };
 
 export function Results() {
@@ -35,7 +38,7 @@ export function Results() {
   const resultsTab = useStore((s) => s.resultsTab);
   const mode = useStore((s) => s.mode);
   const tab = useStore((s) => s.tab);
-  const dismissed = useStore((s) => (s.record ? (s.dismissed[s.record.id] ?? []) : []));
+  const dismissed = useStore((s) => (s.record ? s.dismissed[s.record.id] : undefined)) ?? NONE;
   const debuggerGranted = useStore((s) => s.debuggerGranted);
   const firefox = useStore((s) => s.firefox);
   const history = useStore((s) => s.history);

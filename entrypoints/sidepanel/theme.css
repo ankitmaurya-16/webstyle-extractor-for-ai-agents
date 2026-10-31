@@ -181,6 +181,12 @@
   }
 }
 
+/* Chrome injects body { font-size: 75% } into extension pages as an unlayered style, which beats
+   anything in @layer base; this unlayered, more specific rule restores the 13 px base. */
+html body {
+  font-size: var(--text-base);
+}
+
 /* 6 px checkerboard under translucent swatches so alpha is visible (CheckerSwatch). */
 .checker {
   background-color: var(--color-surface-3);

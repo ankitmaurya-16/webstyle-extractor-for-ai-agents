@@ -9,6 +9,10 @@ import { TokenMenu } from '../components/TokenMenu.jsx';
 
 const STATES = ['default', 'hover', 'focus', 'focus-visible', 'active'];
 const STATE_KEYS = { default: 'state_default', hover: 'state_hover', focus: 'state_focus', 'focus-visible': 'state_focus_visible', active: 'state_active' };
+// Values that only restate the browser default add noise to the property list.
+const DEFAULTS = new Set(['none', 'normal', 'auto', '0px', '']);
+const meaningful = ([, value]) => !DEFAULTS.has(isRef(value) ? value.raw : String(value ?? ''));
+
 const COLOR_PROPS = { 'background-color': 'background', color: 'text', zebra: 'background' };
 
 function describeProp(design, prop, value, mode) {
@@ -172,8 +176,8 @@ function RecipeCard({ design, recipe, mode, shots, picked }) {
       <div className="flex min-h-16 items-center justify-center overflow-hidden rounded-card border border-border p-4" style={{ background }}>
         <Preview design={design} recipe={recipe} styles={styles} />
       </div>
-      <dl className="mt-2 grid grid-cols-[104px_1fr] gap-x-2 font-mono text-sm">
-        {Object.entries(styles).map(([prop, value]) => (
+      <dl className="mt-2 grid grid-cols-[120px_1fr] gap-x-2 font-mono text-sm">
+        {Object.entries(styles).filter((entry) => meaningful(entry) || changed.has(entry[0])).map(([prop, value]) => (
           <div key={prop} className="contents">
             <dt className="truncate text-faint">{prop}</dt>
             <dd className="m-0 truncate text-text" title={describeProp(design, prop, value, mode)}>
