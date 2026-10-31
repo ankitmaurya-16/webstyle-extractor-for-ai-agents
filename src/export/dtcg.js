@@ -34,7 +34,9 @@ export function dtcgShadow(value) {
   layers.push(current.trim());
   const out = [];
   for (const layer of layers) {
-    const colorMatch = /(rgba?|hsla?|oklch|oklab|lab|lch|color)\([^)]*\)|#[0-9a-f]{3,8}\b/i.exec(layer);
+    const colorMatch = /(rgba?|hsla?|oklch|oklab|lab|lch|color)\([^)]*\)|#[0-9a-f]{3,8}\b/i.exec(
+      layer,
+    );
     const rest = (colorMatch ? layer.replace(colorMatch[0], ' ') : layer).trim();
     const inset = /\binset\b/.test(rest);
     const lengths = rest
@@ -64,7 +66,10 @@ export function dtcgShadow(value) {
 /** Gradient stops as positions 0 to 1 where they are percentages. */
 function dtcgGradient(g, colorRef) {
   return g.stops.map((s, i) => {
-    const pct = s.position && /%$/.test(s.position) ? Number.parseFloat(s.position) / 100 : i / Math.max(1, g.stops.length - 1);
+    const pct =
+      s.position && /%$/.test(s.position)
+        ? Number.parseFloat(s.position) / 100
+        : i / Math.max(1, g.stops.length - 1);
     return { color: colorRef(s), position: round3(pct) };
   });
 }
@@ -85,7 +90,8 @@ export function exportDtcgFiles(design, version, ctx = {}) {
   const { root, other } = rootAndOtherMode(t);
   const semanticGroup = (mode) => {
     const group = {};
-    for (const [role, c] of t.semanticByMode[mode] ?? []) group[role] = { $type: 'color', $value: `{color.${colorKey(c)}}` };
+    for (const [role, c] of t.semanticByMode[mode] ?? [])
+      group[role] = { $type: 'color', $value: `{color.${colorKey(c)}}` };
     return group;
   };
   const rootSemantic = semanticGroup(root);
@@ -100,7 +106,9 @@ export function exportDtcgFiles(design, version, ctx = {}) {
       doc.gradient[stripPrefix(g.name, 'gradient')] = {
         $type: 'gradient',
         $value: dtcgGradient(g, ref),
-        $extensions: { 'com.webstyle': { type: g.type, direction: g.direction, repeating: g.repeating } },
+        $extensions: {
+          'com.webstyle': { type: g.type, direction: g.direction, repeating: g.repeating },
+        },
       };
     }
   }
@@ -108,7 +116,10 @@ export function exportDtcgFiles(design, version, ctx = {}) {
     doc.font = {};
     for (const f of t.families) {
       doc.font[f.name] = { $type: 'fontFamily', $value: [...f.stack] };
-      if (f.webFont) doc.font[f.name].$extensions = { 'com.webstyle': { provider: f.webFont.provider, weights: f.webFont.weights } };
+      if (f.webFont)
+        doc.font[f.name].$extensions = {
+          'com.webstyle': { provider: f.webFont.provider, weights: f.webFont.weights },
+        };
     }
   }
   if (t.sizes.length) {
@@ -117,7 +128,8 @@ export function exportDtcgFiles(design, version, ctx = {}) {
     doc['font-weight'] = {};
     for (const s of t.sizes) {
       doc.text[s.name] = { $type: 'dimension', $value: dimension(s.sizePx) };
-      if (s.lineHeightPx !== null) doc['line-height'][s.name] = { $type: 'dimension', $value: dimension(s.lineHeightPx) };
+      if (s.lineHeightPx !== null)
+        doc['line-height'][s.name] = { $type: 'dimension', $value: dimension(s.lineHeightPx) };
       doc['font-weight'][s.name] = { $type: 'fontWeight', $value: s.fontWeight };
     }
     if (Object.keys(doc['line-height']).length === 0) delete doc['line-height'];
@@ -133,9 +145,16 @@ export function exportDtcgFiles(design, version, ctx = {}) {
           fontSize: dimension(s.sizePx),
           fontWeight: s.fontWeight,
           letterSpacing: dimension(s.letterSpacingEm * s.sizePx),
-          lineHeight: s.lineHeightPx === null ? 1.2 : round3(s.lineHeightPx / s.sizePx),
+          // "normal" has no number on the page, so none is invented; the extension records it.
+          ...(s.lineHeightPx === null ? {} : { lineHeight: round3(s.lineHeightPx / s.sizePx) }),
         },
-        $extensions: { 'com.webstyle': { textTransform: s.textTransform, usedFor: s.usedFor } },
+        $extensions: {
+          'com.webstyle': {
+            textTransform: s.textTransform,
+            usedFor: s.usedFor,
+            ...(s.lineHeightPx === null ? { lineHeight: 'normal' } : {}),
+          },
+        },
       };
     }
   }
@@ -143,47 +162,71 @@ export function exportDtcgFiles(design, version, ctx = {}) {
     // DTCG dimensions allow px and rem only, so em letter spacing is a number with its unit noted.
     doc.tracking = {};
     for (const l of t.letterSpacings) {
-      doc.tracking[stripPrefix(l.name, 'tracking')] = { $type: 'number', $value: l.em, $extensions: { 'com.webstyle': { unit: 'em' } } };
+      doc.tracking[stripPrefix(l.name, 'tracking')] = {
+        $type: 'number',
+        $value: l.em,
+        $extensions: { 'com.webstyle': { unit: 'em' } },
+      };
     }
   }
   const dims = (group, list, prefix, px = (x) => x.px) => {
     if (!list.length) return;
     doc[group] = {};
-    for (const x of list) doc[group][stripPrefix(x.name, prefix)] = { $type: 'dimension', $value: dimension(px(x)) };
+    for (const x of list)
+      doc[group][stripPrefix(x.name, prefix)] = { $type: 'dimension', $value: dimension(px(x)) };
   };
   dims('space', t.spacing, 'space');
   dims('container', t.containers, 'container');
-  dims('gap', t.gaps.filter((g) => !g.spaceId), 'gap');
+  dims(
+    'gap',
+    t.gaps.filter((g) => !g.spaceId),
+    'gap',
+  );
   dims('radius', t.radii, 'radius');
   dims('border-width', t.borderWidths, 'border');
   dims('breakpoint', t.breakpoints, '');
   const shadows = t.shadows.map((s) => [s, dtcgShadow(s.value)]).filter(([, v]) => v !== null);
   if (shadows.length) {
     doc.shadow = {};
-    for (const [s, value] of shadows) doc.shadow[stripPrefix(s.name, 'shadow')] = { $type: 'shadow', $value: value };
+    for (const [s, value] of shadows)
+      doc.shadow[stripPrefix(s.name, 'shadow')] = { $type: 'shadow', $value: value };
   }
   const numbers = (group, list, prefix) => {
     if (!list.length) return;
     doc[group] = {};
-    for (const x of list) doc[group][stripPrefix(x.name, prefix)] = { $type: 'number', $value: x.value };
+    for (const x of list)
+      doc[group][stripPrefix(x.name, prefix)] = { $type: 'number', $value: x.value };
   };
   numbers('opacity', t.opacities, 'opacity');
   numbers('z-index', t.zIndex, 'z');
   if (t.gridColumns.length) numbers('grid-columns', t.gridColumns, 'grid');
   if (t.durations.length) {
     doc.duration = {};
-    for (const x of t.durations) doc.duration[stripPrefix(x.name, 'duration')] = { $type: 'duration', $value: { value: x.ms, unit: 'ms' } };
+    for (const x of t.durations)
+      doc.duration[stripPrefix(x.name, 'duration')] = {
+        $type: 'duration',
+        $value: { value: x.ms, unit: 'ms' },
+      };
   }
   const curves = t.easings.filter((e) => e.bezier);
   if (curves.length) {
     doc.easing = {};
-    for (const e of curves) doc.easing[e.name === 'ease' ? 'default' : stripPrefix(e.name, 'ease')] = { $type: 'cubicBezier', $value: e.bezier };
+    for (const e of curves)
+      doc.easing[e.name === 'ease' ? 'default' : stripPrefix(e.name, 'ease')] = {
+        $type: 'cubicBezier',
+        $value: e.bezier,
+      };
   }
   const recipes = (d.components ?? []).filter((r) => !r.excluded);
   if (recipes.length || d.focusRing) {
     doc.$extensions = {
       'com.webstyle': {
-        recipes: Object.fromEntries(recipes.map((r) => [r.id, { name: r.name, kind: r.kind, variant: r.variant, byMode: plainRecipe(r.byMode) }])),
+        recipes: Object.fromEntries(
+          recipes.map((r) => [
+            r.id,
+            { name: r.name, kind: r.kind, variant: r.variant, byMode: plainRecipe(r.byMode) },
+          ]),
+        ),
         focusRing: d.focusRing ?? null,
       },
     };
@@ -205,7 +248,9 @@ function plainRecipe(byMode) {
   for (const [mode, states] of Object.entries(byMode)) {
     out[mode] = {};
     for (const [state, styles] of Object.entries(states)) {
-      out[mode][state] = Object.fromEntries(Object.entries(styles).map(([k, v]) => [k, typeof v === 'object' && v ? `{${v.ref}}` : v]));
+      out[mode][state] = Object.fromEntries(
+        Object.entries(styles).map(([k, v]) => [k, typeof v === 'object' && v ? `{${v.ref}}` : v]),
+      );
     }
   }
   return out;

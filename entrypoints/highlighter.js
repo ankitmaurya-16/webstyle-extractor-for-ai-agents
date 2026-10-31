@@ -10,7 +10,8 @@ export default defineUnlistedScript(() => {
   const RECOMPUTE_MS = 1000;
   let state = null;
 
-  const STYLES = '.o { position: fixed; outline: 2px solid #7aa2f7; outline-offset: 1px; border-radius: 2px; background: rgb(122 162 247 / 0.08); }';
+  const STYLES =
+    '.o { position: fixed; outline: 2px solid #7aa2f7; outline-offset: 1px; border-radius: 2px; background: rgb(122 162 247 / 0.08); }';
   const COLOR_PROPS = ['color', 'background-color', 'border-top-color', 'outline-color'];
 
   const normColor = (v) => {
@@ -26,7 +27,10 @@ export default defineUnlistedScript(() => {
       case 'background-color':
       case 'border-color':
       case 'outline-color': {
-        const props = match.property === 'color' && match.anyColor ? COLOR_PROPS : [match.property === 'border-color' ? 'border-top-color' : match.property];
+        const props =
+          match.property === 'color' && match.anyColor
+            ? COLOR_PROPS
+            : [match.property === 'border-color' ? 'border-top-color' : match.property];
         return props.some((p) => {
           if (p === 'border-top-color' && !(parseFloat(style.borderTopWidth) > 0)) return false;
           if (p === 'outline-color' && style.outlineStyle === 'none') return false;
@@ -35,10 +39,14 @@ export default defineUnlistedScript(() => {
         });
       }
       case 'font-family':
-        return values.includes(style.fontFamily.split(',')[0].replace(/["']/g, '').trim().toLowerCase());
+        return values.includes(
+          style.fontFamily.split(',')[0].replace(/["']/g, '').trim().toLowerCase(),
+        );
       case 'padding':
       case 'margin':
-        return ['top', 'right', 'bottom', 'left'].some((s) => values.includes(style.getPropertyValue(`${match.property}-${s}`)));
+        return ['top', 'right', 'bottom', 'left'].some((s) =>
+          values.includes(style.getPropertyValue(`${match.property}-${s}`)),
+        );
       case 'border-width':
         return parseFloat(style.borderTopWidth) > 0 && values.includes(style.borderTopWidth);
       case 'border-radius':
@@ -62,7 +70,10 @@ export default defineUnlistedScript(() => {
 
   function find(match) {
     const found = [];
-    const walker = document.createTreeWalker(document.body ?? document.documentElement, NodeFilter.SHOW_ELEMENT);
+    const walker = document.createTreeWalker(
+      document.body ?? document.documentElement,
+      NodeFilter.SHOW_ELEMENT,
+    );
     let n = 0;
     for (let el = walker.currentNode; el && n < ELEMENT_CAP; el = walker.nextNode()) {
       if (el.tagName === 'WEBSTYLE-OVERLAY') continue;
@@ -141,6 +152,15 @@ export default defineUnlistedScript(() => {
     state = null;
   }
 
-  self.__webstyleHighlighter = { show, clear, get active() { return Boolean(state); }, get lastDrawMs() { return state?.lastDrawMs ?? 0; } };
+  self.__webstyleHighlighter = {
+    show,
+    clear,
+    get active() {
+      return Boolean(state);
+    },
+    get lastDrawMs() {
+      return state?.lastDrawMs ?? 0;
+    },
+  };
   return true;
 });

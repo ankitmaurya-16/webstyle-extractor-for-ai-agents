@@ -1,5 +1,6 @@
 // Pooling captures (F25) and upgrading v1 raw snapshots to the v2 shape. Pure.
 
+import { normalizeColor } from './colors.js';
 import { emptyRaw } from './themes.js';
 
 const LIST_FIELDS = [
@@ -34,13 +35,12 @@ export function upgradeRaw(raw) {
   const base = emptyRaw(raw);
   const out = { ...base, ...raw };
   for (const field of LIST_FIELDS) out[field] = Array.isArray(raw[field]) ? raw[field] : [];
-  out.colors = (raw.colors ?? []).map((c) => ({
-    effectiveHex: null,
-    backdropHex: null,
-    overImageShare: 0,
-    maxWeight: c.weight,
-    ...c,
-  }));
+  out.colors = (raw.colors ?? []).map((c) => {
+    // A v1 color has no backdrop: its effective and backdrop colors are its own value (6.4).
+    const own =
+      c.effectiveHex === undefined ? (normalizeColor(c.value)?.hex.slice(0, 7) ?? null) : null;
+    return { effectiveHex: own, backdropHex: own, overImageShare: 0, maxWeight: c.weight, ...c };
+  });
   out.textStyles = (raw.textStyles ?? []).map((s) => {
     if (typeof s.value !== 'string') return s;
     const [size, line, weight, ...family] = s.value.split('|');
@@ -56,9 +56,19 @@ export function upgradeRaw(raw) {
       usage: s.weight,
     };
   });
-  out.samples = (raw.samples ?? []).map((s, i) => ({ key: s.key ?? `${s.kind}:v1-${i}`, hints: [], ...s }));
+  out.samples = (raw.samples ?? []).map((s, i) => ({
+    key: s.key ?? `${s.kind}:v1-${i}`,
+    hints: [],
+    ...s,
+  }));
   out.variableDefs =
-    raw.variableDefs ?? Object.entries(raw.cssVariables ?? {}).map(([name, value]) => ({ name, value, scope: 'root', selector: ':root' }));
+    raw.variableDefs ??
+    Object.entries(raw.cssVariables ?? {}).map(([name, value]) => ({
+      name,
+      value,
+      scope: 'root',
+      selector: ':root',
+    }));
   return out;
 }
 
@@ -79,7 +89,11 @@ export function poolRaws(raws) {
   for (const field of LIST_FIELDS) {
     out[field] = list.flatMap((r) => {
       const f = scale(r[field]);
-      return r[field].map((s) => ({ ...s, weight: s.weight * f, maxWeight: s.maxWeight === undefined ? undefined : s.maxWeight * f }));
+      return r[field].map((s) => ({
+        ...s,
+        weight: s.weight * f,
+        maxWeight: s.maxWeight === undefined ? undefined : s.maxWeight * f,
+      }));
     });
   }
   out.textStyles = list.flatMap((r) => {
@@ -138,7 +152,8 @@ function uniteFonts(faces) {
       e.weights = [...new Set([...e.weights, ...f.weights])].sort((a, b) => a - b);
       e.styles = [...new Set([...e.styles, ...f.styles])].sort();
       e.loaded ||= f.loaded;
-      if (e.provider === 'unknown') Object.assign(e, { provider: f.provider, providerHost: f.providerHost });
+      if (e.provider === 'unknown')
+        Object.assign(e, { provider: f.provider, providerHost: f.providerHost });
     }
   }
   return [...map.values()];
@@ -146,13 +161,17 @@ function uniteFonts(faces) {
 
 function uniteVariables(list) {
   const usage = {};
-  for (const r of list) for (const [k, v] of Object.entries(r.variableUsage ?? {})) usage[k] = (usage[k] ?? 0) + v;
+  for (const r of list)
+    for (const [k, v] of Object.entries(r.variableUsage ?? {})) usage[k] = (usage[k] ?? 0) + v;
   const byKey = new Map();
   for (const r of list) {
     for (const d of r.variableDefs ?? []) {
       const key = `${d.scope}|${d.name}`;
       const values = byKey.get(key) ?? { def: d, values: new Map() };
-      values.values.set(d.value, (values.values.get(d.value) ?? 0) + (r.variableUsage?.[d.name] ?? 0) + 1);
+      values.values.set(
+        d.value,
+        (values.values.get(d.value) ?? 0) + (r.variableUsage?.[d.name] ?? 0) + 1,
+      );
       byKey.set(key, values);
     }
   }
@@ -161,7 +180,13 @@ function uniteVariables(list) {
   for (const { def, values } of byKey.values()) {
     const sorted = [...values.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
     defs.push({ ...def, value: sorted[0][0] });
-    if (sorted.length > 1) conflicts.push({ name: def.name, scope: def.scope, kept: sorted[0][0], others: sorted.slice(1).map(([v]) => v) });
+    if (sorted.length > 1)
+      conflicts.push({
+        name: def.name,
+        scope: def.scope,
+        kept: sorted[0][0],
+        others: sorted.slice(1).map(([v]) => v),
+      });
   }
   return { defs, usage, conflicts };
 }

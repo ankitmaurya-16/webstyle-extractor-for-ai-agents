@@ -21,12 +21,34 @@ export const THEME_MODES = ['light', 'dark'];
 export const INTERACTION_STATES = ['default', 'hover', 'focus', 'focus-visible', 'active'];
 
 /** Hue order used by every exporter: gray first, then the families by hue. */
-export const HUE_FAMILIES = ['gray', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'indigo', 'purple', 'pink'];
+export const HUE_FAMILIES = [
+  'gray',
+  'red',
+  'orange',
+  'yellow',
+  'green',
+  'teal',
+  'blue',
+  'indigo',
+  'purple',
+  'pink',
+];
 export const FAMILY_ORDER = ['white', 'black', ...HUE_FAMILIES];
 
 export const STEPS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
-export const COMPONENT_KINDS = ['button', 'input', 'link', 'heading', 'card', 'badge', 'navbar', 'tabs', 'alert', 'table'];
+export const COMPONENT_KINDS = [
+  'button',
+  'input',
+  'link',
+  'heading',
+  'card',
+  'badge',
+  'navbar',
+  'tabs',
+  'alert',
+  'table',
+];
 
 export const RECIPE_PROPERTIES = [
   'background-color',

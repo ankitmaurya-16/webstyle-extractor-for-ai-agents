@@ -23,7 +23,10 @@ export async function startPicker(tabId) {
 
 export async function stopPicker(tabId) {
   try {
-    await api().scripting.executeScript({ target: { tabId, frameIds: [0] }, func: () => self.__webstylePicker?.stop() });
+    await api().scripting.executeScript({
+      target: { tabId, frameIds: [0] },
+      func: () => self.__webstylePicker?.stop(),
+    });
   } catch {
     // Gone with the page.
   }
@@ -31,7 +34,11 @@ export async function stopPicker(tabId) {
 
 export async function pickerKey(tabId, key) {
   try {
-    await api().scripting.executeScript({ target: { tabId, frameIds: [0] }, func: (k) => self.__webstylePicker?.key(k), args: [key] });
+    await api().scripting.executeScript({
+      target: { tabId, frameIds: [0] },
+      func: (k) => self.__webstylePicker?.key(k),
+      args: [key],
+    });
   } catch {
     // Gone with the page.
   }
@@ -39,7 +46,9 @@ export async function pickerKey(tabId, key) {
 
 export async function showHighlight(tabId, match) {
   try {
-    const result = await call(tabId, '/highlighter.js', (m) => self.__webstyleHighlighter.show(m), [match]);
+    const result = await call(tabId, '/highlighter.js', (m) => self.__webstyleHighlighter.show(m), [
+      match,
+    ]);
     return { type: MSG.HIGHLIGHT_COUNT, count: result?.count ?? 0 };
   } catch (error) {
     return { type: MSG.HIGHLIGHT_COUNT, count: 0, error: classifyInjectionError(error) };
@@ -48,7 +57,10 @@ export async function showHighlight(tabId, match) {
 
 export async function clearHighlight(tabId) {
   try {
-    await api().scripting.executeScript({ target: { tabId, frameIds: [0] }, func: () => self.__webstyleHighlighter?.clear() });
+    await api().scripting.executeScript({
+      target: { tabId, frameIds: [0] },
+      func: () => self.__webstyleHighlighter?.clear(),
+    });
   } catch {
     // Gone with the page.
   }

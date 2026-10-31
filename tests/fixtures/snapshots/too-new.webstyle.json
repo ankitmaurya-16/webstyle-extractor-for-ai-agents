@@ -1,0 +1,8 @@
+{
+  "format": "webstyle-snapshots",
+  "version": 3,
+  "exportedAt": 1792540800000,
+  "snapshots": [
+    { "id": "future", "schemaVersion": 3, "hostname": "example.com", "title": "From the future" }
+  ]
+}

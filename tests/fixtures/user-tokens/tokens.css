@@ -1,0 +1,15 @@
+/* A synthetic stylesheet of custom properties, written for the mapping tests. */
+:root {
+  --brand: #2563eb;
+  --brand-hover: var(--brand);
+  --text: rgb(17 24 39);
+  --space-4: 1rem;
+  --radius-md: 0.375rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --font-sans: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.later {
+  /* A later declaration of the same name does not replace the first one. */
+  --brand: #ff0000;
+}

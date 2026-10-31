@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tailwind-like fixture</title>
+    <style>
+      @layer theme, base, utilities;
+      @layer theme {
+        :root {
+          --color-blue-500: oklch(0.623 0.214 259.815);
+          --color-gray-900: oklch(0.21 0.034 264.665);
+          --spacing: 0.25rem;
+        }
+      }
+      @layer base {
+        *,
+        ::before,
+        ::after {
+          --tw-shadow: 0 0 #0000;
+          --tw-ring-offset-width: 0px;
+          --tw-ring-color: rgb(59 130 246 / 0.5);
+        }
+        body {
+          margin: 0;
+          font-family: system-ui, sans-serif;
+          color: var(--color-gray-900);
+        }
+      }
+      @layer utilities {
+        .flex {
+          display: flex;
+        }
+        .items-center {
+          align-items: center;
+        }
+        .gap-4 {
+          gap: 1rem;
+        }
+        .p-4 {
+          padding: 1rem;
+        }
+        .px-4 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        .py-2 {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
+        .text-sm {
+          font-size: 0.875rem;
+        }
+        .bg-blue-500 {
+          background-color: var(--color-blue-500);
+        }
+        .text-white {
+          color: #ffffff;
+        }
+        .rounded-md {
+          border-radius: 0.375rem;
+        }
+        .w-\[37px\] {
+          width: 37px;
+        }
+        .h-8 {
+          height: 2rem;
+        }
+        @media (min-width: 768px) {
+          .md\:p-8 {
+            padding: 2rem;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="flex items-center gap-4 p-4 md:p-8">
+      <div class="w-[37px] h-8 bg-blue-500 rounded-md"></div>
+      <span class="text-sm">Utility page</span>
+    </header>
+    <main class="p-4">
+      <p class="text-sm py-2">Paragraph styled with utility classes.</p>
+      <div class="flex gap-4">
+        <span class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm">Chip one</span>
+        <span class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm">Chip two</span>
+      </div>
+    </main>
+  </body>
+</html>

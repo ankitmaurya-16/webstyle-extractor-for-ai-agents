@@ -12,7 +12,11 @@ export const FILE_MAP = Object.freeze({
   'agents-md': ['AGENTS.md'],
   'cursor-rules': ['.cursor/rules/design-system.mdc'],
   'claude-md': ['CLAUDE.md'],
-  figma: ['design/figma/Primitives.tokens.json', 'design/figma/Semantic.Light.tokens.json', 'design/figma/Semantic.Dark.tokens.json'],
+  figma: [
+    'design/figma/Primitives.tokens.json',
+    'design/figma/Semantic.Light.tokens.json',
+    'design/figma/Semantic.Dark.tokens.json',
+  ],
   audit: ['design/audit.md'],
 });
 
@@ -49,5 +53,9 @@ export const screenshotPath = (recipe, mode) =>
 export function isValidRelativePath(path) {
   const p = String(path ?? '').trim();
   if (!p || p.startsWith('/') || p.startsWith('\\') || /^[a-z]:/i.test(p)) return false;
-  return !p.split(/[\\/]/).some((part) => part === '..' || part === '');
+  // A folder path such as the screenshots folder may end with one slash.
+  return !p
+    .replace(/[\\/]$/, '')
+    .split(/[\\/]/)
+    .some((part) => part === '..' || part === '');
 }

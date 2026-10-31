@@ -1,47 +1,102 @@
 {
+ "borderStyles": [],
+ "borderWidths": [],
  "breakpoints": [
   900
  ],
+ "canvasHex": "#fffbeb",
  "capturedAt": 1792324800000,
  "colorScheme": "light",
  "colors": [
   {
+   "backdropHex": "#fffbeb",
    "contexts": [
     "background"
    ],
    "count": 1,
+   "effectiveHex": "#fffbeb",
+   "maxWeight": 2287200,
+   "overImageShare": 0,
    "value": "rgb(255, 251, 235)",
    "weight": 2287200
   },
   {
+   "backdropHex": "#fffbeb",
    "contexts": [
     "background",
     "interactive"
    ],
    "count": 2,
+   "effectiveHex": "#ea580c",
+   "maxWeight": 4358,
+   "overImageShare": 0,
    "value": "rgb(234, 88, 12)",
    "weight": 7886.31
   },
   {
+   "backdropHex": "#fffbeb",
    "contexts": [
     "text"
    ],
    "count": 27,
+   "effectiveHex": "#292524",
+   "maxWeight": 82,
+   "overImageShare": 0,
    "value": "rgb(41, 37, 36)",
    "weight": 454
   },
   {
+   "backdropHex": "#ea580c",
    "contexts": [
     "interactive",
     "text"
    ],
    "count": 2,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 9,
+   "overImageShare": 0,
    "value": "rgb(255, 255, 255)",
    "weight": 15
   }
  ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 26,
+   "effectiveBg": "#fffbeb",
+   "effectiveText": "#292524",
+   "fontWeight": 400,
+   "sizePx": 17
+  },
+  {
+   "count": 2,
+   "effectiveBg": "#ea580c",
+   "effectiveText": "#ffffff",
+   "fontWeight": 400,
+   "sizePx": 17
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#fffbeb",
+   "effectiveText": "#292524",
+   "fontWeight": 700,
+   "sizePx": 32
+  }
+ ],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
  "cssVariables": {},
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
  "elementsSampled": 33,
+ "fontFaces": [],
  "fontFamilies": [
   {
    "contexts": [
@@ -88,6 +143,31 @@
    "weight": 19
   }
  ],
+ "frameCount": 0,
+ "frameworkSignals": [
+  {
+   "count": 3,
+   "evidence": "unique class names sampled",
+   "id": "meta:classes"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 29,
+   "value": "0",
+   "weight": 469
+  }
+ ],
  "lineHeights": [
   {
    "contexts": [
@@ -106,6 +186,7 @@
    "weight": 19
   }
  ],
+ "opacities": [],
  "radii": [
   {
    "contexts": [],
@@ -114,38 +195,101 @@
    "weight": 2
   }
  ],
+ "reducedMotion": false,
+ "representatives": [
+  {
+   "inViewport": true,
+   "kind": "h1",
+   "rect": {
+    "height": 40,
+    "width": 1184,
+    "x": 48,
+    "y": 69
+   },
+   "selector": "body > div > h1",
+   "variant": "h1:8c62398f"
+  },
+  {
+   "inViewport": true,
+   "kind": "button",
+   "rect": {
+    "height": 44,
+    "width": 99,
+    "x": 48,
+    "y": 221
+   },
+   "selector": "body > div > button:nth-of-type(1)",
+   "variant": "button:a02115f6"
+  },
+  {
+   "inViewport": true,
+   "kind": "button",
+   "rect": {
+    "height": 44,
+    "width": 80,
+    "x": 151,
+    "y": 221
+   },
+   "selector": "body > div > button:nth-of-type(2)",
+   "variant": "button:a02115f6"
+  }
+ ],
  "rootFontSizePx": 16,
  "samples": [
   {
    "count": 1,
+   "hints": [],
+   "key": "h1:8c62398f",
    "kind": "h1",
    "styles": {
     "background-color": "rgba(0, 0, 0, 0)",
+    "background-image": "none",
     "border": "none",
     "border-radius": "0px",
+    "border-width": "0px",
     "box-shadow": "none",
     "color": "rgb(41, 37, 36)",
     "font-family": "Georgia, serif",
     "font-size": "32px",
     "font-weight": "700",
+    "gap": "0px",
+    "height": "40px",
+    "letter-spacing": "normal",
     "line-height": "40px",
-    "padding": "0px 0px 0px 0px"
+    "opacity": "1",
+    "outline": "none",
+    "outline-offset": "0px",
+    "padding": "0px 0px 0px 0px",
+    "text-transform": "none",
+    "transition": "none"
    }
   },
   {
    "count": 2,
+   "hints": [],
+   "key": "button:a02115f6",
    "kind": "button",
    "styles": {
     "background-color": "rgb(234, 88, 12)",
+    "background-image": "none",
     "border": "none",
     "border-radius": "4px",
+    "border-width": "0px",
     "box-shadow": "none",
     "color": "rgb(255, 255, 255)",
     "font-family": "Georgia, serif",
     "font-size": "17px",
     "font-weight": "400",
+    "gap": "0px",
+    "height": "44px",
+    "letter-spacing": "normal",
     "line-height": "28px",
-    "padding": "8px 16px 8px 16px"
+    "opacity": "1",
+    "outline": "none",
+    "outline-offset": "0px",
+    "padding": "8px 16px 8px 16px",
+    "text-transform": "none",
+    "transition": "none"
    }
   }
  ],
@@ -188,35 +332,68 @@
    "weight": 1
   }
  ],
+ "stateSamples": [],
  "stylesheets": {
   "readable": 1,
   "unreadable": 1
  },
  "textStyles": [
   {
-   "contexts": [
+   "count": 28,
+   "family": "Georgia, serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": 28,
+   "sizePx": 17,
+   "tags": [
     "button",
     "li",
     "p"
    ],
-   "count": 28,
-   "value": "17px|28px|400|Georgia, serif",
-   "weight": 450
+   "textTransform": "none",
+   "usage": 450
   },
   {
-   "contexts": [
+   "count": 1,
+   "family": "Georgia, serif",
+   "fontWeight": 700,
+   "letterSpacingEm": 0,
+   "lineHeightPx": 40,
+   "sizePx": 32,
+   "tags": [
     "h1"
    ],
-   "count": 1,
-   "value": "32px|40px|700|Georgia, serif",
-   "weight": 19
+   "textTransform": "none",
+   "usage": 19
   }
  ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 29,
+   "value": "none",
+   "weight": 469
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
  "title": "Cross-origin stylesheet fixture",
+ "transitionProperties": [],
  "truncated": false,
  "url": "http://127.0.0.1:4173/cross-origin.html",
+ "variableDefs": [],
+ "variableUsage": {},
  "viewport": {
   "height": 720,
   "width": 1280
- }
+ },
+ "zIndices": []
 }

@@ -1,6 +1,7 @@
 // Unique CSS paths for representative elements (F26, F12). Nothing is added to the page.
 
-const AUTO_ID = /(\d{3,}|[a-f0-9]{8,}|^:|^[a-z]+-[a-z0-9]{6,}$|__|radix|headlessui|react|ember|mui-)/i;
+const AUTO_ID =
+  /(\d{3,}|[a-f0-9]{8,}|^:|^[a-z]+-[a-z0-9]{6,}$|__|radix|headlessui|react|ember|mui-)/i;
 
 const escape = (s) => (globalThis.CSS?.escape ? CSS.escape(s) : s.replace(/[^\w-]/g, '\\$&'));
 

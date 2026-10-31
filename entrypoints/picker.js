@@ -22,17 +22,32 @@ export default defineUnlistedScript(() => {
 
   function describe(el) {
     const r = el.getBoundingClientRect();
-    const cls = typeof el.className === 'string' && el.className.trim() ? `.${el.className.trim().split(/\s+/)[0]}` : '';
-    return { tag: `${el.tagName.toLowerCase()}${cls}`, width: Math.round(r.width), height: Math.round(r.height) };
+    const cls =
+      typeof el.className === 'string' && el.className.trim()
+        ? `.${el.className.trim().split(/\s+/)[0]}`
+        : '';
+    return {
+      tag: `${el.tagName.toLowerCase()}${cls}`,
+      width: Math.round(r.width),
+      height: Math.round(r.height),
+    };
   }
 
   function draw() {
     if (!state?.current) return;
     const r = state.current.getBoundingClientRect();
-    Object.assign(state.box.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+    Object.assign(state.box.style, {
+      left: `${r.left}px`,
+      top: `${r.top}px`,
+      width: `${r.width}px`,
+      height: `${r.height}px`,
+    });
     const info = describe(state.current);
     state.label.textContent = `${info.tag} · ${info.width} x ${info.height}`;
-    Object.assign(state.label.style, { left: `${Math.max(0, r.left)}px`, top: `${Math.max(0, r.top - 22)}px` });
+    Object.assign(state.label.style, {
+      left: `${Math.max(0, r.left)}px`,
+      top: `${Math.max(0, r.top - 22)}px`,
+    });
   }
 
   function setCurrent(el) {
@@ -62,8 +77,14 @@ export default defineUnlistedScript(() => {
   function key(name) {
     if (!state) return false;
     if (name === 'Escape') cancel();
-    else if (name === 'ArrowUp' && state.current?.parentElement && state.current.parentElement !== document.documentElement) setCurrent(state.current.parentElement);
-    else if (name === 'ArrowDown' && state.current?.firstElementChild) setCurrent(state.current.firstElementChild);
+    else if (
+      name === 'ArrowUp' &&
+      state.current?.parentElement &&
+      state.current.parentElement !== document.documentElement
+    )
+      setCurrent(state.current.parentElement);
+    else if (name === 'ArrowDown' && state.current?.firstElementChild)
+      setCurrent(state.current.firstElementChild);
     else if (name === 'Enter') confirm();
     else return false;
     return true;
@@ -86,7 +107,12 @@ export default defineUnlistedScript(() => {
     send({
       type: 'PICK_RESULT',
       selector,
-      rect: { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height) },
+      rect: {
+        x: Math.round(r.x),
+        y: Math.round(r.y),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+      },
       tag: el.tagName.toLowerCase(),
       role: el.getAttribute('role'),
     });
@@ -123,7 +149,9 @@ export default defineUnlistedScript(() => {
     state = { overlay, box, label, current: null };
     for (const [type, fn] of listeners) window.addEventListener(type, fn, true);
     // Without a mouse, start at the element in the middle of the viewport (AC-F26.11).
-    setCurrent(document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2) ?? document.body);
+    setCurrent(
+      document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2) ?? document.body,
+    );
     return true;
   }
 
@@ -134,6 +162,13 @@ export default defineUnlistedScript(() => {
     state = null;
   }
 
-  self.__webstylePicker = { start, stop, key, get active() { return Boolean(state); } };
+  self.__webstylePicker = {
+    start,
+    stop,
+    key,
+    get active() {
+      return Boolean(state);
+    },
+  };
   return true;
 });

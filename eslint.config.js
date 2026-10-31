@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import react from 'eslint-plugin-react';
+import i18next from 'eslint-plugin-i18next';
 
 export default [
   {
@@ -11,6 +12,7 @@ export default [
       'node_modules/**',
       'playwright-report/**',
       'test-results/**',
+      'cli/dist/**',
     ],
   },
   js.configs.recommended,
@@ -39,7 +41,22 @@ export default [
     },
   },
   {
-    files: ['tests/**', 'scripts/**', '*.config.js'],
+    // AC-F44.1: user-visible text in panel components comes from messages.json through t().
+    files: ['entrypoints/sidepanel/**/*.jsx'],
+    plugins: { i18next },
+    rules: {
+      'i18next/no-literal-string': [
+        'error',
+        {
+          mode: 'jsx-text-only',
+          'jsx-attributes': { include: ['^(aria-label|title|alt|placeholder|label)$'] },
+          words: { exclude: ['^[\\s\\d·•—→←✓×+%:/()\\[\\].,-]*$', '^(oklch|hsl|px|A|B)$'] },
+        },
+      ],
+    },
+  },
+  {
+    files: ['tests/**', 'scripts/**', '*.config.js', 'cli/**'],
     languageOptions: { globals: { ...globals.node } },
   },
   {

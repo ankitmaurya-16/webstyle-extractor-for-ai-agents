@@ -14,8 +14,19 @@ export function Picking() {
       <main className="p-4">
         <p className="text-text">{t('picking_body')}</p>
         <p className="mt-1 text-sm text-faint">{t('picking_keys')}</p>
-        <p className="mt-4 min-h-5 font-mono text-sm text-muted" aria-live="polite" data-testid="pick-current">
-          {picking?.tag ? t('picking_current', picking.tag, Math.round(picking.width), Math.round(picking.height)) : ''}
+        <p
+          className="mt-4 min-h-5 font-mono text-sm text-muted"
+          aria-live="polite"
+          data-testid="pick-current"
+        >
+          {picking?.tag
+            ? t(
+                'picking_current',
+                picking.tag,
+                Math.round(picking.width),
+                Math.round(picking.height),
+              )
+            : ''}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button variant="secondary" className="h-7" onClick={() => pickKey('ArrowUp')}>
@@ -26,7 +37,12 @@ export function Picking() {
             <ArrowDown size={14} aria-hidden />
             {t('child')}
           </Button>
-          <Button variant="primary" className="h-7" disabled={!picking?.tag} onClick={() => pickKey('Enter')}>
+          <Button
+            variant="primary"
+            className="h-7"
+            disabled={!picking?.tag}
+            onClick={() => pickKey('Enter')}
+          >
             <Check size={14} aria-hidden />
             {t('select_element')}
           </Button>

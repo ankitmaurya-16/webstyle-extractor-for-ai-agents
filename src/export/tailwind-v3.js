@@ -3,7 +3,16 @@
 // variables.css (v2 spec 9.3).
 
 import { stripPrefix } from '../model/design.js';
-import { collectTokens, emString, finish, generatedBy, prepare, pxString, roleVar, safeComment } from './common.js';
+import {
+  collectTokens,
+  emString,
+  finish,
+  generatedBy,
+  prepare,
+  pxString,
+  roleVar,
+  safeComment,
+} from './common.js';
 import { gradientCss } from './css-vars.js';
 
 const quote = (s) => `'${String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
@@ -38,7 +47,8 @@ export function exportTailwindV3(design, version, ctx = {}) {
     }
     const taken = new Set([...t.colors.map((c) => c.name), ...emitted]);
     const roles = new Map();
-    for (const pairs of Object.values(t.semanticByMode)) for (const [role, c] of pairs) if (!roles.has(role)) roles.set(role, c);
+    for (const pairs of Object.values(t.semanticByMode))
+      for (const [role, c] of pairs) if (!roles.has(role)) roles.set(role, c);
     for (const [role, c] of roles) {
       if (taken.has(role)) continue;
       colorLines.push(`${key(role)}: ${t.paired ? quote(`var(${roleVar(role)})`) : quote(c.hex)},`);
@@ -46,7 +56,10 @@ export function exportTailwindV3(design, version, ctx = {}) {
     extend.push(['colors', colorLines]);
   }
   if (t.families.length) {
-    extend.push(['fontFamily', t.families.map((f) => `${key(f.name)}: [${f.stack.map(quote).join(', ')}],`)]);
+    extend.push([
+      'fontFamily',
+      t.families.map((f) => `${key(f.name)}: [${f.stack.map(quote).join(', ')}],`),
+    ]);
   }
   const sizeLines = t.sizes.map((s) =>
     s.lineHeightPx === null
@@ -58,16 +71,26 @@ export function exportTailwindV3(design, version, ctx = {}) {
     if (s.lineHeightPx !== null) opts.push(`lineHeight: ${quote(pxString(s.lineHeightPx))}`);
     if (s.letterSpacingEm) opts.push(`letterSpacing: ${quote(emString(s.letterSpacingEm))}`);
     opts.push(`fontWeight: ${quote(String(s.fontWeight))}`);
-    if (!t.sizes.some((x) => x.name === s.name)) sizeLines.push(`${key(s.name)}: [${quote(pxString(s.sizePx))}, { ${opts.join(', ')} }],`);
+    if (!t.sizes.some((x) => x.name === s.name))
+      sizeLines.push(`${key(s.name)}: [${quote(pxString(s.sizePx))}, { ${opts.join(', ')} }],`);
   }
   if (sizeLines.length) extend.push(['fontSize', sizeLines]);
   const inline = (name, list, prefix, value) => {
-    if (list.length) extend.push([name, object(list.map((tk) => [prefix ? stripPrefix(tk.name, prefix) : tk.name, value(tk)]))]);
+    if (list.length)
+      extend.push([
+        name,
+        object(list.map((tk) => [prefix ? stripPrefix(tk.name, prefix) : tk.name, value(tk)])),
+      ]);
   };
   inline('letterSpacing', t.letterSpacings, 'tracking', (l) => quote(emString(l.em)));
   inline('spacing', t.spacing, 'space', (s) => quote(pxString(s.px)));
   inline('maxWidth', t.containers, 'container', (c) => quote(pxString(c.px)));
-  inline('gap', t.gaps.filter((g) => !g.spaceId), 'gap', (g) => quote(pxString(g.px)));
+  inline(
+    'gap',
+    t.gaps.filter((g) => !g.spaceId),
+    'gap',
+    (g) => quote(pxString(g.px)),
+  );
   inline('borderRadius', t.radii, 'radius', (r) => quote(pxString(r.px)));
   inline('borderWidth', t.borderWidths, 'border', (b) => quote(pxString(b.px)));
   inline('boxShadow', t.shadows, 'shadow', (s) => quote(s.value));
@@ -83,19 +106,28 @@ export function exportTailwindV3(design, version, ctx = {}) {
     const ringColor = d.colors.find((c) => c.id === ring.colorTokenId && !c.excluded);
     if (ringColor) extend.push(['ringColor', object([['DEFAULT', quote(ringColor.hex)]])]);
     extend.push(['ringWidth', object([['DEFAULT', quote(width)]])]);
-    if (ring.offsetPx !== null) extend.push(['ringOffsetWidth', object([['DEFAULT', quote(`${ring.offsetPx}px`)]])]);
+    if (ring.offsetPx !== null)
+      extend.push(['ringOffsetWidth', object([['DEFAULT', quote(`${ring.offsetPx}px`)]])]);
   }
 
   const { themeMechanism: mechanism, themeSelector: selector } = d.meta;
   const out = [`// ${safeComment(generatedBy(d, version))}`];
-  if (t.paired) out.push('// Semantic colors read CSS variables: import design/variables.css in your global stylesheet.');
+  if (t.paired)
+    out.push(
+      '// Semantic colors read CSS variables: import design/variables.css in your global stylesheet.',
+    );
   out.push("/** @type {import('tailwindcss').Config} */", 'module.exports = {');
   if (t.paired) {
-    out.push(mechanism === 'class' || mechanism === 'attribute' ? `  darkMode: ['selector', ${quote(selector)}],` : "  darkMode: 'media',");
+    out.push(
+      mechanism === 'class' || mechanism === 'attribute'
+        ? `  darkMode: ['selector', ${quote(selector)}],`
+        : "  darkMode: 'media',",
+    );
   }
   out.push('  theme: {', '    extend: {');
   for (const [name, value] of extend) {
-    if (Array.isArray(value)) out.push(`      ${name}: {`, ...value.map((l) => `        ${l}`), '      },');
+    if (Array.isArray(value))
+      out.push(`      ${name}: {`, ...value.map((l) => `        ${l}`), '      },');
     else out.push(`      ${name}: ${value},`);
   }
   out.push('    },', '  },', '};');

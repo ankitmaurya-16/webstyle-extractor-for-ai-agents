@@ -1,0 +1,399 @@
+{
+ "borderStyles": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "solid",
+   "weight": 4
+  }
+ ],
+ "borderWidths": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "2px",
+   "weight": 4
+  }
+ ],
+ "breakpoints": [
+  900
+ ],
+ "canvasHex": "#ffffff",
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 3457120,
+   "overImageShare": 0,
+   "value": "rgb(255, 255, 255)",
+   "weight": 3457120
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 6,
+   "effectiveHex": "#7c3aed",
+   "maxWeight": 64064,
+   "overImageShare": 0,
+   "value": "rgb(124, 58, 237)",
+   "weight": 384384
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "effectiveHex": "#db2777",
+   "maxWeight": 3870,
+   "overImageShare": 0,
+   "value": "rgb(219, 39, 119)",
+   "weight": 3870
+  },
+  {
+   "backdropHex": "#db2777",
+   "contexts": [
+    "border"
+   ],
+   "count": 4,
+   "effectiveHex": "#0891b2",
+   "maxWeight": 215,
+   "overImageShare": 0,
+   "value": "rgb(8, 145, 178)",
+   "weight": 574
+  },
+  {
+   "backdropHex": "#7c3aed",
+   "contexts": [
+    "text"
+   ],
+   "count": 7,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 12,
+   "overImageShare": 0,
+   "value": "rgb(255, 255, 255)",
+   "weight": 81
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "effectiveHex": "#111827",
+   "maxWeight": 8,
+   "overImageShare": 0,
+   "value": "rgb(17, 24, 39)",
+   "weight": 8
+  }
+ ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 6,
+   "effectiveBg": "#7c3aed",
+   "effectiveText": "#ffffff",
+   "fontWeight": 400,
+   "sizePx": 16
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#111827",
+   "fontWeight": 700,
+   "sizePx": 32
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#db2777",
+   "effectiveText": "#ffffff",
+   "fontWeight": 400,
+   "sizePx": 16
+  }
+ ],
+ "coverage": {
+  "autoScrolled": true,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 1
+ },
+ "cssVariables": {
+  "--widget-accent": "#db2777",
+  "--widget-adopted": "#0891b2"
+ },
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
+ "elementsSampled": 15,
+ "fontFaces": [],
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 8,
+   "value": "system-ui, sans-serif",
+   "weight": 89
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 7,
+   "value": "16px",
+   "weight": 81
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "32px",
+   "weight": 8
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 7,
+   "value": "400",
+   "weight": 81
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "700",
+   "weight": 8
+  }
+ ],
+ "frameCount": 2,
+ "frameworkSignals": [
+  {
+   "count": 3,
+   "evidence": "unique class names sampled",
+   "id": "meta:classes"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 8,
+   "value": "0",
+   "weight": 89
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 8,
+   "value": "normal",
+   "weight": 89
+  }
+ ],
+ "opacities": [],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 6,
+   "value": "8px",
+   "weight": 6
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "12px",
+   "weight": 1
+  }
+ ],
+ "reducedMotion": false,
+ "representatives": [
+  {
+   "inViewport": true,
+   "kind": "h1",
+   "rect": {
+    "height": 39,
+    "width": 1232,
+    "x": 24,
+    "y": 45
+   },
+   "selector": "body > h1",
+   "variant": "h1:39a7055a"
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "hints": [],
+   "key": "h1:39a7055a",
+   "kind": "h1",
+   "styles": {
+    "background-color": "rgba(0, 0, 0, 0)",
+    "background-image": "none",
+    "border": "none",
+    "border-radius": "0px",
+    "border-width": "0px",
+    "box-shadow": "none",
+    "color": "rgb(17, 24, 39)",
+    "font-family": "system-ui, sans-serif",
+    "font-size": "32px",
+    "font-weight": "700",
+    "gap": "0px",
+    "height": "39px",
+    "letter-spacing": "normal",
+    "line-height": "normal",
+    "opacity": "1",
+    "outline": "none",
+    "outline-offset": "0px",
+    "padding": "0px 0px 0px 0px",
+    "text-transform": "none",
+    "transition": "none"
+   }
+  }
+ ],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 24,
+   "value": "16px",
+   "weight": 24
+  },
+  {
+   "contexts": [],
+   "count": 12,
+   "value": "8px",
+   "weight": 12
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "24px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "14px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "21.44px",
+   "weight": 2
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "6px",
+   "weight": 2
+  }
+ ],
+ "stateSamples": [],
+ "stylesheets": {
+  "readable": 3,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "count": 7,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 16,
+   "tags": [
+    "badge",
+    "div",
+    "span"
+   ],
+   "textTransform": "none",
+   "usage": 81
+  },
+  {
+   "count": 1,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 700,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 32,
+   "tags": [
+    "h1"
+   ],
+   "textTransform": "none",
+   "usage": 8
+  }
+ ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 8,
+   "value": "none",
+   "weight": 89
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
+ "title": "Coverage fixture",
+ "transitionProperties": [],
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/coverage.html",
+ "variableDefs": [
+  {
+   "name": "--widget-accent",
+   "scope": "root",
+   "selector": ":host",
+   "value": "#db2777"
+  },
+  {
+   "name": "--widget-adopted",
+   "scope": "root",
+   "selector": ":host",
+   "value": "#0891b2"
+  }
+ ],
+ "variableUsage": {
+  "--widget-accent": 1
+ },
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ },
+ "zIndices": []
+}

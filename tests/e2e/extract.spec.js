@@ -110,6 +110,7 @@ test('AC-F2.1 to AC-F2.6 the Colors tab shows roles and scales from the page', a
     await expect(panel.locator('li', { hasText: role }).first()).toBeVisible();
   }
   await expect(panel.getByRole('button', { name: 'Copy #2563eb' }).first()).toBeVisible();
-  await expect(panel.getByRole('button', { name: 'Show blue-600' })).toBeVisible();
+  // v2 names the primary from the site's own --brand variable (AC-F10).
+  await expect(panel.getByRole('button', { name: 'Show brand' })).toBeVisible();
   expect(FIXTURES).toContain('127.0.0.1');
 });

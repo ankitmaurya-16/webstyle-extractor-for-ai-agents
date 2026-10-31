@@ -35,30 +35,66 @@ export function frameworkSignals({ classCounts, varNames, dataSlots, layerNames,
   add('meta:classes', 'unique class names sampled', total);
 
   // Tailwind
-  add('tailwind:variables', '--tw- variables', countVars((n) => n.startsWith('--tw-')));
+  add(
+    'tailwind:variables',
+    '--tw- variables',
+    countVars((n) => n.startsWith('--tw-')),
+  );
   const utilities = countClasses((c) => TAILWIND_UTILITY.test(c));
   add('tailwind:classes', `${utilities} of ${total} class names are utility classes`, utilities);
-  add('tailwind:v4', 'theme variables use oklch() or an @layer theme exists', themeOklch || layerNames.includes('theme') ? 1 : 0);
+  add(
+    'tailwind:v4',
+    'theme variables use oklch() or an @layer theme exists',
+    themeOklch || layerNames.includes('theme') ? 1 : 0,
+  );
 
   // Bootstrap
-  add('bootstrap:variables', '--bs- variables', countVars((n) => n.startsWith('--bs-')));
+  add(
+    'bootstrap:variables',
+    '--bs- variables',
+    countVars((n) => n.startsWith('--bs-')),
+  );
   add(
     'bootstrap:classes',
     'btn, btn-primary, container, row, col-*, d-flex classes',
-    countClasses((c) => /^(?:btn|btn-primary|btn-secondary|container|row|d-flex|navbar|card-body)$|^col(?:-\w+)?(?:-\d+)?$/.test(c)),
+    countClasses((c) =>
+      /^(?:btn|btn-primary|btn-secondary|container|row|d-flex|navbar|card-body)$|^col(?:-\w+)?(?:-\d+)?$/.test(
+        c,
+      ),
+    ),
   );
 
   // MUI
-  add('mui:classes', 'classes starting with Mui', countClasses((c) => /^Mui[A-Z]/.test(c)));
-  add('mui:variables', '--mui- variables', countVars((n) => n.startsWith('--mui-')));
+  add(
+    'mui:classes',
+    'classes starting with Mui',
+    countClasses((c) => /^Mui[A-Z]/.test(c)),
+  );
+  add(
+    'mui:variables',
+    '--mui- variables',
+    countVars((n) => n.startsWith('--mui-')),
+  );
 
   // Chakra
-  add('chakra:variables', '--chakra- variables', countVars((n) => n.startsWith('--chakra-')));
-  add('chakra:classes', 'chakra- classes', countClasses((c) => c.startsWith('chakra-')));
+  add(
+    'chakra:variables',
+    '--chakra- variables',
+    countVars((n) => n.startsWith('--chakra-')),
+  );
+  add(
+    'chakra:classes',
+    'chakra- classes',
+    countClasses((c) => c.startsWith('chakra-')),
+  );
 
   // shadcn/ui
   const shadcnVars = ['--background', '--foreground', '--primary-foreground', '--ring', '--radius'];
-  add('shadcn:variables', shadcnVars.join(', '), shadcnVars.every((v) => varSet.has(v)) ? shadcnVars.length : 0);
+  add(
+    'shadcn:variables',
+    shadcnVars.join(', '),
+    shadcnVars.every((v) => varSet.has(v)) ? shadcnVars.length : 0,
+  );
   add('shadcn:attributes', 'data-slot attributes', dataSlots);
   add('shadcn:oklch', 'theme variables use oklch()', themeOklch ? 1 : 0);
 
@@ -71,8 +107,16 @@ export function frameworkSignals({ classCounts, varNames, dataSlots, layerNames,
   );
 
   // Ant Design
-  add('antd:classes', 'ant- classes', countClasses((c) => c.startsWith('ant-')));
-  add('antd:variables', '--ant- variables', countVars((n) => n.startsWith('--ant-')));
+  add(
+    'antd:classes',
+    'ant- classes',
+    countClasses((c) => c.startsWith('ant-')),
+  );
+  add(
+    'antd:variables',
+    '--ant- variables',
+    countVars((n) => n.startsWith('--ant-')),
+  );
 
   // Bulma
   add(
@@ -81,7 +125,11 @@ export function frameworkSignals({ classCounts, varNames, dataSlots, layerNames,
     (classCounts.has('is-primary') && classCounts.has('button') ? 1 : 0) +
       (classCounts.has('columns') && classCounts.has('column') ? 1 : 0),
   );
-  add('bulma:variables', '--bulma- variables', countVars((n) => n.startsWith('--bulma-')));
+  add(
+    'bulma:variables',
+    '--bulma- variables',
+    countVars((n) => n.startsWith('--bulma-')),
+  );
 
   // Layers count as their own signal type for any framework that declares them.
   add('meta:layers', `@layer ${layerNames.join(', ')}`, layerNames.length);
@@ -100,17 +148,57 @@ export function iconSignals({ classCounts, fontFamilies, svg }) {
   const font = (test) => fontFamilies.filter(test).length;
 
   add('lucide:svg', 'svg.lucide elements', svg.lucide);
-  add('lucide:classes', 'lucide- classes', sum((c) => c.startsWith('lucide-')));
+  add(
+    'lucide:classes',
+    'lucide- classes',
+    sum((c) => c.startsWith('lucide-')),
+  );
   add('heroicons:svg', 'SVGs with data-slot="icon", 24 x 24 viewBox and stroke 1.5', svg.heroicons);
   add('fontawesome:svg', 'svg.svg-inline--fa elements', svg.fontawesome);
-  add('fontawesome:classes', 'fa- classes', sum((c) => /^fa-[\w-]+$/.test(c) || c === 'fa' || /^fa[srlbdt]$/.test(c)));
-  add('fontawesome:font', 'Font Awesome font family', font((f) => /font awesome/i.test(f)));
-  add('material:font', 'Material Symbols or Material Icons font', font((f) => /material (symbols|icons)/i.test(f)));
-  add('material:classes', 'material-symbols or material-icons classes', sum((c) => /^material-(symbols|icons)/.test(c)));
-  add('bootstrap-icons:classes', 'bi- classes', sum((c) => /^bi-[\w-]+$/.test(c)));
-  add('bootstrap-icons:font', 'bootstrap-icons font', font((f) => /bootstrap-icons/i.test(f)));
-  add('phosphor:classes', 'ph and ph- classes', sum((c) => c === 'ph' || /^ph-[\w-]+$/.test(c)));
-  add('tabler:classes', 'tabler-icon classes', sum((c) => c.startsWith('tabler-icon')));
-  add('remix:classes', 'ri- classes', sum((c) => /^ri-[\w-]+$/.test(c)));
+  add(
+    'fontawesome:classes',
+    'fa- classes',
+    sum((c) => /^fa-[\w-]+$/.test(c) || c === 'fa' || /^fa[srlbdt]$/.test(c)),
+  );
+  add(
+    'fontawesome:font',
+    'Font Awesome font family',
+    font((f) => /font awesome/i.test(f)),
+  );
+  add(
+    'material:font',
+    'Material Symbols or Material Icons font',
+    font((f) => /material (symbols|icons)/i.test(f)),
+  );
+  add(
+    'material:classes',
+    'material-symbols or material-icons classes',
+    sum((c) => /^material-(symbols|icons)/.test(c)),
+  );
+  add(
+    'bootstrap-icons:classes',
+    'bi- classes',
+    sum((c) => /^bi-[\w-]+$/.test(c)),
+  );
+  add(
+    'bootstrap-icons:font',
+    'bootstrap-icons font',
+    font((f) => /bootstrap-icons/i.test(f)),
+  );
+  add(
+    'phosphor:classes',
+    'ph and ph- classes',
+    sum((c) => c === 'ph' || /^ph-[\w-]+$/.test(c)),
+  );
+  add(
+    'tabler:classes',
+    'tabler-icon classes',
+    sum((c) => c.startsWith('tabler-icon')),
+  );
+  add(
+    'remix:classes',
+    'ri- classes',
+    sum((c) => /^ri-[\w-]+$/.test(c)),
+  );
   return hits;
 }

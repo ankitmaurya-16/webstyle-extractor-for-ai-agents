@@ -57,7 +57,6 @@
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
 }
 
-
 /* Light theme (F42). Dark values stay on :root; light values apply when the user picks Light, or
    when Appearance is System and the OS is light. Every text token meets 4.5:1 on bg. */
 @layer theme {
@@ -168,7 +167,6 @@
   animation: pop-in 180ms var(--ease-out);
 }
 
-
 :root[data-theme='light'],
 :root[data-theme='light'] body {
   color-scheme: light;
@@ -181,6 +179,12 @@
   }
 }
 
+/* Chrome injects body { font-size: 75% } into extension pages as an unlayered style, which beats
+   anything in @layer base; this unlayered, more specific rule restores the 13 px base. */
+html body {
+  font-size: var(--text-base);
+}
+
 /* 6 px checkerboard under translucent swatches so alpha is visible (CheckerSwatch). */
 .checker {
   background-color: var(--color-surface-3);
@@ -190,7 +194,11 @@
     linear-gradient(45deg, transparent 75%, var(--color-border-strong) 75%),
     linear-gradient(-45deg, transparent 75%, var(--color-border-strong) 75%);
   background-size: 6px 6px;
-  background-position: 0 0, 0 3px, 3px -3px, -3px 0;
+  background-position:
+    0 0,
+    0 3px,
+    3px -3px,
+    -3px 0;
 }
 
 /* CurvePreview: a dot travels the easing curve on hover; reduced motion stops it below. */

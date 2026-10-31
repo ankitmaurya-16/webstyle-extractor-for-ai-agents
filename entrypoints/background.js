@@ -1,16 +1,27 @@
 import { MSG, PANEL_PORT, PENDING_EXTRACT_KEY, isExtractRequest } from '../src/messaging.js';
-import { cleanupOverlays, handleExtract, recoverActiveCapture } from '../src/platform/extract-handler.js';
-import { clearHighlight, showHighlight, startPicker, stopPicker, pickerKey } from '../src/platform/overlays.js';
+import {
+  cleanupOverlays,
+  handleExtract,
+  recoverActiveCapture,
+} from '../src/platform/extract-handler.js';
+import { openPanelFromGesture, openPanelOnAction } from '../src/platform/chrome.js';
+import {
+  clearHighlight,
+  showHighlight,
+  startPicker,
+  stopPicker,
+  pickerKey,
+} from '../src/platform/overlays.js';
 
 export default defineBackground(() => {
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+  openPanelOnAction();
   // A restart in the middle of a capture must not leave the debugger attached (AC-F23.7).
   recoverActiveCapture();
 
   chrome.commands.onCommand.addListener((command, tab) => {
     if (command !== 'extract' || !tab?.id) return;
-    // sidePanel.open must run first with no await before it, or Chrome drops the user gesture.
-    chrome.sidePanel.open({ windowId: tab.windowId }).catch(() => {});
+    // Opening must run first with no await before it, or the browser drops the user gesture.
+    openPanelFromGesture(tab.windowId);
     chrome.storage.session.set({
       [PENDING_EXTRACT_KEY]: { tabId: tab.id, windowId: tab.windowId, at: Date.now() },
     });
@@ -46,7 +57,8 @@ export default defineBackground(() => {
           runs.set(msg.requestId, controller);
           handleExtract(msg, {
             signal: controller.signal,
-            onProgress: (stage) => post({ type: MSG.EXTRACT_PROGRESS, requestId: msg.requestId, stage }),
+            onProgress: (stage) =>
+              post({ type: MSG.EXTRACT_PROGRESS, requestId: msg.requestId, stage }),
           }).then((reply) => {
             runs.delete(msg.requestId);
             if (reply.type !== 'CANCELLED') post({ ...reply, requestId: msg.requestId });
@@ -66,7 +78,9 @@ export default defineBackground(() => {
           pickerKey(msg.tabId, msg.key);
           return;
         case MSG.HIGHLIGHT_SHOW:
-          showHighlight(msg.tabId, msg.match).then((reply) => post({ ...reply, tokenId: msg.tokenId }));
+          showHighlight(msg.tabId, msg.match).then((reply) =>
+            post({ ...reply, tokenId: msg.tokenId }),
+          );
           return;
         case MSG.HIGHLIGHT_CLEAR:
           clearHighlight(msg.tabId);

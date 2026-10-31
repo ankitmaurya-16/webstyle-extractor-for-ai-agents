@@ -1,0 +1,218 @@
+{
+ "borderStyles": [],
+ "borderWidths": [],
+ "breakpoints": [],
+ "canvasHex": "#ffffff",
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 158720,
+   "overImageShare": 0,
+   "value": "rgb(255, 255, 255)",
+   "weight": 158720
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "effectiveHex": "#111827",
+   "maxWeight": 53,
+   "overImageShare": 0,
+   "value": "rgb(17, 24, 39)",
+   "weight": 53
+  }
+ ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 1,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#111827",
+   "fontWeight": 400,
+   "sizePx": 16
+  }
+ ],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
+ "cssVariables": {},
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
+ "elementsSampled": 7,
+ "fontFaces": [],
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "system-ui, sans-serif",
+   "weight": 53
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "16px",
+   "weight": 53
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "400",
+   "weight": 53
+  }
+ ],
+ "frameCount": 0,
+ "frameworkSignals": [
+  {
+   "count": 5,
+   "evidence": "unique class names sampled",
+   "id": "meta:classes"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [
+  {
+   "count": 1,
+   "evidence": "svg.svg-inline--fa elements",
+   "id": "fontawesome:svg"
+  },
+  {
+   "count": 7,
+   "evidence": "fa- classes",
+   "id": "fontawesome:classes"
+  }
+ ],
+ "iconSizes": [
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "16px",
+   "weight": 1
+  }
+ ],
+ "iconStrokes": [
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "2",
+   "weight": 1
+  }
+ ],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "0",
+   "weight": 53
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "normal",
+   "weight": 53
+  }
+ ],
+ "opacities": [],
+ "radii": [],
+ "reducedMotion": false,
+ "representatives": [],
+ "rootFontSizePx": 16,
+ "samples": [],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "24px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "16px",
+   "weight": 2
+  }
+ ],
+ "stateSamples": [],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "count": 1,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 16,
+   "tags": [
+    "p"
+   ],
+   "textTransform": "none",
+   "usage": 53
+  }
+ ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "none",
+   "weight": 53
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
+ "title": "Font Awesome-like icons",
+ "transitionProperties": [],
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/icons/fontawesome.html",
+ "variableDefs": [],
+ "variableUsage": {},
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ },
+ "zIndices": []
+}

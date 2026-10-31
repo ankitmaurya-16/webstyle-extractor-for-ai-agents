@@ -4,7 +4,16 @@
  * @param {object} input
  * @returns {import('../model/types.js').AuditReport}
  */
-export function buildAudit({ colorsBeforeMerge, colors, spacing, distinct, contrast, focusRing, variableConflicts, lowConfidence }) {
+export function buildAudit({
+  colorsBeforeMerge,
+  colors,
+  spacing,
+  distinct,
+  contrast,
+  focusRing,
+  variableConflicts,
+  lowConfidence,
+}) {
   const nearDuplicateGroups = colors
     .filter((c) => c.mergedFrom.length > 0)
     .map((c) => ({ kept: c.hex, merged: [...c.mergedFrom] }));

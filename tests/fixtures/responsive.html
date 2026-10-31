@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Responsive fixture</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #111827;
+        background: #ffffff;
+        margin: 0;
+      }
+      h1 {
+        font-size: 32px;
+        line-height: 40px;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 4px 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .card {
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+      }
+      @media (min-width: 640px) {
+        .container {
+          max-width: 600px;
+          padding: 16px;
+        }
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+        .card {
+          padding: 16px;
+        }
+      }
+      @media (min-width: 1024px) {
+        h1 {
+          font-size: 48px;
+          line-height: 56px;
+        }
+        h2 {
+          font-size: 30px;
+          line-height: 36px;
+        }
+        .container {
+          max-width: 960px;
+          padding: 24px;
+        }
+        .grid {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+        }
+        .card {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Responsive heading</h1>
+      <p>Body text stays at sixteen pixels at every width while the heading grows.</p>
+      <h2>Section</h2>
+      <div class="grid">
+        <div class="card">One</div>
+        <div class="card">Two</div>
+        <div class="card">Three</div>
+        <div class="card">Four</div>
+      </div>
+    </main>
+    <!-- Enough elements for the 30-element minimum in end-to-end runs. -->
+    <ul class="filler">
+      <li>Filler line 1.</li>
+      <li>Filler line 2.</li>
+      <li>Filler line 3.</li>
+      <li>Filler line 4.</li>
+      <li>Filler line 5.</li>
+      <li>Filler line 6.</li>
+      <li>Filler line 7.</li>
+      <li>Filler line 8.</li>
+      <li>Filler line 9.</li>
+      <li>Filler line 10.</li>
+      <li>Filler line 11.</li>
+      <li>Filler line 12.</li>
+      <li>Filler line 13.</li>
+      <li>Filler line 14.</li>
+      <li>Filler line 15.</li>
+      <li>Filler line 16.</li>
+      <li>Filler line 17.</li>
+      <li>Filler line 18.</li>
+      <li>Filler line 19.</li>
+      <li>Filler line 20.</li>
+      <li>Filler line 21.</li>
+      <li>Filler line 22.</li>
+      <li>Filler line 23.</li>
+      <li>Filler line 24.</li>
+    </ul>
+  </body>
+</html>

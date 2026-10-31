@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Variables fixture</title>
+    <style>
+      :root {
+        /* Role-named colors; the button color reaches the page through a var() chain. */
+        --brand-primary: #2563eb;
+        --color-action: var(--brand-primary);
+        --surface-raised: #f3f4f6;
+        --border-subtle: #e5e7eb;
+        /* Bare HSL and RGB channel triplets, as shadcn/ui and Tailwind themes write them. */
+        --background: 0 0% 100%;
+        --foreground: 222.2 47.4% 11.2%;
+        --accent-rgb: 219 39 119;
+        /* Layout values. */
+        --space-4: 16px;
+        --space-6: 24px;
+        --radius-md: 8px;
+        /* A cycle the resolver must stop. */
+        --loop-a: var(--loop-b);
+        --loop-b: var(--loop-a);
+        /* Framework internals that must never name tokens, though referenced most. */
+        --tw-ring-color: #2563eb;
+        --tw-border: #e5e7eb;
+      }
+      body {
+        margin: 0;
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: var(--space-6);
+      }
+      h1 {
+        font-size: 32px;
+        line-height: 40px;
+        margin: 0 0 var(--space-4);
+      }
+      p {
+        margin: 0 0 var(--space-4);
+      }
+      .card {
+        background: var(--surface-raised);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        margin-bottom: var(--space-4);
+        box-shadow:
+          0 0 0 1px var(--tw-border),
+          0 0 0 0 var(--tw-border),
+          0 0 0 0 var(--tw-border);
+      }
+      .btn {
+        background: var(--color-action);
+        color: hsl(var(--background));
+        border: 0;
+        border-radius: var(--radius-md);
+        padding: 8px var(--space-4);
+        font: inherit;
+        outline-color: var(--tw-ring-color);
+        --tw-shadow: 0 0 0 var(--tw-ring-color), 0 0 0 var(--tw-ring-color);
+      }
+      .btn:hover {
+        background: var(--color-action);
+      }
+      .tag {
+        color: rgb(var(--accent-rgb));
+      }
+      .tag-link {
+        color: rgb(var(--accent-rgb));
+      }
+      .loop {
+        color: var(--loop-a, #111827);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Site variable names</h1>
+      <p>Body copy written in the foreground color over the background color of the page.</p>
+      <div class="card">
+        <p>A raised surface with a subtle border.</p>
+        <p><span class="tag">Accent tag</span> <a class="tag-link" href="#x">accent link</a></p>
+      </div>
+      <div class="card">
+        <p>Another raised card.</p>
+      </div>
+      <p><button class="btn">Primary action</button> <a class="btn" href="#y">Second action</a></p>
+      <p class="loop">A cyclic variable falls back to its default.</p>
+    </div>
+  </body>
+</html>

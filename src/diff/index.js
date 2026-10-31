@@ -37,7 +37,8 @@ function valueOf(category, t) {
 }
 
 function delta(category, a, b) {
-  if (category === 'color') return Math.round(distance(parse(a.hex.slice(0, 7)), parse(b.hex.slice(0, 7))) * 1000) / 1000;
+  if (category === 'color')
+    return Math.round(distance(parse(a.hex.slice(0, 7)), parse(b.hex.slice(0, 7))) * 1000) / 1000;
   if (a.px !== undefined && b.px !== undefined) return Math.round((b.px - a.px) * 100) / 100;
   if (a.sizePx !== undefined) return Math.round((b.sizePx - a.sizePx) * 100) / 100;
   if (a.ms !== undefined) return b.ms - a.ms;
@@ -50,7 +51,15 @@ function delta(category, a, b) {
 export function diffDesigns(a, b) {
   const ca = categories(a);
   const cb = categories(b);
-  const result = { a: summary(a), b: summary(b), categories: {}, roles: [], recipes: [], stack: {}, counts: { added: 0, removed: 0, changed: 0, renamed: 0, unchanged: 0 } };
+  const result = {
+    a: summary(a),
+    b: summary(b),
+    categories: {},
+    roles: [],
+    recipes: [],
+    stack: {},
+    counts: { added: 0, removed: 0, changed: 0, renamed: 0, unchanged: 0 },
+  };
   for (const category of Object.keys(ca)) {
     const left = visible(ca[category]);
     const right = visible(cb[category]);
@@ -62,7 +71,13 @@ export function diffDesigns(a, b) {
       if (same) {
         usedRight.add(same);
         if (valueOf(category, t) === valueOf(category, same)) out.unchanged += 1;
-        else out.changed.push({ name: t.name, from: valueOf(category, t), to: valueOf(category, same), delta: delta(category, t, same) });
+        else
+          out.changed.push({
+            name: t.name,
+            from: valueOf(category, t),
+            to: valueOf(category, same),
+            delta: delta(category, t, same),
+          });
       } else leftover.push(t);
     }
     for (const t of leftover) {
@@ -72,8 +87,15 @@ export function diffDesigns(a, b) {
         out.renamed.push({ from: t.name, to: same.name, value: valueOf(category, t) });
       } else out.removed.push({ name: t.name, value: valueOf(category, t) });
     }
-    for (const r of right) if (!usedRight.has(r)) out.added.push({ name: r.name, value: valueOf(category, r) });
-    if (out.added.length || out.removed.length || out.changed.length || out.renamed.length || out.unchanged) {
+    for (const r of right)
+      if (!usedRight.has(r)) out.added.push({ name: r.name, value: valueOf(category, r) });
+    if (
+      out.added.length ||
+      out.removed.length ||
+      out.changed.length ||
+      out.renamed.length ||
+      out.unchanged
+    ) {
       result.categories[category] = out;
       for (const k of ['added', 'removed', 'changed', 'renamed']) result.counts[k] += out[k].length;
       result.counts.unchanged += out.unchanged;
@@ -87,7 +109,8 @@ export function diffDesigns(a, b) {
       const ia = a.semantic?.[role]?.[mode];
       const ib = b.semantic?.[role]?.[mode];
       if (!ia && !ib) continue;
-      if (hexOf(a, ia) === hexOf(b, ib) && tokenName(a, ia) === tokenName(b, ib)) continue;
+      // Ids are values, so the same id is the same color; a new name alone is under Renamed.
+      if (ia === ib) continue;
       const fromHex = hexOf(a, ia);
       const toHex = hexOf(b, ib);
       result.roles.push({
@@ -95,7 +118,11 @@ export function diffDesigns(a, b) {
         mode,
         from: ia ? `${tokenName(a, ia)} ${fromHex}` : null,
         to: ib ? `${tokenName(b, ib)} ${toHex}` : null,
-        delta: fromHex && toHex ? Math.round(distance(parse(fromHex.slice(0, 7)), parse(toHex.slice(0, 7))) * 1000) / 1000 : null,
+        delta:
+          fromHex && toHex
+            ? Math.round(distance(parse(fromHex.slice(0, 7)), parse(toHex.slice(0, 7))) * 1000) /
+              1000
+            : null,
       });
     }
   }
@@ -121,21 +148,37 @@ export function diffDesigns(a, b) {
         for (const prop of new Set([...Object.keys(sa), ...Object.keys(sb)])) {
           const va = plain(a, sa[prop]);
           const vb = plain(b, sb[prop]);
-          if (va !== vb) result.recipes.push({ id: ra.id, name: ra.name, mode, state, prop, from: va || null, to: vb || null });
+          if (va !== vb)
+            result.recipes.push({
+              id: ra.id,
+              name: ra.name,
+              mode,
+              state,
+              prop,
+              from: va || null,
+              to: vb || null,
+            });
         }
       }
     }
   }
   for (const rb of b.components ?? []) {
-    if (!(a.components ?? []).some((r) => r.id === rb.id)) result.recipes.push({ id: rb.id, name: rb.name, change: 'added' });
+    if (!(a.components ?? []).some((r) => r.id === rb.id))
+      result.recipes.push({ id: rb.id, name: rb.name, change: 'added' });
   }
   // Stack changes (AC-F39.5).
-  const setDiff = (x, y) => ({ added: y.filter((v) => !x.includes(v)), removed: x.filter((v) => !y.includes(v)) });
+  const setDiff = (x, y) => ({
+    added: y.filter((v) => !x.includes(v)),
+    removed: x.filter((v) => !y.includes(v)),
+  });
   const names = (list) => (list ?? []).map((d) => d.name);
   result.stack = {
     framework: setDiff(names(a.meta.framework), names(b.meta.framework)),
     icons: setDiff(names(a.meta.icons), names(b.meta.icons)),
-    fonts: setDiff((a.meta.webFonts ?? []).map((f) => f.family), (b.meta.webFonts ?? []).map((f) => f.family)),
+    fonts: setDiff(
+      (a.meta.webFonts ?? []).map((f) => f.family),
+      (b.meta.webFonts ?? []).map((f) => f.family),
+    ),
   };
   return result;
 }

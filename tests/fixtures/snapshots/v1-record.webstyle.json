@@ -1,0 +1,687 @@
+{
+  "format": "webstyle-snapshots",
+  "version": 2,
+  "exportedAt": 1792454400000,
+  "snapshots": [
+    {
+      "id": "v1-cross-origin",
+      "schemaVersion": 1,
+      "url": "http://127.0.0.1:4173/cross-origin.html",
+      "hostname": "127.0.0.1",
+      "title": "Cross-origin stylesheet fixture",
+      "capturedAt": 1792324800000,
+      "raw": {
+        "breakpoints": [900],
+        "capturedAt": 1792324800000,
+        "colorScheme": "light",
+        "colors": [
+          {
+            "contexts": ["background"],
+            "count": 1,
+            "value": "rgb(255, 251, 235)",
+            "weight": 2287200
+          },
+          {
+            "contexts": ["background", "interactive"],
+            "count": 2,
+            "value": "rgb(234, 88, 12)",
+            "weight": 7886.31
+          },
+          {
+            "contexts": ["text"],
+            "count": 27,
+            "value": "rgb(41, 37, 36)",
+            "weight": 454
+          },
+          {
+            "contexts": ["interactive", "text"],
+            "count": 2,
+            "value": "rgb(255, 255, 255)",
+            "weight": 15
+          }
+        ],
+        "cssVariables": {},
+        "elementsSampled": 33,
+        "fontFamilies": [
+          {
+            "contexts": ["text"],
+            "count": 29,
+            "value": "Georgia, serif",
+            "weight": 469
+          }
+        ],
+        "fontSizes": [
+          {
+            "contexts": ["text"],
+            "count": 28,
+            "value": "17px",
+            "weight": 450
+          },
+          {
+            "contexts": ["text"],
+            "count": 1,
+            "value": "32px",
+            "weight": 19
+          }
+        ],
+        "fontWeights": [
+          {
+            "contexts": ["text"],
+            "count": 28,
+            "value": "400",
+            "weight": 450
+          },
+          {
+            "contexts": ["text"],
+            "count": 1,
+            "value": "700",
+            "weight": 19
+          }
+        ],
+        "lineHeights": [
+          {
+            "contexts": ["text"],
+            "count": 28,
+            "value": "28px",
+            "weight": 450
+          },
+          {
+            "contexts": ["text"],
+            "count": 1,
+            "value": "40px",
+            "weight": 19
+          }
+        ],
+        "radii": [
+          {
+            "contexts": [],
+            "count": 2,
+            "value": "4px",
+            "weight": 2
+          }
+        ],
+        "rootFontSizePx": 16,
+        "samples": [
+          {
+            "count": 1,
+            "kind": "h1",
+            "styles": {
+              "background-color": "rgba(0, 0, 0, 0)",
+              "border": "none",
+              "border-radius": "0px",
+              "box-shadow": "none",
+              "color": "rgb(41, 37, 36)",
+              "font-family": "Georgia, serif",
+              "font-size": "32px",
+              "font-weight": "700",
+              "line-height": "40px",
+              "padding": "0px 0px 0px 0px"
+            }
+          },
+          {
+            "count": 2,
+            "kind": "button",
+            "styles": {
+              "background-color": "rgb(234, 88, 12)",
+              "border": "none",
+              "border-radius": "4px",
+              "box-shadow": "none",
+              "color": "rgb(255, 255, 255)",
+              "font-family": "Georgia, serif",
+              "font-size": "17px",
+              "font-weight": "400",
+              "line-height": "28px",
+              "padding": "8px 16px 8px 16px"
+            }
+          }
+        ],
+        "shadows": [],
+        "spacing": [
+          {
+            "contexts": [],
+            "count": 100,
+            "value": "16px",
+            "weight": 100
+          },
+          {
+            "contexts": [],
+            "count": 6,
+            "value": "17px",
+            "weight": 6
+          },
+          {
+            "contexts": [],
+            "count": 4,
+            "value": "48px",
+            "weight": 4
+          },
+          {
+            "contexts": [],
+            "count": 4,
+            "value": "8px",
+            "weight": 4
+          },
+          {
+            "contexts": [],
+            "count": 2,
+            "value": "21.44px",
+            "weight": 2
+          },
+          {
+            "contexts": [],
+            "count": 1,
+            "value": "40px",
+            "weight": 1
+          }
+        ],
+        "stylesheets": {
+          "readable": 1,
+          "unreadable": 1
+        },
+        "textStyles": [
+          {
+            "contexts": ["button", "li", "p"],
+            "count": 28,
+            "value": "17px|28px|400|Georgia, serif",
+            "weight": 450
+          },
+          {
+            "contexts": ["h1"],
+            "count": 1,
+            "value": "32px|40px|700|Georgia, serif",
+            "weight": 19
+          }
+        ],
+        "title": "Cross-origin stylesheet fixture",
+        "truncated": false,
+        "url": "http://127.0.0.1:4173/cross-origin.html",
+        "viewport": {
+          "height": 720,
+          "width": 1280
+        }
+      },
+      "extracted": {
+        "meta": {
+          "sourceUrl": "http://127.0.0.1:4173/cross-origin.html",
+          "hostname": "127.0.0.1",
+          "capturedAt": 1792324800000,
+          "colorScheme": "light",
+          "partial": ["breakpoints", "cssVariables"],
+          "truncated": false,
+          "stylesheets": {
+            "readable": 1,
+            "unreadable": 1
+          }
+        },
+        "colors": [
+          {
+            "id": "c1",
+            "name": "white",
+            "hex": "#ffffff",
+            "oklch": {
+              "l": 1,
+              "c": 0,
+              "h": null
+            },
+            "family": "white",
+            "step": null,
+            "roles": [],
+            "usageShare": 0.016,
+            "contexts": ["interactive", "text"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c2",
+            "name": "gray-900",
+            "hex": "#292524",
+            "oklch": {
+              "l": 0.2685,
+              "c": 0.0063,
+              "h": 34.3
+            },
+            "family": "gray",
+            "step": 900,
+            "roles": ["text"],
+            "usageShare": 0.484,
+            "contexts": ["text"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c3",
+            "name": "orange-500",
+            "hex": "#ea580c",
+            "oklch": {
+              "l": 0.6461,
+              "c": 0.1943,
+              "h": 41.12
+            },
+            "family": "orange",
+            "step": 500,
+            "roles": ["primary"],
+            "usageShare": 0.0017,
+            "contexts": ["background", "interactive"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c4",
+            "name": "yellow-100",
+            "hex": "#fffbeb",
+            "oklch": {
+              "l": 0.9869,
+              "c": 0.0214,
+              "h": 95.28
+            },
+            "family": "yellow",
+            "step": 100,
+            "roles": ["background"],
+            "usageShare": 0.4983,
+            "contexts": ["background"],
+            "mergedFrom": [],
+            "excluded": false
+          }
+        ],
+        "typography": {
+          "families": [
+            {
+              "id": "f1",
+              "name": "serif",
+              "stack": ["Georgia", "serif"],
+              "usageShare": 1,
+              "excluded": false
+            }
+          ],
+          "sizes": [
+            {
+              "id": "t1",
+              "name": "base",
+              "sizePx": 17,
+              "lineHeightPx": 28,
+              "weight": 400,
+              "familyId": "f1",
+              "headings": [],
+              "usageShare": 0.9595,
+              "excluded": false
+            },
+            {
+              "id": "t2",
+              "name": "lg",
+              "sizePx": 32,
+              "lineHeightPx": 40,
+              "weight": 700,
+              "familyId": "f1",
+              "headings": ["h1"],
+              "usageShare": 0.0405,
+              "excluded": false
+            }
+          ]
+        },
+        "spacing": {
+          "baseUnitPx": 8,
+          "tokens": [
+            {
+              "id": "s1",
+              "name": "space-1",
+              "px": 8,
+              "usageShare": 0.0342,
+              "excluded": false
+            },
+            {
+              "id": "s2",
+              "name": "space-2",
+              "px": 16,
+              "usageShare": 0.906,
+              "excluded": false
+            },
+            {
+              "id": "s3",
+              "name": "space-5",
+              "px": 40,
+              "usageShare": 0.0085,
+              "excluded": false
+            },
+            {
+              "id": "s4",
+              "name": "space-6",
+              "px": 48,
+              "usageShare": 0.0342,
+              "excluded": false
+            }
+          ]
+        },
+        "radii": [
+          {
+            "id": "r1",
+            "name": "radius-sm",
+            "px": 4,
+            "usageShare": 1,
+            "excluded": false
+          }
+        ],
+        "shadows": [],
+        "breakpoints": [
+          {
+            "id": "b1",
+            "name": "sm",
+            "px": 900,
+            "usageShare": 0,
+            "excluded": false
+          }
+        ],
+        "components": [
+          {
+            "id": "p1",
+            "kind": "button",
+            "variant": "primary",
+            "styles": {
+              "background-color": {
+                "ref": "color.orange-500",
+                "id": "c3",
+                "raw": "#ea580c"
+              },
+              "color": {
+                "ref": "color.white",
+                "id": "c1",
+                "raw": "#ffffff"
+              },
+              "border": "none",
+              "border-radius": {
+                "ref": "radius.radius-sm",
+                "id": "r1",
+                "raw": "4px"
+              },
+              "padding": "8px 16px",
+              "font-family": {
+                "ref": "font.serif",
+                "id": "f1",
+                "raw": "Georgia, serif"
+              },
+              "font-size": {
+                "ref": "text.base",
+                "id": "t1",
+                "raw": "17px"
+              },
+              "font-weight": "400",
+              "line-height": "28px",
+              "box-shadow": "none"
+            },
+            "excluded": false
+          },
+          {
+            "id": "p2",
+            "kind": "heading",
+            "variant": "h1",
+            "styles": {
+              "background-color": "transparent",
+              "color": {
+                "ref": "color.gray-900",
+                "id": "c2",
+                "raw": "#292524"
+              },
+              "border": "none",
+              "border-radius": "0px",
+              "padding": "0px",
+              "font-family": {
+                "ref": "font.serif",
+                "id": "f1",
+                "raw": "Georgia, serif"
+              },
+              "font-size": {
+                "ref": "text.lg",
+                "id": "t2",
+                "raw": "32px"
+              },
+              "font-weight": "700",
+              "line-height": "40px",
+              "box-shadow": "none"
+            },
+            "excluded": false
+          }
+        ]
+      },
+      "edited": {
+        "meta": {
+          "sourceUrl": "http://127.0.0.1:4173/cross-origin.html",
+          "hostname": "127.0.0.1",
+          "capturedAt": 1792324800000,
+          "colorScheme": "light",
+          "partial": ["breakpoints", "cssVariables"],
+          "truncated": false,
+          "stylesheets": {
+            "readable": 1,
+            "unreadable": 1
+          }
+        },
+        "colors": [
+          {
+            "id": "c1",
+            "name": "brand-ink",
+            "hex": "#ffffff",
+            "oklch": {
+              "l": 1,
+              "c": 0,
+              "h": null
+            },
+            "family": "white",
+            "step": null,
+            "roles": [],
+            "usageShare": 0.016,
+            "contexts": ["interactive", "text"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c2",
+            "name": "gray-900",
+            "hex": "#292524",
+            "oklch": {
+              "l": 0.2685,
+              "c": 0.0063,
+              "h": 34.3
+            },
+            "family": "gray",
+            "step": 900,
+            "roles": ["text"],
+            "usageShare": 0.484,
+            "contexts": ["text"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c3",
+            "name": "orange-500",
+            "hex": "#ea580c",
+            "oklch": {
+              "l": 0.6461,
+              "c": 0.1943,
+              "h": 41.12
+            },
+            "family": "orange",
+            "step": 500,
+            "roles": ["primary"],
+            "usageShare": 0.0017,
+            "contexts": ["background", "interactive"],
+            "mergedFrom": [],
+            "excluded": false
+          },
+          {
+            "id": "c4",
+            "name": "yellow-100",
+            "hex": "#fffbeb",
+            "oklch": {
+              "l": 0.9869,
+              "c": 0.0214,
+              "h": 95.28
+            },
+            "family": "yellow",
+            "step": 100,
+            "roles": ["background"],
+            "usageShare": 0.4983,
+            "contexts": ["background"],
+            "mergedFrom": [],
+            "excluded": false
+          }
+        ],
+        "typography": {
+          "families": [
+            {
+              "id": "f1",
+              "name": "serif",
+              "stack": ["Georgia", "serif"],
+              "usageShare": 1,
+              "excluded": false
+            }
+          ],
+          "sizes": [
+            {
+              "id": "t1",
+              "name": "base",
+              "sizePx": 17,
+              "lineHeightPx": 28,
+              "weight": 400,
+              "familyId": "f1",
+              "headings": [],
+              "usageShare": 0.9595,
+              "excluded": false
+            },
+            {
+              "id": "t2",
+              "name": "lg",
+              "sizePx": 32,
+              "lineHeightPx": 40,
+              "weight": 700,
+              "familyId": "f1",
+              "headings": ["h1"],
+              "usageShare": 0.0405,
+              "excluded": false
+            }
+          ]
+        },
+        "spacing": {
+          "baseUnitPx": 8,
+          "tokens": [
+            {
+              "id": "s1",
+              "name": "space-1",
+              "px": 8,
+              "usageShare": 0.0342,
+              "excluded": false
+            },
+            {
+              "id": "s2",
+              "name": "space-2",
+              "px": 16,
+              "usageShare": 0.906,
+              "excluded": false
+            },
+            {
+              "id": "s3",
+              "name": "space-5",
+              "px": 40,
+              "usageShare": 0.0085,
+              "excluded": false
+            },
+            {
+              "id": "s4",
+              "name": "space-6",
+              "px": 48,
+              "usageShare": 0.0342,
+              "excluded": false
+            }
+          ]
+        },
+        "radii": [
+          {
+            "id": "r1",
+            "name": "radius-sm",
+            "px": 4,
+            "usageShare": 1,
+            "excluded": false
+          }
+        ],
+        "shadows": [],
+        "breakpoints": [
+          {
+            "id": "b1",
+            "name": "sm",
+            "px": 900,
+            "usageShare": 0,
+            "excluded": false
+          }
+        ],
+        "components": [
+          {
+            "id": "p1",
+            "kind": "button",
+            "variant": "primary",
+            "styles": {
+              "background-color": {
+                "ref": "color.orange-500",
+                "id": "c3",
+                "raw": "#ea580c"
+              },
+              "color": {
+                "ref": "color.brand-ink",
+                "id": "c1",
+                "raw": "#ffffff"
+              },
+              "border": "none",
+              "border-radius": {
+                "ref": "radius.radius-sm",
+                "id": "r1",
+                "raw": "4px"
+              },
+              "padding": "8px 16px",
+              "font-family": {
+                "ref": "font.serif",
+                "id": "f1",
+                "raw": "Georgia, serif"
+              },
+              "font-size": {
+                "ref": "text.base",
+                "id": "t1",
+                "raw": "17px"
+              },
+              "font-weight": "400",
+              "line-height": "28px",
+              "box-shadow": "none"
+            },
+            "excluded": false
+          },
+          {
+            "id": "p2",
+            "kind": "heading",
+            "variant": "h1",
+            "styles": {
+              "background-color": "transparent",
+              "color": {
+                "ref": "color.gray-900",
+                "id": "c2",
+                "raw": "#292524"
+              },
+              "border": "none",
+              "border-radius": "0px",
+              "padding": "0px",
+              "font-family": {
+                "ref": "font.serif",
+                "id": "f1",
+                "raw": "Georgia, serif"
+              },
+              "font-size": {
+                "ref": "text.lg",
+                "id": "t2",
+                "raw": "32px"
+              },
+              "font-weight": "700",
+              "line-height": "40px",
+              "box-shadow": "none"
+            },
+            "excluded": false
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Motion fixture</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        color: #111827;
+        background: #ffffff;
+        margin: 0;
+        padding: 24px;
+      }
+      /* Tailwind's default ease-in-out curve on two properties of one shorthand list. */
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #2563eb;
+        color: #ffffff;
+        border: 0;
+        border-radius: 6px;
+        transition:
+          color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      /* Two durations aligned with two properties; one timing function repeats for both. */
+      .card {
+        padding: 16px;
+        margin: 16px 0;
+        border: 1px solid #e5e7eb;
+        transition-property: transform, opacity;
+        transition-duration: 300ms, 0.2s;
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+      .link {
+        color: #2563eb;
+        transition: color 200ms ease;
+      }
+      /* A zero duration must be skipped. */
+      .instant {
+        transition: opacity 0s linear;
+      }
+      .bouncy {
+        transition: transform 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+      .slow {
+        /* The same curve as .bouncy once rounded to 3 decimals. */
+        transition: opacity 700ms cubic-bezier(0.68, -0.55, 0.2654, 1.55);
+      }
+      .fast {
+        transition: opacity 75ms linear;
+      }
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #2563eb;
+        animation: spin 1s linear infinite;
+      }
+      .blink {
+        animation: blink 2s steps(4, end) infinite;
+      }
+      .paused {
+        animation-name: none;
+        animation-duration: 3s;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0.5;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Motion fixture</h1>
+    <p>
+      <button class="btn">One</button>
+      <button class="btn">Two</button>
+      <button class="btn">Three</button>
+      <button class="btn">Four</button>
+    </p>
+    <div class="card">Card one</div>
+    <div class="card">Card two</div>
+    <div class="card">Card three</div>
+    <p><a class="link" href="#a">First link</a> and <a class="link" href="#b">second link</a></p>
+    <p class="instant">Instant</p>
+    <p class="bouncy">Bouncy</p>
+    <p class="slow">Slow</p>
+    <p class="fast">Fast</p>
+    <div class="spinner" aria-label="Loading"></div>
+    <p class="blink">Blink</p>
+    <p class="paused">Not animated</p>
+  </body>
+</html>

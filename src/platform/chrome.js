@@ -150,3 +150,34 @@ export function originPattern(url) {
     return null;
   }
 }
+
+// Firefox has a sidebar instead of Chrome's side panel (F43). Both open calls must run inside
+// the user gesture, so callers make these calls before any await.
+const sidebar = () => globalThis.browser?.sidebarAction;
+
+/** The toolbar button opens the panel: Chrome by panel behavior, Firefox by an action listener. */
+export function openPanelOnAction() {
+  if (api().sidePanel?.setPanelBehavior) {
+    api()
+      .sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+      .catch(() => {});
+    return;
+  }
+  if (sidebar())
+    api().action.onClicked.addListener(() =>
+      sidebar()
+        .open()
+        .catch(() => {}),
+    );
+}
+
+/** Opens the panel for a window from a gesture such as the keyboard shortcut. */
+export function openPanelFromGesture(windowId) {
+  if (api().sidePanel?.open)
+    return api()
+      .sidePanel.open({ windowId })
+      .catch(() => {});
+  return sidebar()
+    ?.open()
+    .catch(() => {});
+}

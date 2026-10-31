@@ -12,7 +12,9 @@ export const GECKO_ID = 'webstyle-extractor@example.invalid';
 
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
-  outDirTemplate: e2e ? '{{browser}}-mv{{manifestVersion}}-e2e' : '{{browser}}-mv{{manifestVersion}}',
+  outDirTemplate: e2e
+    ? '{{browser}}-mv{{manifestVersion}}-e2e'
+    : '{{browser}}-mv{{manifestVersion}}',
   vite: () => ({ plugins: [tailwindcss()] }),
   manifest: ({ mode, browser }) => {
     const firefox = browser === 'firefox';
@@ -22,13 +24,26 @@ export default defineConfig({
       default_locale: 'en',
       ...(firefox
         ? {
-            browser_specific_settings: { gecko: { id: GECKO_ID, strict_min_version: '128.0' } },
+            browser_specific_settings: {
+              // The extension collects and transmits nothing (Firefox's built-in consent).
+              gecko: {
+                id: GECKO_ID,
+                strict_min_version: '128.0',
+                data_collection_permissions: { required: ['none'] },
+              },
+            },
             permissions: ['activeTab', 'scripting', 'storage'],
             optional_host_permissions: ['https://*/*', 'http://*/*'],
           }
         : {
             minimum_chrome_version: '116',
-            permissions: ['activeTab', 'scripting', 'sidePanel', 'storage', ...(e2e ? ['debugger'] : [])],
+            permissions: [
+              'activeTab',
+              'scripting',
+              'sidePanel',
+              'storage',
+              ...(e2e ? ['debugger'] : []),
+            ],
             ...(e2e ? {} : { optional_permissions: ['debugger'] }),
             optional_host_permissions: ['https://*/*', 'http://*/*'],
           }),
@@ -42,7 +57,11 @@ export default defineConfig({
       ...(e2e ? { host_permissions: ['http://127.0.0.1/*', 'http://localhost/*'] } : {}),
       // The dev server needs network access, so the no-network CSP is production only.
       ...(mode === 'production'
-        ? { content_security_policy: { extension_pages: "script-src 'self'; object-src 'self'; connect-src 'none'" } }
+        ? {
+            content_security_policy: {
+              extension_pages: "script-src 'self'; object-src 'self'; connect-src 'none'",
+            },
+          }
         : {}),
     };
   },

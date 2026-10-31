@@ -44,17 +44,41 @@ const MAX_REPRESENTATIVES = 3;
 const GRADIENT_WEIGHT = 0.25;
 
 const SKIP_TAGS = new Set([
-  'SCRIPT', 'STYLE', 'HEAD', 'META', 'LINK', 'TITLE', 'NOSCRIPT', 'TEMPLATE', 'BR', 'WBR',
-  'IFRAME', 'FRAME', 'OBJECT', 'EMBED', 'SOURCE', 'TRACK', 'PARAM', 'CANVAS',
+  'SCRIPT',
+  'STYLE',
+  'HEAD',
+  'META',
+  'LINK',
+  'TITLE',
+  'NOSCRIPT',
+  'TEMPLATE',
+  'BR',
+  'WBR',
+  'IFRAME',
+  'FRAME',
+  'OBJECT',
+  'EMBED',
+  'SOURCE',
+  'TRACK',
+  'PARAM',
+  'CANVAS',
 ]);
 const SIDES = ['top', 'right', 'bottom', 'left'];
 const SPACING_PROPS = [
-  'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-  'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+  'padding-top',
+  'padding-right',
+  'padding-bottom',
+  'padding-left',
+  'margin-top',
+  'margin-right',
+  'margin-bottom',
+  'margin-left',
 ];
 const CORNERS = [
-  'border-top-left-radius', 'border-top-right-radius',
-  'border-bottom-right-radius', 'border-bottom-left-radius',
+  'border-top-left-radius',
+  'border-top-right-radius',
+  'border-bottom-right-radius',
+  'border-bottom-left-radius',
 ];
 const STATEFUL_KINDS = new Set(['button', 'link', 'input', 'tabs', 'card', 'navbar']);
 const GRADIENT_FN = /(repeating-)?(linear|radial|conic)-gradient\(/i;
@@ -91,7 +115,9 @@ export async function collect(options = {}) {
 
   const started = performance.now();
   const viewport = { width: win.innerWidth, height: win.innerHeight };
-  const maxTop = options.rootSelector ? Infinity : win.scrollY + viewport.height * (1 + limits.scrollScreens);
+  const maxTop = options.rootSelector
+    ? Infinity
+    : win.scrollY + viewport.height * (1 + limits.scrollScreens);
   const rootStyle = getComputedStyle(doc.documentElement);
   const rootFontSizePx = parseFloat(rootStyle.fontSize) || 16;
   const parseColor = (() => {
@@ -193,7 +219,15 @@ export async function collect(options = {}) {
     const rgba = parseColor(value);
     if (!rgba || rgba.a <= 0) return;
     const effective = rgba.a >= 1 ? rgba : composite(rgba, backdrop);
-    colors.add(value, rgba, weight, contexts, toHex(effective), toHex(backdrop), imageBehind && rgba.a < 1);
+    colors.add(
+      value,
+      rgba,
+      weight,
+      contexts,
+      toHex(effective),
+      toHex(backdrop),
+      imageBehind && rgba.a < 1,
+    );
   };
 
   // ---- Walk ----
@@ -211,7 +245,8 @@ export async function collect(options = {}) {
     }
     const el = stack.pop();
     if (!el || el.nodeType !== 1 || SKIP_TAGS.has(el.tagName)) continue;
-    const isSvgChild = el.namespaceURI === 'http://www.w3.org/2000/svg' && el.tagName.toLowerCase() !== 'svg';
+    const isSvgChild =
+      el.namespaceURI === 'http://www.w3.org/2000/svg' && el.tagName.toLowerCase() !== 'svg';
     if (isSvgChild) continue;
     const style = styleOf(el);
     if (style.display === 'none') continue;
@@ -219,7 +254,8 @@ export async function collect(options = {}) {
     // Children in reverse so they pop in document order; open shadow roots after light children.
     if (el.shadowRoot && el.shadowRoot.mode === 'open') {
       shadowRoots.push(el.shadowRoot);
-      for (let i = el.shadowRoot.children.length - 1; i >= 0; i -= 1) stack.push(el.shadowRoot.children[i]);
+      for (let i = el.shadowRoot.children.length - 1; i >= 0; i -= 1)
+        stack.push(el.shadowRoot.children[i]);
     }
     if (el.tagName.toLowerCase() !== 'svg') {
       for (let i = el.children.length - 1; i >= 0; i -= 1) stack.push(el.children[i]);
@@ -280,7 +316,14 @@ export async function collect(options = {}) {
       stats.letterSpacings.add(String(lsEm), textLength, ['text']);
       stats.textTransforms.add(style.textTransform, textLength, ['text']);
       const tags = textTags(el, tag);
-      const key = [style.fontFamily, style.fontSize, style.lineHeight, style.fontWeight, lsEm, style.textTransform].join('|');
+      const key = [
+        style.fontFamily,
+        style.fontSize,
+        style.lineHeight,
+        style.fontWeight,
+        lsEm,
+        style.textTransform,
+      ].join('|');
       let ts = textStyles.get(key);
       if (!ts) {
         ts = {
@@ -306,7 +349,14 @@ export async function collect(options = {}) {
         const cKey = [effText, toHex(self), fontSize, Number(style.fontWeight) || 400].join('|');
         const entry = contrast.get(cKey);
         if (entry) entry.count += 1;
-        else contrast.set(cKey, { effectiveText: effText, effectiveBg: toHex(self), sizePx: fontSize, fontWeight: Number(style.fontWeight) || 400, count: 1 });
+        else
+          contrast.set(cKey, {
+            effectiveText: effText,
+            effectiveBg: toHex(self),
+            sizePx: fontSize,
+            fontWeight: Number(style.fontWeight) || 400,
+            count: 1,
+          });
       }
     }
 
@@ -315,7 +365,8 @@ export async function collect(options = {}) {
     const image = style.backgroundImage;
     if (image && image !== 'none' && GRADIENT_FN.test(image)) {
       readGradients(image, area, behind);
-      if (style.backgroundClip === 'text' || style.webkitBackgroundClip === 'text') gradientText += 1;
+      if (style.backgroundClip === 'text' || style.webkitBackgroundClip === 'text')
+        gradientText += 1;
     }
 
     // Borders and outline
@@ -324,13 +375,25 @@ export async function collect(options = {}) {
       const lineStyle = style.getPropertyValue(`border-${side}-style`);
       if (width > 0 && lineStyle !== 'none' && lineStyle !== 'hidden') {
         const length = side === 'top' || side === 'bottom' ? rect.width : rect.height;
-        addColor(style.getPropertyValue(`border-${side}-color`), length * width, ['border'], self, imageBehind);
+        addColor(
+          style.getPropertyValue(`border-${side}-color`),
+          length * width,
+          ['border'],
+          self,
+          imageBehind,
+        );
         stats.borderWidths.add(`${Math.round(width * 100) / 100}px`, 1);
         stats.borderStyles.add(lineStyle, 1);
       }
     }
     if (style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0) {
-      addColor(style.outlineColor, (rect.width + rect.height) * 2, ['outline'], behind, imageBehind);
+      addColor(
+        style.outlineColor,
+        (rect.width + rect.height) * 2,
+        ['outline'],
+        behind,
+        imageBehind,
+      );
     }
 
     // Spacing (auto-centering margins excluded)
@@ -356,7 +419,9 @@ export async function collect(options = {}) {
           if (count >= 1) stats.gridColumns.add(String(count), 1);
         }
       } else if (!style.flexDirection.startsWith('column') && el.children.length >= 2) {
-        const widths = [...el.children].map((c) => c.getBoundingClientRect().width).filter((w) => w > 0);
+        const widths = [...el.children]
+          .map((c) => c.getBoundingClientRect().width)
+          .filter((w) => w > 0);
         if (widths.length >= 2 && Math.max(...widths) - Math.min(...widths) <= 2) {
           stats.gridColumns.add(String(widths.length), 1);
         }
@@ -365,7 +430,11 @@ export async function collect(options = {}) {
     const maxWidth = style.maxWidth;
     if (maxWidth && maxWidth !== 'none' && !maxWidth.endsWith('%')) {
       const fs = parseFloat(style.fontSize) || 16;
-      const px = /ch$/.test(maxWidth) ? parseFloat(maxWidth) * fs * 0.5 : /em$/.test(maxWidth) ? parseFloat(maxWidth) * fs : parseFloat(maxWidth);
+      const px = /ch$/.test(maxWidth)
+        ? parseFloat(maxWidth) * fs * 0.5
+        : /em$/.test(maxWidth)
+          ? parseFloat(maxWidth) * fs
+          : parseFloat(maxWidth);
       const ml = parseFloat(style.marginLeft);
       const mr = parseFloat(style.marginRight);
       if (px >= 320 && Math.abs(ml - mr) <= 1) {
@@ -389,7 +458,8 @@ export async function collect(options = {}) {
       const disabled = el.matches(':disabled, [aria-disabled="true"]');
       stats.opacities.add(String(rounded), 1, disabled ? ['disabled'] : []);
     }
-    if (style.position !== 'static' && /^-?\d+$/.test(style.zIndex)) readZIndex(el, style, rect, Number(style.zIndex));
+    if (style.position !== 'static' && /^-?\d+$/.test(style.zIndex))
+      readZIndex(el, style, rect, Number(style.zIndex));
 
     // Motion (F14)
     readMotion(style);
@@ -429,22 +499,37 @@ export async function collect(options = {}) {
     if (size > 0 && size <= 48) {
       stats.iconSizes.add(`${size}px`, 1);
       const strokeNum = parseFloat(stroke);
-      if (strokeNum > 0 && el.getAttribute('stroke') !== 'none') stats.iconStrokes.add(String(strokeNum), 1);
+      if (strokeNum > 0 && el.getAttribute('stroke') !== 'none')
+        stats.iconStrokes.add(String(strokeNum), 1);
     }
   }
 
   function readZIndex(el, style, rect, value) {
     const hints = new Set();
     const role = el.getAttribute('role');
-    if ((style.position === 'sticky' || style.position === 'fixed') && rect.top <= 1 && el.querySelector('nav, a') && rect.height < viewport.height / 2) {
+    if (
+      (style.position === 'sticky' || style.position === 'fixed') &&
+      rect.top <= 1 &&
+      el.querySelector('nav, a') &&
+      rect.height < viewport.height / 2
+    ) {
       hints.add('sticky-header');
     }
-    if (role === 'dialog' || el.getAttribute('aria-modal') === 'true' || el.tagName === 'DIALOG') hints.add('dialog');
+    if (role === 'dialog' || el.getAttribute('aria-modal') === 'true' || el.tagName === 'DIALOG')
+      hints.add('dialog');
     if (role === 'menu' || role === 'listbox') hints.add('menu');
-    if (style.position === 'fixed' && (role === 'status' || el.hasAttribute('aria-live'))) hints.add('toast');
+    if (style.position === 'fixed' && (role === 'status' || el.hasAttribute('aria-live')))
+      hints.add('toast');
     if (role === 'tooltip') hints.add('tooltip');
     const bg = parseColor(style.backgroundColor);
-    if (style.position === 'fixed' && rect.width >= viewport.width * 0.9 && rect.height >= viewport.height * 0.9 && bg && bg.a > 0 && bg.a < 1) {
+    if (
+      style.position === 'fixed' &&
+      rect.width >= viewport.width * 0.9 &&
+      rect.height >= viewport.height * 0.9 &&
+      bg &&
+      bg.a > 0 &&
+      bg.a < 1
+    ) {
       hints.add('overlay');
     }
     const entry = zIndices.get(value) ?? { value, count: 0, hints: new Set() };
@@ -468,7 +553,9 @@ export async function collect(options = {}) {
       const d = toMs(style.animationDuration.split(',')[0]);
       if (d > 0) {
         stats.durations.add(String(d), 1, ['animation']);
-        stats.easings.add(splitTopLevel(style.animationTimingFunction)[0] ?? 'ease', 1, ['animation']);
+        stats.easings.add(splitTopLevel(style.animationTimingFunction)[0] ?? 'ease', 1, [
+          'animation',
+        ]);
       }
     }
   }
@@ -485,11 +572,24 @@ export async function collect(options = {}) {
         const rgba = parseColor(parts.color);
         if (!rgba) continue;
         stops.push({ color: toHex(rgba), position: parts.position });
-        addColor(parts.color, (area * GRADIENT_WEIGHT) / Math.max(1, args.length), ['gradient'], backdrop, false);
+        addColor(
+          parts.color,
+          (area * GRADIENT_WEIGHT) / Math.max(1, args.length),
+          ['gradient'],
+          backdrop,
+          false,
+        );
       }
       if (stops.length < 2) continue;
       const css = layer.trim().replace(/\s+/g, ' ');
-      const entry = gradients.get(css) ?? { css, type: m[2].toLowerCase(), repeating: Boolean(m[1]), stops, count: 0, usage: 0 };
+      const entry = gradients.get(css) ?? {
+        css,
+        type: m[2].toLowerCase(),
+        repeating: Boolean(m[1]),
+        stops,
+        count: 0,
+        usage: 0,
+      };
       entry.count += 1;
       entry.usage += area;
       gradients.set(css, entry);
@@ -510,7 +610,10 @@ export async function collect(options = {}) {
 
   // ---- Shadow root stylesheets (AC-F22.1) ----
   if (shadowRoots.length > 0) {
-    const shadowSheets = shadowRoots.flatMap((r) => [...r.styleSheets, ...(r.adoptedStyleSheets ?? [])]);
+    const shadowSheets = shadowRoots.flatMap((r) => [
+      ...r.styleSheets,
+      ...(r.adoptedStyleSheets ?? []),
+    ]);
     const extra = readStylesheets({ sheets: shadowSheets, doc, win });
     mergeSheetData(sheetData, extra);
   }
@@ -529,15 +632,30 @@ export async function collect(options = {}) {
           kind,
           variant: key,
           selector,
-          rect: { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) },
-          inViewport: rect.top >= 0 && rect.left >= 0 && rect.bottom <= viewport.height && rect.right <= viewport.width,
+          rect: {
+            x: Math.round(rect.x),
+            y: Math.round(rect.y),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          },
+          inViewport:
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= viewport.height &&
+            rect.right <= viewport.width,
         });
       }
     }
     const el = list[0]?.el;
     if (!el) continue;
     for (const s of stateStyles(el, sheetData.stateRules)) {
-      stateSamples.push({ kind: list[0].kind, variant: key, state: s.state, styles: s.styles, source: 'stylesheet' });
+      stateSamples.push({
+        kind: list[0].kind,
+        variant: key,
+        state: s.state,
+        styles: s.styles,
+        source: 'stylesheet',
+      });
     }
   }
 
@@ -562,7 +680,9 @@ export async function collect(options = {}) {
     .map(([px]) => px);
   const darkActive =
     activeMode === 'dark' ||
-    [...sheetData.darkSelectors].some((sel) => safeMatches(doc.documentElement, sel) || safeMatches(doc.body, sel));
+    [...sheetData.darkSelectors].some(
+      (sel) => safeMatches(doc.documentElement, sel) || safeMatches(doc.body, sel),
+    );
 
   return {
     url: location.href,
@@ -589,12 +709,16 @@ export async function collect(options = {}) {
     borderWidths: stats.borderWidths.toStats(),
     borderStyles: stats.borderStyles.toStats(),
     opacities: stats.opacities.toStats(),
-    zIndices: [...zIndices.values()].map((z) => ({ ...z, hints: [...z.hints].sort() })).sort((a, b) => a.value - b.value),
+    zIndices: [...zIndices.values()]
+      .map((z) => ({ ...z, hints: [...z.hints].sort() }))
+      .sort((a, b) => a.value - b.value),
     durations: stats.durations.toStats(),
     easings: stats.easings.toStats(),
     transitionProperties: stats.transitionProperties.toStats(),
     reducedMotion: sheetData.reducedMotion,
-    gradients: [...gradients.values()].map((g) => ({ ...g, usage: Math.round(g.usage) })).sort((a, b) => b.usage - a.usage),
+    gradients: [...gradients.values()]
+      .map((g) => ({ ...g, usage: Math.round(g.usage) }))
+      .sort((a, b) => b.usage - a.usage),
     gradientText,
     containers: stats.containers.toStats(),
     gridColumns: stats.gridColumns.toStats(),
@@ -648,11 +772,15 @@ export async function collect(options = {}) {
       for (const rule of list) Object.assign(decls, rule.decls);
       const lookup = (name) => style.getPropertyValue(name).trim() || undefined;
       const resolved = {};
-      for (const [prop, value] of Object.entries(decls)) resolved[prop] = resolveVars(value, lookup);
+      for (const [prop, value] of Object.entries(decls))
+        resolved[prop] = resolveVars(value, lookup);
       const styles = toRecipeProps(resolved, style);
       const diff = {};
       for (const [prop, value] of Object.entries(styles)) {
-        if (normalizeForCompare(value, parseColor) !== normalizeForCompare(defaults[prop], parseColor)) diff[prop] = value;
+        if (
+          normalizeForCompare(value, parseColor) !== normalizeForCompare(defaults[prop], parseColor)
+        )
+          diff[prop] = value;
       }
       if (Object.keys(diff).length > 0) results.push({ state, styles: diff });
     }
@@ -669,7 +797,15 @@ class ColorAccumulator {
     const key = `${value}|${contexts.join(',')}`;
     let e = this.map.get(key);
     if (!e) {
-      e = { value, count: 0, weight: 0, contexts: new Set(contexts), pairs: new Map(), imageWeight: 0, maxWeight: 0 };
+      e = {
+        value,
+        count: 0,
+        weight: 0,
+        contexts: new Set(contexts),
+        pairs: new Map(),
+        imageWeight: 0,
+        maxWeight: 0,
+      };
       this.map.set(key, e);
     }
     e.count += 1;
@@ -683,7 +819,9 @@ class ColorAccumulator {
   toStats() {
     return [...this.map.values()]
       .map((e) => {
-        const [effectiveHex, backdropHex] = [...e.pairs.entries()].sort((a, b) => b[1] - a[1])[0][0].split('|');
+        const [effectiveHex, backdropHex] = [...e.pairs.entries()]
+          .sort((a, b) => b[1] - a[1])[0][0]
+          .split('|');
         return {
           value: e.value,
           count: e.count,
@@ -705,7 +843,13 @@ function countFrames(doc, win) {
   let n = 0;
   for (const f of doc.querySelectorAll('iframe, frame')) {
     const r = f.getBoundingClientRect();
-    if (r.width >= 100 && r.height >= 100 && getComputedStyle(f).visibility !== 'hidden' && r.top < win.innerHeight * 4) n += 1;
+    if (
+      r.width >= 100 &&
+      r.height >= 100 &&
+      getComputedStyle(f).visibility !== 'hidden' &&
+      r.top < win.innerHeight * 4
+    )
+      n += 1;
   }
   return n;
 }
@@ -782,11 +926,13 @@ function splitTracks(tracks) {
 /** Splits a gradient argument into its color and optional position, or null for directions. */
 export function splitColorAndPosition(arg) {
   const a = arg.trim();
-  if (/^(to\s|from\s|at\s|circle|ellipse|closest|farthest|-?[\d.]+(deg|turn|rad|grad)\b)/i.test(a)) return null;
+  if (/^(to\s|from\s|at\s|circle|ellipse|closest|farthest|-?[\d.]+(deg|turn|rad|grad)\b)/i.test(a))
+    return null;
   const fn = /^((?:rgba?|hsla?|oklch|oklab|lab|lch|color|hwb)\([^)]*\))\s*(.*)$/i.exec(a);
   if (fn) return { color: fn[1], position: fn[2].trim() || null };
   const word = /^(#[0-9a-f]{3,8}|[a-z]+)\s*(.*)$/i.exec(a);
-  if (word && !/^(to|at|in)$/i.test(word[1])) return { color: word[1], position: word[2].trim() || null };
+  if (word && !/^(to|at|in)$/i.test(word[1]))
+    return { color: word[1], position: word[2].trim() || null };
   return null;
 }
 
@@ -819,16 +965,29 @@ function toRecipeProps(decls, style) {
   }
   if (decls['background-image']) out['background-image'] = decls['background-image'];
   if (decls.color) out.color = decls.color;
-  const borderColor = decls['border-color'] ?? decls['border-top-color'] ?? decls['border-bottom-color'];
+  const borderColor =
+    decls['border-color'] ?? decls['border-top-color'] ?? decls['border-bottom-color'];
   if (decls.border) out.border = decls.border;
   else if (borderColor) {
     out.border = `${decls['border-width'] ?? style.borderTopWidth} ${style.borderTopStyle === 'none' ? 'solid' : style.borderTopStyle} ${borderColor}`;
   }
   if (decls.outline || decls['outline-color'] || decls['outline-width'] || decls['outline-style']) {
     const parts = (decls.outline ?? '').split(/\s+(?![^(]*\))/).filter(Boolean);
-    const width = decls['outline-width'] ?? parts.find((p) => /^[\d.]+(px|em|rem)$|^(thin|medium|thick)$/.test(p)) ?? style.outlineWidth;
-    const lineStyle = decls['outline-style'] ?? parts.find((p) => /^(solid|dashed|dotted|double|auto|none)$/.test(p)) ?? 'solid';
-    const color = decls['outline-color'] ?? parts.find((p) => !/^[\d.]+(px|em|rem)$|^(thin|medium|thick|solid|dashed|dotted|double|auto|none)$/.test(p)) ?? style.outlineColor;
+    const width =
+      decls['outline-width'] ??
+      parts.find((p) => /^[\d.]+(px|em|rem)$|^(thin|medium|thick)$/.test(p)) ??
+      style.outlineWidth;
+    const lineStyle =
+      decls['outline-style'] ??
+      parts.find((p) => /^(solid|dashed|dotted|double|auto|none)$/.test(p)) ??
+      'solid';
+    const color =
+      decls['outline-color'] ??
+      parts.find(
+        (p) =>
+          !/^[\d.]+(px|em|rem)$|^(thin|medium|thick|solid|dashed|dotted|double|auto|none)$/.test(p),
+      ) ??
+      style.outlineColor;
     out.outline = lineStyle === 'none' ? 'none' : `${width} ${lineStyle} ${color}`;
   }
   if (decls['outline-offset']) out['outline-offset'] = decls['outline-offset'];
@@ -840,7 +999,8 @@ function toRecipeProps(decls, style) {
 function mergeSheetData(into, extra) {
   into.readable += extra.readable;
   into.unreadable += extra.unreadable;
-  for (const [k, v] of extra.breakpointCounts) into.breakpointCounts.set(k, (into.breakpointCounts.get(k) ?? 0) + v);
+  for (const [k, v] of extra.breakpointCounts)
+    into.breakpointCounts.set(k, (into.breakpointCounts.get(k) ?? 0) + v);
   into.defs.push(...extra.defs);
   for (const [k, v] of Object.entries(extra.usage)) into.usage[k] = (into.usage[k] ?? 0) + v;
   into.darkMedia ||= extra.darkMedia;
@@ -859,7 +1019,12 @@ function mergeSheetData(into, extra) {
  */
 function buildVariables(sheetData, rootStyle) {
   const defs = [];
-  const byScope = { root: new Map(), 'dark-media': new Map(), 'dark-selector': new Map(), 'light-selector': new Map() };
+  const byScope = {
+    root: new Map(),
+    'dark-media': new Map(),
+    'dark-selector': new Map(),
+    'light-selector': new Map(),
+  };
   for (const d of sheetData.defs) byScope[d.scope]?.set(d.name, d);
   const rootRaw = (name) => byScope.root.get(name)?.value;
   const computed = (name) => rootStyle.getPropertyValue(name).trim() || undefined;
@@ -872,7 +1037,8 @@ function buildVariables(sheetData, rootStyle) {
       } else {
         value = resolveVars(d.value, (n) => map.get(n)?.value ?? rootRaw(n) ?? computed(n));
       }
-      if (value && value.length <= 300) defs.push({ name: d.name, value, scope, selector: d.selector });
+      if (value && value.length <= 300)
+        defs.push({ name: d.name, value, scope, selector: d.selector });
     }
   }
   // Custom properties the browser lists on the computed root style, for sites whose sheets are
@@ -882,13 +1048,15 @@ function buildVariables(sheetData, rootStyle) {
     const name = rootStyle[i];
     if (!name?.startsWith('--') || known.has(`root|${name}`)) continue;
     const value = computed(name);
-    if (value && value.length <= 300) defs.push({ name, value, scope: 'root', selector: ':root (computed)' });
+    if (value && value.length <= 300)
+      defs.push({ name, value, scope: 'root', selector: ':root (computed)' });
   }
   const usage = sheetData.usage;
   defs.sort((a, b) => (usage[b.name] ?? 0) - (usage[a.name] ?? 0) || (a.name < b.name ? -1 : 1));
   const kept = defs.slice(0, 3000);
   const cssVariables = {};
-  for (const d of kept) if (d.scope === 'root' && !(d.name in cssVariables)) cssVariables[d.name] = d.value;
+  for (const d of kept)
+    if (d.scope === 'root' && !(d.name in cssVariables)) cssVariables[d.name] = d.value;
   return { variableDefs: kept, cssVariables };
 }
 
@@ -906,8 +1074,10 @@ function readFontFaces(doc, ruleFaces) {
     .filter(Boolean);
   const providerOf = (hosts) => {
     for (const host of hosts) {
-      if (/fonts\.(googleapis|gstatic)\.com$/.test(host)) return { provider: 'google-fonts', providerHost: host };
-      if (/(use|p)\.typekit\.net$/.test(host)) return { provider: 'adobe-fonts', providerHost: host };
+      if (/fonts\.(googleapis|gstatic)\.com$/.test(host))
+        return { provider: 'google-fonts', providerHost: host };
+      if (/(use|p)\.typekit\.net$/.test(host))
+        return { provider: 'adobe-fonts', providerHost: host };
     }
     if (hosts.includes(ownHost)) return { provider: 'self-hosted', providerHost: ownHost };
     if (hosts.length) return { provider: 'other', providerHost: hosts[0] };

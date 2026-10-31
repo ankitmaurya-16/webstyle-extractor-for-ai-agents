@@ -39,11 +39,16 @@ export function analyzeTypography(raw, webFonts = []) {
   const totalText = styles.reduce((s, t) => s + t.usage, 0) || 1;
 
   // ---- Families ----
-  const familyStats = [...(raw.fontFamilies ?? [])].sort((a, b) => b.weight - a.weight || cmp(a.value, b.value));
+  const familyStats = [...(raw.fontFamilies ?? [])].sort(
+    (a, b) => b.weight - a.weight || cmp(a.value, b.value),
+  );
   const familyTotal = familyStats.reduce((s, f) => s + f.weight, 0) || 1;
   const headingOnly = (value) => {
     const uses = styles.filter((s) => s.family === value);
-    return uses.length > 0 && uses.every((s) => s.tags.length > 0 && s.tags.every((t) => HEADINGS.includes(t)));
+    return (
+      uses.length > 0 &&
+      uses.every((s) => s.tags.length > 0 && s.tags.every((t) => HEADINGS.includes(t)))
+    );
   };
   const families = [];
   const familyIdByValue = new Map();
@@ -64,8 +69,17 @@ export function analyzeTypography(raw, webFonts = []) {
     let name = base;
     for (let i = 2; usedNames.has(name); i += 1) name = `${base}-${i}`;
     usedNames.add(name);
-    const webFont = webFonts.find((w) => w.family.toLowerCase() === stack[0].toLowerCase() && w.loaded) ?? null;
-    families.push({ id, name, stack, webFont, usageShare: round4(stat.weight / familyTotal), count: stat.count, excluded: false });
+    const webFont =
+      webFonts.find((w) => w.family.toLowerCase() === stack[0].toLowerCase() && w.loaded) ?? null;
+    families.push({
+      id,
+      name,
+      stack,
+      webFont,
+      usageShare: round4(stat.weight / familyTotal),
+      count: stat.count,
+      excluded: false,
+    });
     familyIdByValue.set(stat.value, id);
   }
 
@@ -74,9 +88,16 @@ export function analyzeTypography(raw, webFonts = []) {
   for (const s of styles) {
     const sizePx = round2(s.sizePx);
     if (!(sizePx > 0)) continue;
-    const e =
-      bySize.get(sizePx) ??
-      { sizePx, weight: 0, bodyWeight: 0, count: 0, lineHeights: new Map(), weights: new Map(), families: new Map(), tracking: new Map() };
+    const e = bySize.get(sizePx) ?? {
+      sizePx,
+      weight: 0,
+      bodyWeight: 0,
+      count: 0,
+      lineHeights: new Map(),
+      weights: new Map(),
+      families: new Map(),
+      tracking: new Map(),
+    };
     e.weight += s.usage;
     e.count += s.count;
     if (!s.tags.some((t) => HEADINGS.includes(t))) e.bodyWeight += s.usage;
@@ -95,14 +116,27 @@ export function analyzeTypography(raw, webFonts = []) {
     if (size) headingSize.set(level, round2(size));
   }
   const headingSizes = new Set(headingSize.values());
-  const kept = [...bySize.values()].filter((e) => e.weight / totalText >= MIN_SHARE || headingSizes.has(e.sizePx));
+  const kept = [...bySize.values()].filter(
+    (e) => e.weight / totalText >= MIN_SHARE || headingSizes.has(e.sizePx),
+  );
   for (const size of headingSizes) {
     if (!kept.some((e) => e.sizePx === size)) {
-      kept.push({ sizePx: size, weight: 0, bodyWeight: 0, count: 0, lineHeights: new Map(), weights: new Map(), families: new Map(), tracking: new Map() });
+      kept.push({
+        sizePx: size,
+        weight: 0,
+        bodyWeight: 0,
+        count: 0,
+        lineHeights: new Map(),
+        weights: new Map(),
+        families: new Map(),
+        tracking: new Map(),
+      });
     }
   }
   kept.sort((a, b) => a.sizePx - b.sizePx);
-  const base = [...kept].sort((a, b) => b.bodyWeight - a.bodyWeight || b.weight - a.weight || a.sizePx - b.sizePx)[0];
+  const base = [...kept].sort(
+    (a, b) => b.bodyWeight - a.bodyWeight || b.weight - a.weight || a.sizePx - b.sizePx,
+  )[0];
   const baseIndex = kept.indexOf(base);
   const sizes = kept.map((entry, i) => {
     let name;
@@ -134,16 +168,27 @@ export function analyzeTypography(raw, webFonts = []) {
   for (const s of raw.letterSpacings ?? []) {
     const em = Math.round(Number(s.value) * 1000) / 1000;
     if (!Number.isFinite(em)) continue;
-    trackingStats.set(em, (trackingStats.get(em) ?? 0) + s.weight);
+    const e = trackingStats.get(em) ?? { weight: 0, count: 0 };
+    e.weight += s.weight;
+    // The element count feeds confidence; without it every tracking token scored as unused.
+    e.count += s.count || 0;
+    trackingStats.set(em, e);
   }
-  const trackingTotal = [...trackingStats.values()].reduce((a, b) => a + b, 0) || 1;
+  const trackingTotal = [...trackingStats.values()].reduce((a, e) => a + e.weight, 0) || 1;
   let custom = 0;
   const letterSpacings = [...trackingStats.entries()]
-    .filter(([, w]) => w / trackingTotal >= MIN_SHARE)
-    .sort((a, b) => b[1] - a[1] || a[0] - b[0])
-    .map(([em, w]) => {
+    .filter(([, e]) => e.weight / trackingTotal >= MIN_SHARE)
+    .sort((a, b) => b[1].weight - a[1].weight || a[0] - b[0])
+    .map(([em, e]) => {
       const named = TRACKING_NAMES.find(([, v]) => Math.abs(v - em) <= 0.005);
-      return { id: ids.tracking(em), name: named ? `tracking-${named[0]}` : null, em, usageShare: round4(w / trackingTotal), count: 0, excluded: false };
+      return {
+        id: ids.tracking(em),
+        name: named ? `tracking-${named[0]}` : null,
+        em,
+        usageShare: round4(e.weight / trackingTotal),
+        count: e.count,
+        excluded: false,
+      };
     })
     .map((t) => (t.name ? t : { ...t, name: `tracking-custom-${(custom += 1)}` }))
     .sort((a, b) => a.em - b.em);
@@ -159,28 +204,55 @@ function buildTextStyles(styles, baseSize, familyIdByValue, totalText) {
   const named = [];
   const taken = new Set();
   const take = (style, name) => {
-    if (!style || taken.has(style) || named.some((n) => n.name === name) || named.length >= MAX_TEXT_STYLES) return;
+    if (
+      !style ||
+      taken.has(style) ||
+      named.some((n) => n.name === name) ||
+      named.length >= MAX_TEXT_STYLES
+    )
+      return;
     taken.add(style);
     named.push({ style, name });
   };
-  for (const tag of [...HEADINGS, 'button', 'label', 'code']) take(sorted.find((s) => s.tags.includes(tag)), tag);
+  for (const tag of [...HEADINGS, 'button', 'label', 'code'])
+    take(
+      sorted.find((s) => s.tags.includes(tag)),
+      tag,
+    );
   const nonHeading = sorted.filter((s) => !s.tags.some((t) => HEADINGS.includes(t)));
   const largest = [...nonHeading].sort((a, b) => b.sizePx - a.sizePx)[0];
   if (largest && largest.sizePx >= baseSize * 1.5) take(largest, 'display');
   take(
-    nonHeading.find((s) => s.textTransform === 'uppercase' && s.letterSpacingEm > 0 && s.sizePx <= baseSize),
+    nonHeading.find(
+      (s) => s.textTransform === 'uppercase' && s.letterSpacingEm > 0 && s.sizePx <= baseSize,
+    ),
     'overline',
   );
-  const body = nonHeading.find((s) => s.tags.includes('p') && !taken.has(s)) ?? nonHeading.find((s) => !taken.has(s));
+  const body =
+    nonHeading.find((s) => s.tags.includes('p') && !taken.has(s)) ??
+    nonHeading.find((s) => !taken.has(s));
   take(body, 'body');
   if (body) {
     const smaller = nonHeading.filter((s) => !taken.has(s) && s.sizePx < body.sizePx);
     const bodySm = smaller[0];
     take(bodySm, 'body-sm');
-    if (bodySm) take(smaller.find((s) => !taken.has(s) && s.sizePx < bodySm.sizePx), 'caption');
+    if (bodySm)
+      take(
+        smaller.find((s) => !taken.has(s) && s.sizePx < bodySm.sizePx),
+        'caption',
+      );
   }
   return named.map(({ style, name }) => ({
-    id: ids.textStyle([style.family, style.sizePx, style.lineHeightPx, style.fontWeight, style.letterSpacingEm, style.textTransform].join('|')),
+    id: ids.textStyle(
+      [
+        style.family,
+        style.sizePx,
+        style.lineHeightPx,
+        style.fontWeight,
+        style.letterSpacingEm,
+        style.textTransform,
+      ].join('|'),
+    ),
     name,
     familyId: familyIdByValue.get(style.family) ?? null,
     family: style.family,

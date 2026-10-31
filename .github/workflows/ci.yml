@@ -26,6 +26,8 @@ jobs:
         run: pnpm build
       - name: Size checks
         run: pnpm size
+      - name: Build the CLI
+        run: pnpm cli:build
       - name: Install Chromium for end-to-end tests
         run: pnpm exec playwright install --with-deps chromium
       - name: End-to-end tests
@@ -40,3 +42,55 @@ jobs:
             .output/*.zip
             test-results/
           if-no-files-found: ignore
+          # .output starts with a dot; upload-artifact skips hidden paths unless told otherwise.
+          include-hidden-files: true
+
+  # AC-F43.7: a Firefox package on every pull request, checked with web-ext lint.
+  firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Firefox build and web-ext lint
+        run: pnpm lint:firefox
+      - name: Firefox zip
+        run: pnpm zip:firefox
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firefox
+          path: .output/*-firefox.zip
+          if-no-files-found: error
+          include-hidden-files: true
+
+  # AC-F41.9: the CLI package installs and runs with npx on Node 20 on a clean runner.
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm cli:build
+      - name: Pack the CLI
+        working-directory: cli
+        run: npm pack
+      - name: Install and run it in an empty folder
+        run: |
+          mkdir -p /tmp/cli-smoke && cd /tmp/cli-smoke
+          npm init -y > /dev/null
+          npm install "$GITHUB_WORKSPACE"/cli/webstyle-extractor-*.tgz
+          npx playwright install --with-deps chromium
+          npx webstyle --version
+          node "$GITHUB_WORKSPACE"/tests/e2e/server.js &
+          sleep 1
+          npx webstyle extract http://127.0.0.1:4173/classic.html --out out --no-dark
+          test -f out/DESIGN.md
+          test -f out/snapshot.webstyle.json

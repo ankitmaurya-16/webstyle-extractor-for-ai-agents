@@ -69,7 +69,8 @@ function matcher(kind, v2) {
       return (t) => find(t.hex);
     }
     case 'families':
-      return (t) => v2.typography.families.find((f) => f.stack[0]?.toLowerCase() === t.stack[0]?.toLowerCase());
+      return (t) =>
+        v2.typography.families.find((f) => f.stack[0]?.toLowerCase() === t.stack[0]?.toLowerCase());
     case 'sizes':
       return (t) => v2.typography.sizes.find((s) => s.sizePx === t.sizePx);
     case 'spacing':
@@ -101,9 +102,11 @@ export function deriveEdits(extracted, edited, v2, mode) {
       const target = toV2(token);
       if (!now) {
         // Merged away: the target is the token that lists its hex (colors only).
-        const into = kind === 'colors' ? after.find((t) => t.mergedFrom?.includes(token.hex)) : null;
+        const into =
+          kind === 'colors' ? after.find((t) => t.mergedFrom?.includes(token.hex)) : null;
         const intoV2 = into ? toV2(into) : null;
-        if (target && intoV2 && target.id !== intoV2.id) edits.push({ kind: 'merge', sourceId: target.id, targetId: intoV2.id });
+        if (target && intoV2 && target.id !== intoV2.id)
+          edits.push({ kind: 'merge', sourceId: target.id, targetId: intoV2.id });
         else dropped += 1;
         continue;
       }
@@ -111,8 +114,10 @@ export function deriveEdits(extracted, edited, v2, mode) {
         if (now.name !== token.name || now.excluded !== token.excluded) dropped += 1;
         continue;
       }
-      if (now.name !== token.name) edits.push({ kind: 'rename', tokenId: target.id, name: now.name });
-      if (now.excluded !== token.excluded) edits.push({ kind: now.excluded ? 'exclude' : 'include', tokenId: target.id });
+      if (now.name !== token.name)
+        edits.push({ kind: 'rename', tokenId: target.id, name: now.name });
+      if (now.excluded !== token.excluded)
+        edits.push({ kind: now.excluded ? 'exclude' : 'include', tokenId: target.id });
     }
   }
   // Roles (colors only).

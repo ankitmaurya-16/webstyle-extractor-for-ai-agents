@@ -59,8 +59,18 @@ export function contrastResults(samplesByMode, colorTokens) {
       const e = map.get(key);
       if (e) e.count += s.count;
       else {
-        const ratio = contrastRatio(s.effectiveText, s.effectiveBg);
-        map.set(key, { textTokenId: text.id, backgroundTokenId: bg.id, mode, ratio, large, level: contrastLevel(ratio, large), count: s.count });
+        // The ratio belongs to the token pair, not to whichever sample came first: samples merged
+        // into one token differ slightly, and the agent will use the token values.
+        const ratio = contrastRatio(text.effectiveHex ?? text.hex, bg.effectiveHex ?? bg.hex);
+        map.set(key, {
+          textTokenId: text.id,
+          backgroundTokenId: bg.id,
+          mode,
+          ratio,
+          large,
+          level: contrastLevel(ratio, large),
+          count: s.count,
+        });
       }
     }
   }

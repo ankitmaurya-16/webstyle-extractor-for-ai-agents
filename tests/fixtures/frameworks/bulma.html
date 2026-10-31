@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bulma-like fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        color: #111827;
+        background: #ffffff;
+      }
+      :root {
+        --bulma-primary-h: 171deg;
+        --bulma-radius: 0.375em;
+        --bulma-text: #4a4a4a;
+      }
+      .button {
+        padding: 8px 16px;
+        border: 1px solid #dbdbdb;
+        border-radius: var(--bulma-radius);
+      }
+      .button.is-primary {
+        background: #00d1b2;
+        color: #ffffff;
+        border-color: transparent;
+      }
+      .columns {
+        display: flex;
+        gap: 12px;
+      }
+      .column {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="columns">
+      <div class="column"><p>Column copy.</p></div>
+      <div class="column"><p>Column copy.</p></div>
+    </div>
+    <button class="button is-primary">Action</button>
+  </body>
+</html>

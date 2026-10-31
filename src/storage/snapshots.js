@@ -22,36 +22,43 @@ function db() {
       }
       if (oldVersion < 2) {
         const store = tx.objectStore(STORE);
-        if (!store.indexNames.contains('byUpdatedAt')) store.createIndex('byUpdatedAt', 'updatedAt');
-        database.createObjectStore(SCREENSHOTS, { keyPath: ['snapshotId', 'id'] }).createIndex('bySnapshot', 'snapshotId');
+        if (!store.indexNames.contains('byUpdatedAt'))
+          store.createIndex('byUpdatedAt', 'updatedAt');
+        database
+          .createObjectStore(SCREENSHOTS, { keyPath: ['snapshotId', 'id'] })
+          .createIndex('bySnapshot', 'snapshotId');
         database.createObjectStore(PROJECTS, { keyPath: 'id' });
-        if (oldVersion === 1) migrateAll(store);
+        if (oldVersion === 1) migrateAll(store).catch(() => {});
       }
     },
   });
   return dbPromise;
 }
 
-/** Migrates every v1 record inside the upgrade transaction (v2 spec 6.4). */
-function migrateAll(store) {
+/**
+ * Migrates every v1 record inside the upgrade transaction (v2 spec 6.4). The store is idb's
+ * wrapper, so its cursor methods return promises rather than IDBRequests.
+ */
+async function migrateAll(store) {
   migration = { snapshots: 0, droppedEdits: 0 };
-  const request = store.openCursor();
-  request.onsuccess = () => {
-    const cursor = request.result;
-    if (!cursor) return;
+  let cursor = await store.openCursor();
+  while (cursor) {
     const value = cursor.value;
     if (value.schemaVersion === 1) {
+      let migrated = null;
       try {
-        const { record, droppedEdits } = migrateRecord(value);
-        cursor.update(record);
-        migration.snapshots += 1;
-        migration.droppedEdits += droppedEdits;
+        migrated = migrateRecord(value);
       } catch {
         // A record that cannot be analyzed is left as is rather than lost.
       }
+      if (migrated) {
+        await cursor.update(migrated.record);
+        migration.snapshots += 1;
+        migration.droppedEdits += migrated.droppedEdits;
+      }
     }
-    cursor.continue();
-  };
+    cursor = await cursor.continue();
+  }
 }
 
 /** The one-time migration result, returned once: { snapshots, droppedEdits } or null. */
@@ -80,7 +87,10 @@ export async function getSnapshot(id) {
 export async function listSnapshots() {
   const database = await db();
   const summaries = [];
-  let cursor = await database.transaction(STORE).store.index('byCapturedAt').openCursor(null, 'prev');
+  let cursor = await database
+    .transaction(STORE)
+    .store.index('byCapturedAt')
+    .openCursor(null, 'prev');
   while (cursor) {
     summaries.push(toSummary(cursor.value));
     cursor = await cursor.continue();
@@ -164,7 +174,16 @@ export function toSummary(record) {
  * @param {{id: string, kind?: string, captures: object[], extracted: object, edited: object,
  *   edits?: object[], staleEdits?: number, previous?: object}} input
  */
-export function makeRecord({ id, kind = 'page', captures, extracted, edited, edits = [], staleEdits = 0, previous }) {
+export function makeRecord({
+  id,
+  kind = 'page',
+  captures,
+  extracted,
+  edited,
+  edits = [],
+  staleEdits = 0,
+  previous,
+}) {
   const first = captures[0];
   const now = Date.now();
   return {

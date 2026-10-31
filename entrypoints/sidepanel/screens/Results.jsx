@@ -1,10 +1,22 @@
 import { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Crosshair, Download, FilePlus2, GitCompare, Link2, RotateCcw, Sparkles, Trash2, X } from 'lucide-react';
-import { useStore } from '../store.js';
-import { shortDate, t } from '../../../src/i18n.js';
+import {
+  Crosshair,
+  Download,
+  FilePlus2,
+  GitCompare,
+  Link2,
+  RotateCcw,
+  Sparkles,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { stageLabel, useStore } from '../store.js';
+import { classifyUrl } from '../../../src/platform/errors.js';
+import { hasMessage, shortDate, t } from '../../../src/i18n.js';
 import { modesOf } from '../../../src/model/design.js';
+import { sameSite } from '../../../src/model/site.js';
 import { Banner, Segmented } from '../components/Basics.jsx';
 import { Button } from '../components/Button.jsx';
 import { Header } from '../components/Header.jsx';
@@ -28,14 +40,15 @@ const TABS = [
   ['export', ExportTab],
 ];
 
-const PARTIAL_LABELS = { breakpoints: 'breakpoints', cssVariables: 'CSS variables', states: 'states', dark: 'dark', frames: 'frames' };
+// Selectors must return stable values, or React re-renders forever.
+const NONE = [];
 
 export function Results() {
   const record = useStore((s) => s.record);
   const resultsTab = useStore((s) => s.resultsTab);
   const mode = useStore((s) => s.mode);
   const tab = useStore((s) => s.tab);
-  const dismissed = useStore((s) => (s.record ? (s.dismissed[s.record.id] ?? []) : []));
+  const dismissed = useStore((s) => (s.record ? s.dismissed[s.record.id] : undefined)) ?? NONE;
   const debuggerGranted = useStore((s) => s.debuggerGranted);
   const firefox = useStore((s) => s.firefox);
   const history = useStore((s) => s.history);
@@ -45,13 +58,26 @@ export function Results() {
   if (!record) return null;
   const design = record.edited;
   const modes = modesOf(design);
-  const sameSiteOtherPage = tab?.hostname === record.hostname && tab?.url && !record.pages.includes(tab.url);
+  const sameSiteOtherPage =
+    tab?.hostname &&
+    sameSite(tab.hostname, record.hostname) &&
+    tab.url &&
+    !record.pages.includes(tab.url);
   const banners = [];
   if (record.migratedFromV1) banners.push(['migrated', 'info', t('banner_migrated')]);
   const warnings = record.captureWarnings ?? [];
-  if (warnings.length) banners.push(['partial', 'warning', t('banner_partial', warnings.join(', '))]);
-  if (record.staleEdits > 0) banners.push(['stale', 'warning', t('banner_stale', record.staleEdits), true]);
-  if (modes.length > 1 && (design.meta.themeMechanism === 'class' || design.meta.themeMechanism === 'attribute')) {
+  if (warnings.length)
+    banners.push([
+      'partial',
+      'warning',
+      t('banner_partial', warnings.map(partialLabel).join(', ')),
+    ]);
+  if (record.staleEdits > 0)
+    banners.push(['stale', 'warning', t('banner_stale', record.staleEdits), true]);
+  if (
+    modes.length > 1 &&
+    (design.meta.themeMechanism === 'class' || design.meta.themeMechanism === 'attribute')
+  ) {
     banners.push(['class-theme', 'info', t('banner_class_theme')]);
   }
 
@@ -62,15 +88,38 @@ export function Results() {
         title={`${design.meta.hostname} · ${shortDate(design.meta.capturedAt)}`}
         actions={record.pages.length > 1 && <PagesChip record={record} />}
         menu={[
-          { label: t('rerun'), onSelect: () => store.extract({ intent: 'rerun' }), icon: RotateCcw },
-          { label: t('add_this_page'), onSelect: () => store.extract({ intent: 'add-page' }), icon: FilePlus2, disabled: !tab?.url || record.pages.includes(tab.url) },
+          {
+            label: t('rerun'),
+            onSelect: () => store.extract({ intent: 'rerun' }),
+            icon: RotateCcw,
+          },
+          {
+            label: t('add_this_page'),
+            onSelect: () => store.extract({ intent: 'add-page' }),
+            icon: FilePlus2,
+            // Only a readable tab on a page the snapshot does not hold yet (AC-F25.1).
+            disabled: !tab?.url || Boolean(classifyUrl(tab.url)) || record.pages.includes(tab.url),
+          },
           { label: t('pick_element'), onSelect: store.startPick, icon: Crosshair },
           !firefox && debuggerGranted
-            ? { label: t('advanced_recapture'), onSelect: () => store.extract({ intent: 'rerun', advanced: true }), icon: Sparkles }
+            ? {
+                label: t('advanced_recapture'),
+                onSelect: () => store.extract({ intent: 'rerun', advanced: true }),
+                icon: Sparkles,
+              }
             : null,
-          { label: t('compare_with'), onSelect: () => setConfirm('compare'), icon: GitCompare, disabled: history.length < 2 },
+          {
+            label: t('compare_with'),
+            onSelect: () => setConfirm('compare'),
+            icon: GitCompare,
+            disabled: history.length < 2,
+          },
           { label: t('map_to_my_tokens'), onSelect: store.openMap, icon: Link2 },
-          { label: t('export_snapshot'), onSelect: () => store.exportSnapshotsToFile([record.id]), icon: Download },
+          {
+            label: t('export_snapshot'),
+            onSelect: () => store.exportSnapshotsToFile([record.id]),
+            icon: Download,
+          },
           { label: t('reset_to_extracted'), onSelect: () => setConfirm('reset') },
           { label: t('delete'), onSelect: () => setConfirm('delete'), danger: true, icon: Trash2 },
         ]}
@@ -166,7 +215,11 @@ export function Results() {
   );
 }
 
-export const partialLabel = (key) => PARTIAL_LABELS[key] ?? key;
+/** Failed Advanced stages by their progress-list names; unknown ids are shown as they are. */
+export const partialLabel = (stage) =>
+  stage.startsWith('width-') || hasMessage(`stage_${stage.replace('-', '_')}`)
+    ? stageLabel(stage)
+    : stage;
 
 /** "N pages" pill with the page list; the last page cannot be removed (F25). */
 function PagesChip({ record }) {
@@ -174,7 +227,10 @@ function PagesChip({ record }) {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button type="button" className="transition-quick h-6 shrink-0 rounded-full bg-surface-3 px-2 text-sm text-text hover:bg-surface-2">
+        <button
+          type="button"
+          className="transition-quick h-6 shrink-0 rounded-full bg-surface-3 px-2 text-sm text-text hover:bg-surface-2"
+        >
           {t('pages_count', record.pages.length)}
         </button>
       </Popover.Trigger>

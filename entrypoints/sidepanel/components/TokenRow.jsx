@@ -94,7 +94,17 @@ export function HighlightButton({ tokenId, name }) {
  * A token row: leading visual, role badges, name, detail, site variable, usage, confidence,
  * highlight and the token menu.
  */
-export function TokenRow({ token, category, siblings, detail, leading, roles, children, menuVisible, hex }) {
+export function TokenRow({
+  token,
+  category,
+  siblings,
+  detail,
+  leading,
+  roles,
+  children,
+  menuVisible,
+  hex,
+}) {
   const [renaming, setRenaming] = useState(false);
   const swatchHex = hex ?? (category === 'color' ? token.hex : null);
   return (
@@ -115,7 +125,10 @@ export function TokenRow({ token, category, siblings, detail, leading, roles, ch
               {token.name}
             </span>
             {token.siteVariable && token.siteVariable !== `--${token.name}` && (
-              <span className="truncate font-mono text-[11px] text-faint" title={token.siteVariable}>
+              <span
+                className="truncate font-mono text-[11px] text-faint"
+                title={token.siteVariable}
+              >
                 <span className="sr-only">{t('site_variable', '')}</span>
                 {token.siteVariable}
               </span>
@@ -130,9 +143,17 @@ export function TokenRow({ token, category, siblings, detail, leading, roles, ch
           <span className="ml-auto flex shrink-0 items-center gap-1">
             {token.excluded && <RoleBadge role={t('excluded')} />}
             <ConfidenceDot confidence={token.confidence} />
-            {typeof token.usageShare === 'number' && token.usageShare > 0 && <UsageBar share={token.usageShare} />}
+            {typeof token.usageShare === 'number' && token.usageShare > 0 && (
+              <UsageBar share={token.usageShare} />
+            )}
             {!token.excluded && <HighlightButton tokenId={token.id} name={token.name} />}
-            <TokenMenu token={token} category={category} siblings={siblings} onRename={() => setRenaming(true)} alwaysVisible={menuVisible} />
+            <TokenMenu
+              token={token}
+              category={category}
+              siblings={siblings}
+              onRename={() => setRenaming(true)}
+              alwaysVisible={menuVisible}
+            />
           </span>
         </>
       )}

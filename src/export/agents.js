@@ -9,7 +9,9 @@ export const MARK_END = '<!-- webstyle:end -->';
 
 export function exportAgentsMd(design, version, ctx = {}) {
   const d = prepare(design, ctx);
-  const rules = agentRules(d, ctx).map((r, i) => `${i + 1}. ${r.replace(/this file/g, 'DESIGN.md')}`);
+  const rules = agentRules(d, ctx).map(
+    (r, i) => `${i + 1}. ${r.replace(/this file/g, 'DESIGN.md')}`,
+  );
   return finish([
     MARK_START,
     '## Design system',
@@ -23,12 +25,22 @@ export function exportAgentsMd(design, version, ctx = {}) {
 }
 
 export function exportClaudeMd() {
-  return finish([MARK_START, '## Design system', '', '@DESIGN.md', '', 'Follow DESIGN.md for all UI work in this project.', MARK_END]);
+  return finish([
+    MARK_START,
+    '## Design system',
+    '',
+    '@DESIGN.md',
+    '',
+    'Follow DESIGN.md for all UI work in this project.',
+    MARK_END,
+  ]);
 }
 
 export function exportCursorRules(design, version, ctx = {}) {
   const d = prepare(design, ctx);
-  const rules = agentRules(d, ctx).map((r, i) => `${i + 1}. ${r.replace(/this file/g, 'DESIGN.md')}`);
+  const rules = agentRules(d, ctx).map(
+    (r, i) => `${i + 1}. ${r.replace(/this file/g, 'DESIGN.md')}`,
+  );
   return finish([
     '---',
     `description: Design system rules extracted from ${d.meta.hostname}`,

@@ -40,10 +40,9 @@ export function specificity(selector) {
   // Functional pseudo-classes with selector arguments.
   s = s.replace(/:(is|not|has|matches|where)\(((?:[^()]|\([^()]*\))*)\)/gi, (_, fn, inner) => {
     if (fn.toLowerCase() === 'where') return ' ';
-    const best = splitSelectorList(inner)
-      .map(specificity)
-      .sort(compareSpecificity)
-      .at(-1) ?? [0, 0, 0];
+    const best = splitSelectorList(inner).map(specificity).sort(compareSpecificity).at(-1) ?? [
+      0, 0, 0,
+    ];
     a += best[0];
     b += best[1];
     c += best[2];
@@ -54,7 +53,8 @@ export function specificity(selector) {
   b += (s.match(/\.[\w-]+/g) ?? []).length;
   b += (s.match(/\[[^\]]*\]/g) ?? []).length;
   // Pseudo-elements count as types; other pseudo-classes as classes.
-  const pseudoElements = (s.match(/::[\w-]+|:(before|after|first-line|first-letter)\b/gi) ?? []).length;
+  const pseudoElements = (s.match(/::[\w-]+|:(before|after|first-line|first-letter)\b/gi) ?? [])
+    .length;
   c += pseudoElements;
   b += (s.replace(/::[\w-]+/g, '').match(/:[\w-]+(\([^)]*\))?/g) ?? []).filter(
     (p) => !/^:(before|after|first-line|first-letter)$/i.test(p),

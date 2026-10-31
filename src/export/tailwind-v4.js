@@ -22,11 +22,17 @@ export function exportTailwindV4(design, version, ctx = {}) {
   const t = collectTokens(d);
   const groups = [];
   groups.push(t.colors.map((c) => `  ${varName('color', c.name)}: ${c.hex};`));
-  groups.push(t.families.map((f) => `  ${varName('font', f.name)}: ${formatFontStack(f.stack)};${f.webFont ? ` /* web font: ${f.webFont.provider} */` : ''}`));
+  groups.push(
+    t.families.map(
+      (f) =>
+        `  ${varName('font', f.name)}: ${formatFontStack(f.stack)};${f.webFont ? ` /* web font: ${f.webFont.provider} */` : ''}`,
+    ),
+  );
   groups.push(
     t.sizes.flatMap((s) => {
       const lines = [`  ${varName('text', s.name)}: ${pxString(s.sizePx)};`];
-      if (s.lineHeightPx !== null) lines.push(`  ${varName('text', s.name)}--line-height: ${pxString(s.lineHeightPx)};`);
+      if (s.lineHeightPx !== null)
+        lines.push(`  ${varName('text', s.name)}--line-height: ${pxString(s.lineHeightPx)};`);
       return lines;
     }),
   );
@@ -35,7 +41,9 @@ export function exportTailwindV4(design, version, ctx = {}) {
     // Tailwind derives every spacing utility from the base, so only the base is emitted.
     groups.push([`  --spacing: ${d.spacing.baseUnitPx}px;`]);
   } else if (t.spacing.length) {
-    groups.push([`  /* Spacing values (no base unit): ${t.spacing.map((s) => pxString(s.px)).join(', ')} */`]);
+    groups.push([
+      `  /* Spacing values (no base unit): ${t.spacing.map((s) => pxString(s.px)).join(', ')} */`,
+    ]);
   }
   groups.push(t.containers.map((c) => `  ${varName('container', c.name)}: ${pxString(c.px)};`));
   groups.push(t.radii.map((r) => `  ${varName('radius', r.name)}: ${pxString(r.px)};`));
@@ -53,25 +61,56 @@ export function exportTailwindV4(design, version, ctx = {}) {
 
   // Plain variables: semantic values, then categories with no theme namespace.
   const { root, other } = rootAndOtherMode(t);
-  const semanticLine = (role, c) => `  --${role}: ${c.alpha < 1 ? c.hex : `var(${varName('color', c.name)})`};`;
+  const semanticLine = (role, c) =>
+    `  --${role}: ${c.alpha < 1 ? c.hex : `var(${varName('color', c.name)})`};`;
   const rootLines = (t.semanticByMode[root] ?? []).map(([role, c]) => semanticLine(role, c));
-  rootLines.push(...t.zIndex.map((z) => `  ${varName('z', z.name)}: ${z.value};`));
-  rootLines.push(...t.opacities.map((o) => `  ${varName('opacity', o.name)}: ${o.value};`));
-  rootLines.push(...t.durations.map((x) => `  ${varName('duration', x.name)}: ${x.ms}ms;`));
-  rootLines.push(...t.borderWidths.map((b) => `  ${varName('border', b.name)}: ${pxString(b.px)};`));
-  rootLines.push(...t.gaps.filter((g) => !g.spaceId).map((g) => `  ${varName('gap', g.name)}: ${pxString(g.px)};`));
-  rootLines.push(...t.gradients.map((g) => `  ${varName('gradient', g.name)}: ${gradientCss(d, g, (c) => `var(${varName('color', c.name)})`)};`));
+  const gaps = t.gaps.filter((g) => !g.spaceId);
+  const plain = [
+    ['z', t.zIndex, (z) => z.value, (v) => `z-(${v})`],
+    ['opacity', t.opacities, (o) => o.value, (v) => `opacity-(${v})`],
+    ['duration', t.durations, (x) => `${x.ms}ms`, (v) => `duration-(${v})`],
+    ['border', t.borderWidths, (b) => pxString(b.px), (v) => `border-(length:${v})`],
+    ['gap', gaps, (g) => pxString(g.px), (v) => `gap-(${v})`],
+    [
+      'gradient',
+      t.gradients,
+      (g) => gradientCss(d, g, (c) => `var(${varName('color', c.name)})`),
+      (v) => `bg-(image:${v})`,
+    ],
+  ].filter(([, list]) => list.length);
+  if (plain.length) {
+    // v4 has no theme namespace for these, so the agent needs the arbitrary-value syntax.
+    const examples = plain.map(([category, list, , use]) => use(varName(category, list[0].name)));
+    rootLines.push(`  /* No theme namespace in v4; use as ${examples.join(', ')} */`);
+    for (const [category, list, value] of plain)
+      rootLines.push(...list.map((tk) => `  ${varName(category, tk.name)}: ${value(tk)};`));
+  }
   if (rootLines.length) out.push('', ':root {', ...rootLines, '}');
   if (other) {
     const dark = (t.semanticByMode[other] ?? []).map(([role, c]) => semanticLine(role, c));
     if (dark.length) {
-      if (block.mechanism === 'media') out.push('', '@media (prefers-color-scheme: dark) {', '  :root {', ...dark.map((l) => `  ${l}`), '  }', '}');
+      if (block.mechanism === 'media')
+        out.push(
+          '',
+          '@media (prefers-color-scheme: dark) {',
+          '  :root {',
+          ...dark.map((l) => `  ${l}`),
+          '  }',
+          '}',
+        );
       else out.push('', `${block.selector} {`, ...dark, '}');
     }
   }
-  const roles = [...new Set(Object.values(t.semanticByMode).flatMap((pairs) => pairs.map(([role]) => role)))];
+  const roles = [
+    ...new Set(Object.values(t.semanticByMode).flatMap((pairs) => pairs.map(([role]) => role))),
+  ];
   if (roles.length) {
-    out.push('', '@theme inline {', ...roles.map((role) => `  --color-${role}: var(--${role});`), '}');
+    out.push(
+      '',
+      '@theme inline {',
+      ...roles.map((role) => `  --color-${role}: var(--${role});`),
+      '}',
+    );
   }
   for (const s of t.textStyles) {
     out.push('', `@utility text-${s.name} {`);
@@ -81,7 +120,8 @@ export function exportTailwindV4(design, version, ctx = {}) {
     if (s.lineHeightPx !== null) out.push(`  line-height: ${pxString(s.lineHeightPx)};`);
     out.push(`  font-weight: ${s.fontWeight};`);
     if (s.letterSpacingEm) out.push(`  letter-spacing: ${emString(s.letterSpacingEm)};`);
-    if (s.textTransform && s.textTransform !== 'none') out.push(`  text-transform: ${s.textTransform};`);
+    if (s.textTransform && s.textTransform !== 'none')
+      out.push(`  text-transform: ${s.textTransform};`);
     out.push('}');
   }
   return finish(out);

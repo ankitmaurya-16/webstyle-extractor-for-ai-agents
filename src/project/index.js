@@ -30,12 +30,18 @@ export function mapFiles(files, fileMap) {
     const format = Object.keys(FILE_MAP).find((k) => FILE_MAP[k].includes(f.path));
     if (!format) {
       if (f.path.startsWith('design/screenshots/') && fileMap.screenshots) {
-        return { ...f, format: 'screenshots', path: `${fileMap.screenshots.replace(/\/?$/, '/')}${f.path.split('/').pop()}` };
+        return {
+          ...f,
+          format: 'screenshots',
+          path: `${fileMap.screenshots.replace(/\/?$/, '/')}${f.path.split('/').pop()}`,
+        };
       }
       return { ...f, format: null };
     }
     const index = FILE_MAP[format].indexOf(f.path);
-    const target = fileMap[format] ?? FILE_MAP[format][0];
+    // The v3 config never lands on the project's own tailwind.config.js (AC-F37.6).
+    const target =
+      format === 'tailwind-v3' ? FILE_MAP[format][0] : (fileMap[format] ?? FILE_MAP[format][0]);
     if (index === 0) return { ...f, format, path: target };
     const dir = target.includes('/') ? target.slice(0, target.lastIndexOf('/') + 1) : '';
     return { ...f, format, path: `${dir}${f.path.split('/').pop()}` };
@@ -51,10 +57,19 @@ export function planWrites(files, existing) {
     const current = existing[f.path];
     let next = f.text;
     if (MARKED.has(f.format) && current !== undefined) next = mergeMarkedBlock(current, f.text);
-    if (f.bytes) return { ...f, status: current === undefined ? 'new' : 'updated', next: f.bytes };
+    if (f.bytes) {
+      const status =
+        current === undefined ? 'new' : sameBytes(current, f.bytes) ? 'unchanged' : 'updated';
+      return { ...f, status, next: f.bytes };
+    }
     if (current === undefined) return { ...f, status: 'new', next };
     return { ...f, status: current === next ? 'unchanged' : 'updated', next };
   });
+}
+
+function sameBytes(a, b) {
+  if (!(a instanceof Uint8Array) || a.length !== b.length) return false;
+  return a.every((v, i) => v === b[i]);
 }
 
 async function dirFor(root, path, create) {
@@ -64,26 +79,33 @@ async function dirFor(root, path, create) {
   return { dir, name: parts.at(-1) };
 }
 
-async function readText(root, path) {
+async function readExisting(root, path, binary) {
   try {
     const { dir, name } = await dirFor(root, path, false);
     const handle = await dir.getFileHandle(name);
-    return await (await handle.getFile()).text();
+    const file = await handle.getFile();
+    return binary ? new Uint8Array(await file.arrayBuffer()) : await file.text();
   } catch {
     return undefined;
   }
 }
+
+/** FS_PERMISSION_DENIED when the browser refused access, FS_WRITE_FAILED otherwise (AC-F37.9). */
+const failureCode = (error) =>
+  error?.name === 'NotAllowedError' || error?.name === 'SecurityError'
+    ? 'FS_PERMISSION_DENIED'
+    : 'FS_WRITE_FAILED';
 
 /**
  * Writes files into a directory handle. Missing folders are created; unchanged files are not
  * rewritten; nothing is deleted.
  * @param {FileSystemDirectoryHandle} root
  * @param {Array<{path: string, format: string|null, text?: string, bytes?: Uint8Array}>} files
- * @returns {Promise<Array<{path: string, status: 'new'|'updated'|'unchanged'|'failed', error?: string}>>}
+ * @returns {Promise<Array<{path: string, status: 'new'|'updated'|'unchanged'|'failed', code?: string, error?: string}>>}
  */
 export async function writeToProject(root, files) {
   const existing = {};
-  for (const f of files) if (!f.bytes) existing[f.path] = await readText(root, f.path);
+  for (const f of files) existing[f.path] = await readExisting(root, f.path, Boolean(f.bytes));
   const plan = planWrites(files, existing);
   const results = [];
   for (const item of plan) {
@@ -99,7 +121,12 @@ export async function writeToProject(root, files) {
       await writable.close();
       results.push({ path: item.path, status: item.status });
     } catch (error) {
-      results.push({ path: item.path, status: 'failed', error: error instanceof Error ? error.message : String(error) });
+      results.push({
+        path: item.path,
+        status: 'failed',
+        code: failureCode(error),
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
   return results;

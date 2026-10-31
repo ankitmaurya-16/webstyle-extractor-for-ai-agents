@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chakra-like fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        color: #111827;
+        background: #ffffff;
+      }
+      :root {
+        --chakra-colors-teal-500: #319795;
+        --chakra-colors-gray-800: #1a202c;
+        --chakra-radii-md: 0.375rem;
+      }
+      .chakra-button {
+        padding: 8px 16px;
+        border: 0;
+        border-radius: var(--chakra-radii-md);
+        background: var(--chakra-colors-teal-500);
+        color: #ffffff;
+      }
+      .chakra-stack {
+        display: flex;
+        gap: 12px;
+      }
+      .chakra-text {
+        color: var(--chakra-colors-gray-800);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chakra-stack">
+      <p class="chakra-text">Stack copy.</p>
+      <button class="chakra-button">Action</button>
+    </div>
+  </body>
+</html>

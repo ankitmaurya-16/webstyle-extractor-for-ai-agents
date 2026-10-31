@@ -19,7 +19,8 @@ export function History() {
   const [exportDialog, setExportDialog] = useState(null); // ids
   const [includeShots, setIncludeShots] = useState(false);
   const fileInput = useRef(null);
-  const toggle = (id) => setSelected(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
+  const toggle = (id) =>
+    setSelected(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
   const stopSelecting = () => {
     setSelecting(false);
     setSelected([]);
@@ -32,15 +33,23 @@ export function History() {
         title={t('history')}
         actions={
           history.length > 0 && (
-            <Button variant="ghost" className="h-7" onClick={() => (selecting ? stopSelecting() : setSelecting(true))}>
+            <Button
+              variant="ghost"
+              className="h-7"
+              onClick={() => (selecting ? stopSelecting() : setSelecting(true))}
+            >
               {selecting ? t('done') : t('select')}
             </Button>
           )
         }
         menu={[
           { label: t('import'), onSelect: () => fileInput.current?.click() },
-          history.length > 0 ? { label: t('export_all'), onSelect: () => setExportDialog(history.map((h) => h.id)) } : null,
-          history.length > 0 ? { label: t('delete_all'), onSelect: () => setConfirm({ kind: 'all' }), danger: true } : null,
+          history.length > 0
+            ? { label: t('export_all'), onSelect: () => setExportDialog(history.map((h) => h.id)) }
+            : null,
+          history.length > 0
+            ? { label: t('delete_all'), onSelect: () => setConfirm({ kind: 'all' }), danger: true }
+            : null,
         ]}
       />
       <input
@@ -58,20 +67,39 @@ export function History() {
       />
       {selecting && (
         <div className="sticky top-11 z-10 flex flex-wrap gap-2 border-b border-border bg-bg px-4 py-2">
-          <Button variant="primary" className="h-7" disabled={selected.length !== 2} onClick={() => store.compare(selected[0], selected[1])}>
+          <Button
+            variant="primary"
+            className="h-7"
+            disabled={selected.length !== 2}
+            onClick={() => store.compare(selected[0], selected[1])}
+          >
             {t('compare')}
           </Button>
-          <Button variant="secondary" className="h-7" disabled={selected.length === 0} onClick={() => setExportDialog(selected)}>
+          <Button
+            variant="secondary"
+            className="h-7"
+            disabled={selected.length === 0}
+            onClick={() => setExportDialog(selected)}
+          >
             {t('export_selected')}
           </Button>
-          <Button variant="ghost" className="h-7 text-danger hover:text-danger" disabled={selected.length === 0} onClick={() => setConfirm({ kind: 'selected' })}>
+          <Button
+            variant="ghost"
+            className="h-7 text-danger hover:text-danger"
+            disabled={selected.length === 0}
+            onClick={() => setConfirm({ kind: 'selected' })}
+          >
             {t('delete_selected')}
           </Button>
         </div>
       )}
       <main className="p-4 pt-2">
         {loaded && history.length === 0 && (
-          <StateBlock icon={HistoryIcon} title={t('history_empty_title')} body={t('history_empty_body')}>
+          <StateBlock
+            icon={HistoryIcon}
+            title={t('history_empty_title')}
+            body={t('history_empty_body')}
+          >
             <Button
               variant="primary"
               onClick={() => {
@@ -89,7 +117,11 @@ export function History() {
         )}
         <ul className="flex flex-col">
           {history.map((r) => (
-            <li key={r.id} className="group flex min-h-8 items-center gap-1 rounded-control hover:bg-surface" data-snapshot={r.id}>
+            <li
+              key={r.id}
+              className="group flex min-h-8 items-center gap-1 rounded-control hover:bg-surface"
+              data-snapshot={r.id}
+            >
               {selecting && (
                 <input
                   type="checkbox"
@@ -108,7 +140,9 @@ export function History() {
                 <ColorStrip colors={r.topColors} />
                 <span className="min-w-0 flex-1 truncate">
                   {r.hostname}
-                  {r.pages > 1 && <span className="text-faint"> · {t('pages_count', r.pages)}</span>}
+                  {r.pages > 1 && (
+                    <span className="text-faint"> · {t('pages_count', r.pages)}</span>
+                  )}
                 </span>
                 {(r.modes ?? []).length > 1 && <RoleBadge role={`${t('light')} · ${t('dark')}`} />}
                 <span className="shrink-0 text-sm text-faint">{historyDate(r.capturedAt)}</span>
@@ -132,7 +166,10 @@ export function History() {
                       <Menu.Item className={MENU_ITEM} onSelect={() => setExportDialog([r.id])}>
                         {t('export_snapshot')}
                       </Menu.Item>
-                      <Menu.Item className={`${MENU_ITEM} text-danger`} onSelect={() => setConfirm({ kind: 'one', id: r.id })}>
+                      <Menu.Item
+                        className={`${MENU_ITEM} text-danger`}
+                        onSelect={() => setConfirm({ kind: 'one', id: r.id })}
+                      >
                         {t('delete')}
                       </Menu.Item>
                     </Menu.Content>
@@ -178,10 +215,17 @@ export function History() {
         onOpenChange={(open) => !open && setExportDialog(null)}
         title={t('export_title')}
         confirmLabel={t('export_button')}
-        onConfirm={() => store.exportSnapshotsToFile(exportDialog, { includeScreenshots: includeShots })}
+        onConfirm={() =>
+          store.exportSnapshotsToFile(exportDialog, { includeScreenshots: includeShots })
+        }
       >
         <label className="mt-3 flex items-center gap-2 text-text">
-          <input type="checkbox" checked={includeShots} onChange={(e) => setIncludeShots(e.target.checked)} className="size-3.5 accent-accent" />
+          <input
+            type="checkbox"
+            checked={includeShots}
+            onChange={(e) => setIncludeShots(e.target.checked)}
+            className="size-3.5 accent-accent"
+          />
           {t('include_screenshots_export')}
         </label>
       </ConfirmDialog>

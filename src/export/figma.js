@@ -13,7 +13,12 @@ const round3 = (n) => Math.round(n * 1000) / 1000;
 
 function color(hex) {
   const rgb = toRgb(parse(hex.slice(0, 7)));
-  const value = { colorSpace: 'srgb', components: [round3(rgb.r), round3(rgb.g), round3(rgb.b)], alpha: 1, hex: hex.slice(0, 7) };
+  const value = {
+    colorSpace: 'srgb',
+    components: [round3(rgb.r), round3(rgb.g), round3(rgb.b)],
+    alpha: 1,
+    hex: hex.slice(0, 7),
+  };
   if (hex.length === 9) value.alpha = round3(parseInt(hex.slice(7, 9), 16) / 255);
   return value;
 }
@@ -26,6 +31,12 @@ function colorPath(name) {
   return name.split('/').map((p, i) => (i > 0 ? `a${p}` : p));
 }
 
+const SEMANTIC_KEYS = {
+  text: ['text', 'default'],
+  'text-muted': ['text', 'muted'],
+  'focus-ring': ['focus', 'ring'],
+};
+
 function set(obj, path, value) {
   let node = obj;
   for (const key of path.slice(0, -1)) node = node[key] ??= {};
@@ -36,25 +47,50 @@ function set(obj, path, value) {
 export function exportFigmaFiles(design, version, ctx = {}) {
   const d = prepare(design, ctx);
   const t = collectTokens(d);
-  const primitives = { $description: `${generatedBy(d, version)}. Figma collection "Primitives", mode "Value".` };
-  for (const c of t.colors) set(primitives, ['color', ...colorPath(c.name)], { $type: 'color', $value: color(c.hex) });
-  for (const s of t.spacing) set(primitives, ['space', stripPrefix(s.name, 'space')], { $type: 'dimension', $value: px(s.px) });
-  for (const r of t.radii) set(primitives, ['radius', stripPrefix(r.name, 'radius')], { $type: 'dimension', $value: px(r.px) });
-  for (const b of t.borderWidths) set(primitives, ['border', stripPrefix(b.name, 'border')], { $type: 'dimension', $value: px(b.px) });
-  for (const s of t.sizes) set(primitives, ['text', s.name], { $type: 'dimension', $value: px(s.sizePx) });
-  for (const f of t.families) set(primitives, ['font', f.name], { $type: 'fontFamily', $value: f.stack[0] });
+  const primitives = {
+    $description: `${generatedBy(d, version)}. Figma collection "Primitives", mode "Value".`,
+  };
+  for (const c of t.colors)
+    set(primitives, ['color', ...colorPath(c.name)], { $type: 'color', $value: color(c.hex) });
+  for (const s of t.spacing)
+    set(primitives, ['space', stripPrefix(s.name, 'space')], {
+      $type: 'dimension',
+      $value: px(s.px),
+    });
+  for (const r of t.radii)
+    set(primitives, ['radius', stripPrefix(r.name, 'radius')], {
+      $type: 'dimension',
+      $value: px(r.px),
+    });
+  for (const b of t.borderWidths)
+    set(primitives, ['border', stripPrefix(b.name, 'border')], {
+      $type: 'dimension',
+      $value: px(b.px),
+    });
+  for (const s of t.sizes)
+    set(primitives, ['text', s.name], { $type: 'dimension', $value: px(s.sizePx) });
+  for (const f of t.families)
+    set(primitives, ['font', f.name], { $type: 'fontFamily', $value: f.stack[0] });
 
   const semantic = (mode) => {
     const pairs = t.semanticByMode[mode] ?? [];
     if (pairs.length === 0) return null;
-    const doc = { $description: `${generatedBy(d, version)}. Figma collection "Semantic", mode "${mode === 'dark' ? 'Dark' : 'Light'}".` };
+    const doc = {
+      $description: `${generatedBy(d, version)}. Figma collection "Semantic", mode "${mode === 'dark' ? 'Dark' : 'Light'}".`,
+    };
     for (const [role, c] of pairs) {
       const target = ['color', ...colorPath(c.name)].join('/');
-      const key = role === 'text-muted' ? ['text', 'muted'] : role === 'focus-ring' ? ['focus', 'ring'] : [role];
+      // `text` is a group because of text/muted; a DTCG token cannot also hold child tokens.
+      const key = SEMANTIC_KEYS[role] ?? [role];
       set(doc, key, {
         $type: 'color',
         $value: color(c.hex),
-        $extensions: { 'com.figma.aliasData': { targetVariableName: target, targetVariableSetName: 'Primitives' } },
+        $extensions: {
+          'com.figma.aliasData': {
+            targetVariableName: target,
+            targetVariableSetName: 'Primitives',
+          },
+        },
       });
     }
     return `${JSON.stringify(doc, null, 2)}\n`;

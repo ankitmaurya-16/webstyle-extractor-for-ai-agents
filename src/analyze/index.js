@@ -102,8 +102,12 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   }
   const modes = THEME_MODES.filter((m) => rawsByMode[m]);
   const primary = rawsByMode[primaryMode];
-  const componentModes = Object.fromEntries(modes.filter((m) => !overrideOnly[m]).map((m) => [m, rawsByMode[m]]));
-  const pages = [...new Set(themeCaps.filter((c) => c.method !== 'stylesheet-override').map((c) => c.pageUrl))];
+  const componentModes = Object.fromEntries(
+    modes.filter((m) => !overrideOnly[m]).map((m) => [m, rawsByMode[m]]),
+  );
+  const pages = [
+    ...new Set(themeCaps.filter((c) => c.method !== 'stylesheet-override').map((c) => c.pageUrl)),
+  ];
 
   // ---- normalize ----
   onStage('normalize');
@@ -113,7 +117,13 @@ export function analyze(captures, options = {}, onStage = () => {}) {
     const stats = [...raw.colors];
     // The focus ring color is a real page value even when no element shows it by default.
     if (focusRingSeed.colorHex && !overrideOnly[mode]) {
-      stats.push({ value: focusRingSeed.colorHex, count: 1, weight: 0, contexts: ['outline'], effectiveHex: focusRingSeed.colorHex.slice(0, 7) });
+      stats.push({
+        value: focusRingSeed.colorHex,
+        count: 1,
+        weight: 0,
+        contexts: ['outline'],
+        effectiveHex: focusRingSeed.colorHex.slice(0, 7),
+      });
     }
     return { mode, stats, viewportArea: (raw.viewport?.width ?? 0) * (raw.viewport?.height ?? 0) };
   });
@@ -126,7 +136,10 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   const allDefs = modes.flatMap((m) => rawsByMode[m].variableDefs ?? []);
   const usage = Object.assign({}, ...modes.map((m) => rawsByMode[m].variableUsage ?? {}));
   const candidates = variableCandidates(dedupeDefs(allDefs), usage, primary.rootFontSizePx);
-  const namingCandidates = [...candidates[primaryMode], ...candidates[primaryMode === 'light' ? 'dark' : 'light']];
+  const namingCandidates = [
+    ...candidates[primaryMode],
+    ...candidates[primaryMode === 'light' ? 'dark' : 'light'],
+  ];
 
   // ---- cluster ----
   onStage('cluster');
@@ -138,7 +151,10 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   const roleSource = {};
   for (const mode of modes) {
     const usageRoles = assignRoles(clusters, mode);
-    const named = rolesFromVariables(clusters.filter((c) => c.modes[mode]), candidates[mode]);
+    const named = rolesFromVariables(
+      clusters.filter((c) => c.modes[mode]),
+      candidates[mode],
+    );
     rolesByMode[mode] = { ...usageRoles };
     roleSource[mode] = {};
     for (const [role, hit] of Object.entries(named)) {
@@ -146,7 +162,9 @@ export function analyze(captures, options = {}, onStage = () => {}) {
       roleSource[mode][role] = hit.name;
     }
     if (focusRingSeed.colorHex && !roleSource[mode]['focus-ring'] && !overrideOnly[mode]) {
-      const ring = clusters.find((c) => c.hex === focusRingSeed.colorHex || c.mergedFrom.includes(focusRingSeed.colorHex));
+      const ring = clusters.find(
+        (c) => c.hex === focusRingSeed.colorHex || c.mergedFrom.includes(focusRingSeed.colorHex),
+      );
       if (ring) rolesByMode[mode]['focus-ring'] = ring;
     }
   }
@@ -157,7 +175,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   // ---- naming of colors (ids are value-based) ----
   const named = nameColors(kept);
   for (const c of named) {
-    if (c.translucent) c.baseTokenId = c.baseCluster && kept.includes(c.baseCluster) ? c.baseCluster.id : null;
+    if (c.translucent)
+      c.baseTokenId = c.baseCluster && kept.includes(c.baseCluster) ? c.baseCluster.id : null;
   }
   const colorTokens = named.map((c) => toColorToken(c));
   const findColor = colorLookup(colorTokens);
@@ -179,7 +198,9 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   const spacing = analyzeSpacing(primary);
   const radii = analyzeRadii(primary);
   const borders = analyzeBorderWidths(primary);
-  const shadows = analyzeShadows(Object.fromEntries(Object.entries(componentModes).map(([m, r]) => [m, r.shadows])));
+  const shadows = analyzeShadows(
+    Object.fromEntries(Object.entries(componentModes).map(([m, r]) => [m, r.shadows])),
+  );
   const breakpoints = analyzeBreakpoints(primary);
   const containers = analyzeContainers(primary);
   const gridColumns = analyzeGridColumns(primary);
@@ -212,7 +233,12 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   };
   const semanticIds = new Set(Object.values(semantic).flatMap((ref) => Object.values(ref)));
   applySiteNames(lists, namingCandidates, { useSiteVariableNames: useSite, semanticIds });
-  for (const list of [typo.letterSpacings, typo.textStyles, gridColumns, gaps.filter((g) => g.spaceId)]) {
+  for (const list of [
+    typo.letterSpacings,
+    typo.textStyles,
+    gridColumns,
+    gaps.filter((g) => g.spaceId),
+  ]) {
     for (const t of list) {
       t.generatedName = t.name;
       t.aliases = [];
@@ -224,7 +250,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   for (const t of colorTokens) {
     if (t.alpha < 1 && t.baseTokenId && !t.siteVariable) {
       const base = colorTokens.find((b) => b.id === t.baseTokenId);
-      if (base && base.name !== base.generatedName) t.name = `${base.name}/${t.name.split('/').pop()}`;
+      if (base && base.name !== base.generatedName)
+        t.name = `${base.name}/${t.name.split('/').pop()}`;
     }
   }
 
@@ -261,13 +288,17 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   const bg = colorTokens.find((t) => t.id === semantic.background?.[primaryMode]);
   const input = components.find((r) => r.kind === 'input');
   const inputStyles = input?.byMode[primaryMode]?.default ?? {};
-  const inputBorder = typeof inputStyles.border === 'string' ? inputStyles.border.split(' ')[2] : null;
+  const inputBorder =
+    typeof inputStyles.border === 'string' ? inputStyles.border.split(' ')[2] : null;
   const inputFill = inputStyles['background-color'];
   const nonText = nonTextChecks({
     focusRingHex: focusRing.colorHex,
     backgroundHex: bg?.effectiveHex ?? bg?.hex,
     inputBorderHex: inputBorder && normalizeColor(inputBorder)?.hex,
-    inputBackgroundHex: typeof inputFill === 'object' ? inputFill.raw : normalizeColor(inputFill ?? '')?.hex ?? bg?.hex,
+    inputBackgroundHex:
+      typeof inputFill === 'object'
+        ? inputFill.raw
+        : (normalizeColor(inputFill ?? '')?.hex ?? bg?.hex),
   });
 
   // ---- confidence ----
@@ -286,15 +317,46 @@ export function analyze(captures, options = {}, onStage = () => {}) {
       overrideOnly: t.modes.length > 0 && t.modes.every((m) => overrideOnly[m]),
     });
   }
-  for (const list of [gradients, typo.families, typo.sizes, typo.letterSpacings, typo.textStyles, spacing.tokens, containers, gridColumns, gaps, radii.tokens, borders.tokens, shadows.tokens, opacities, zIndex, motion.durations, motion.easings, breakpoints]) {
-    for (const t of list) t.confidence = tokenConfidence({ count: t.count ?? 1, siteVariable: t.siteVariable, truncated, unreadable: list === breakpoints && unreadable });
+  for (const list of [
+    gradients,
+    typo.families,
+    typo.sizes,
+    typo.letterSpacings,
+    typo.textStyles,
+    spacing.tokens,
+    containers,
+    gridColumns,
+    gaps,
+    radii.tokens,
+    borders.tokens,
+    shadows.tokens,
+    opacities,
+    zIndex,
+    motion.durations,
+    motion.easings,
+    breakpoints,
+  ]) {
+    for (const t of list)
+      t.confidence = tokenConfidence({
+        count: t.count ?? 1,
+        siteVariable: t.siteVariable,
+        truncated,
+        unreadable: list === breakpoints && unreadable,
+      });
   }
   const roleConfidenceMap = {};
   for (const mode of modes) {
     for (const [role, holder] of Object.entries(rolesByMode[mode])) {
+      const otherHolders = new Set(
+        Object.entries(rolesByMode[mode])
+          .filter(([r]) => r !== role)
+          .map(([, c]) => c),
+      );
       const w = (c) => roleWeight(c, mode, role);
+      // A color holding another role in this theme (the text color for text-muted, the
+      // background for primary) is not a rival for this one.
       const runnerUp = clusters
-        .filter((c) => c !== holder && c.modes[mode] && w(c) > 0)
+        .filter((c) => c !== holder && !otherHolders.has(c) && c.modes[mode] && w(c) > 0)
         .sort((a, b) => w(b) - w(a))[0];
       (roleConfidenceMap[role] ??= {})[mode] = roleConfidence({
         count: holder.modes[mode]?.count ?? 0,
@@ -307,7 +369,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
       });
     }
   }
-  for (const r of components) r.confidence = recipeConfidence({ count: r.count, stateSource: r.stateSource });
+  for (const r of components)
+    r.confidence = recipeConfidence({ count: r.count, stateSource: r.stateSource });
 
   // ---- audit ----
   onStage('audit');
@@ -324,7 +387,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
     colors: colorTokens,
     spacing,
     distinct: {
-      fontSizes: new Set((primary.textStyles ?? []).map((s) => Math.round(s.sizePx * 100) / 100)).size,
+      fontSizes: new Set((primary.textStyles ?? []).map((s) => Math.round(s.sizePx * 100) / 100))
+        .size,
       radii: radii.distinct,
       shadows: shadows.distinct,
       zIndices: new Set((primary.zIndices ?? []).map((z) => z.value)).size,
@@ -342,7 +406,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
   const sheets = primary.stylesheets ?? { readable: 0, unreadable: 0 };
   const partial = [];
   if (sheets.unreadable > 0 || sheets.readable === 0) partial.push('breakpoints', 'cssVariables');
-  if (sheets.unreadable > 0 && !components.some((r) => r.stateSource === 'forced')) partial.push('states');
+  if (sheets.unreadable > 0 && !components.some((r) => r.stateSource === 'forced'))
+    partial.push('states');
   if (modes.some((m) => overrideOnly[m])) partial.push('dark');
   if ((primary.coverage?.frames?.skipped ?? 0) > 0) partial.push('frames');
   // Advanced stages that failed (CAPTURE_PARTIAL), reported by the capture.
@@ -357,7 +422,9 @@ export function analyze(captures, options = {}, onStage = () => {}) {
       pages,
       modes,
       primaryMode,
-      viewports: [...new Set([primaryCap.viewportWidth, ...widthCaps.map((c) => c.viewportWidth)])].filter(Boolean),
+      viewports: [
+        ...new Set([primaryCap.viewportWidth, ...widthCaps.map((c) => c.viewportWidth)]),
+      ].filter(Boolean),
       themeMechanism: modes.length > 1 || mechanism !== 'none' ? mechanism : 'none',
       themeSelector: selector,
       framework,
@@ -395,7 +462,12 @@ export function analyze(captures, options = {}, onStage = () => {}) {
     shadows: shadows.tokens,
     opacities,
     zIndex,
-    motion: { durations: motion.durations, easings: motion.easings, properties: motion.properties, reducedMotion: motion.reducedMotion },
+    motion: {
+      durations: motion.durations,
+      easings: motion.easings,
+      properties: motion.properties,
+      reducedMotion: motion.reducedMotion,
+    },
     breakpoints,
     responsive: buildResponsive(
       widthCaps.map((c) => ({ width: c.viewportWidth, raw: c.raw })),
@@ -412,7 +484,8 @@ export function analyze(captures, options = {}, onStage = () => {}) {
 function roleWeight(c, mode, role) {
   const m = c.modes[mode];
   if (!m) return 0;
-  if (role === 'background' || role === 'surface' || role === 'overlay') return m.weights.background;
+  if (role === 'background' || role === 'surface' || role === 'overlay')
+    return m.weights.background;
   if (role === 'text' || role === 'text-muted') return m.weights.text;
   if (role === 'border') return m.weights.border;
   if (role === 'focus-ring') return m.weights.outline;

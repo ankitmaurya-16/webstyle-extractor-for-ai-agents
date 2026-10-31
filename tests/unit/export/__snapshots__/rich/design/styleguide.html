@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style guide: 127.0.0.1</title>
+<style>
+:root {
+  --color-white: #ffffff;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-600: #6b7280;
+  --ink: #111827;
+  --color-gray-extra-1: #0b0f19;
+  --color-red-100: #fee2e2;
+  --color-red-800: #991b1b;
+  --color-green-100: #dcfce7;
+  --color-green-800: #166534;
+  --color-blue-400: #60a5fa;
+  --brand: #2563eb;
+  --color-background: var(--color-white);
+  --color-text: var(--ink);
+  --color-text-muted: var(--color-gray-600);
+  --color-border: var(--color-gray-200);
+  --color-primary: var(--brand);
+  --color-success: var(--color-green-800);
+  --color-danger: var(--color-red-800);
+  --color-focus-ring: var(--brand);
+  --gradient-1: linear-gradient(135deg, var(--brand), var(--color-blue-400));
+  --font-sans: "Helvetica Neue", "Arial", sans-serif;
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "Menlo", monospace;
+  --text-xs: 12px;
+  --text-xs-line-height: 16px;
+  --text-sm: 14px;
+  --text-sm-line-height: 20px;
+  --text-base: 16px;
+  --text-base-line-height: 24px;
+  --text-lg: 20px;
+  --text-lg-line-height: 28px;
+  --text-xl: 24px;
+  --text-xl-line-height: 32px;
+  --text-2xl: 36px;
+  --text-2xl-line-height: 40px;
+  --text-h1-font-size: 36px;
+  --text-h1-line-height: 40px;
+  --text-h1-font-weight: 700;
+  --text-h2-font-size: 24px;
+  --text-h2-line-height: 32px;
+  --text-h2-font-weight: 600;
+  --text-h3-font-size: 20px;
+  --text-h3-line-height: 28px;
+  --text-h3-font-weight: 600;
+  --text-button-font-size: 14px;
+  --text-button-line-height: 20px;
+  --text-button-font-weight: 600;
+  --text-code-font-size: 14px;
+  --text-code-line-height: 24px;
+  --text-code-font-weight: 400;
+  --text-body-font-size: 16px;
+  --text-body-line-height: 24px;
+  --text-body-font-weight: 400;
+  --text-body-sm-font-size: 14px;
+  --text-body-sm-line-height: 20px;
+  --text-body-sm-font-weight: 400;
+  --text-caption-font-size: 12px;
+  --text-caption-line-height: 16px;
+  --text-caption-font-weight: 400;
+  --tracking-normal: 0em;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --gap: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --container-sm: 1024px;
+  --gap-20: 20px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  --border-1: 1px;
+  --shadow-sm: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+  --shadow-md: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+  --opacity-disabled: 0.5;
+  --z-dialog: 50;
+  --duration-150: 150ms;
+  --duration-300: 300ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --focus-ring-outline: 2px solid #2563eb;
+  --focus-ring-offset: 2px;
+  --breakpoint-sm: 640px; /* reference only: custom properties do not work inside @media */
+  --breakpoint-md: 768px; /* reference only: custom properties do not work inside @media */
+  --breakpoint-lg: 1024px; /* reference only: custom properties do not work inside @media */
+}
+
+.dark {
+  --color-background: var(--color-gray-extra-1);
+  --color-text: var(--color-white);
+  --color-primary: var(--color-blue-400);
+}
+:root[data-theme="dark"]{--color-background:#0b0f19;--color-text:#ffffff;--color-primary:#60a5fa;}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;color:#1f2937;background:#ffffff;line-height:1.5}
+header,main{max-width:1040px;margin:0 auto;padding:24px}h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:32px 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:4px}h3{font-size:15px;margin:20px 0 8px}
+code{font-family:ui-monospace,monospace;font-size:12px}small{color:#4b5563}table{border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:4px 12px 4px 0;vertical-align:middle}
+.grid{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.grid li{display:flex;flex-direction:column;gap:4px}
+.stack{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}.stack li{display:flex;align-items:center;gap:12px}
+.swatch{width:40px;height:40px;border:1px solid #d1d5db;border-radius:6px;padding:0;cursor:pointer;background:#fff;overflow:hidden}.swatch span{display:block;width:100%;height:100%}
+.checker{background-image:linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%),linear-gradient(45deg,#d1d5db 25%,transparent 25%,transparent 75%,#d1d5db 75%);background-size:12px 12px;background-position:0 0,6px 6px}
+.strip{display:block;width:240px;height:24px;border-radius:4px;border:1px solid #d1d5db}.bar{display:block;height:8px;background:#4b5563;border-radius:2px;max-width:320px}
+.tile{display:block;width:56px;height:56px;background:#e5e7eb;border:1px solid #9ca3af}.tile.white{background:#fff;border:0}.tile.filled{background:#374151}.light-tile{background:#f4f4f5;padding:16px;border-radius:8px}
+.states{display:flex;flex-wrap:wrap;gap:12px}.states figure{margin:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.preview{min-height:56px;min-width:120px;padding:12px;border:1px dashed #d1d5db;border-radius:6px;display:flex;align-items:center;background:var(--color-background,#fff)}
+.shot{max-width:320px;border:1px solid #d1d5db;border-radius:6px}#theme{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid #6b7280;background:#fff;color:#1f2937;cursor:pointer}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>Design system: 127.0.0.1</h1>
+<p>Extracted 2026-10-18 from <code>http://127.0.0.1:4173/classic.html</code> · WebStyle Extractor v2.0.0 · Helvetica Neue</p>
+<button type="button" id="theme" aria-pressed="false">Show dark theme</button>
+<p id="status" role="status" aria-live="polite"></p>
+</header>
+<main>
+<section aria-labelledby="colors"><h2 id="colors">Colors</h2><h3>Semantic</h3><table><thead><tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead><tbody><tr><th scope="row">background</th><td><button type="button" class="swatch" data-copy="#ffffff" aria-label="Copy white #ffffff"><span style="background:#ffffff"></span></button> <code>white</code> <code>#ffffff</code></td><td><button type="button" class="swatch" data-copy="#0b0f19" aria-label="Copy gray-extra-1 #0b0f19"><span style="background:#0b0f19"></span></button> <code>gray-extra-1</code> <code>#0b0f19</code></td></tr><tr><th scope="row">text</th><td><button type="button" class="swatch" data-copy="#111827" aria-label="Copy gray-900 #111827"><span style="background:#111827"></span></button> <code>gray-900</code> <code>#111827</code></td><td><button type="button" class="swatch" data-copy="#ffffff" aria-label="Copy white #ffffff"><span style="background:#ffffff"></span></button> <code>white</code> <code>#ffffff</code></td></tr><tr><th scope="row">text-muted</th><td><button type="button" class="swatch" data-copy="#6b7280" aria-label="Copy gray-600 #6b7280"><span style="background:#6b7280"></span></button> <code>gray-600</code> <code>#6b7280</code></td><td></td></tr><tr><th scope="row">border</th><td><button type="button" class="swatch" data-copy="#e5e7eb" aria-label="Copy gray-200 #e5e7eb"><span style="background:#e5e7eb"></span></button> <code>gray-200</code> <code>#e5e7eb</code></td><td></td></tr><tr><th scope="row">primary</th><td><button type="button" class="swatch" data-copy="#2563eb" aria-label="Copy blue-600 #2563eb"><span style="background:#2563eb"></span></button> <code>blue-600</code> <code>#2563eb</code></td><td><button type="button" class="swatch" data-copy="#60a5fa" aria-label="Copy blue-400 #60a5fa"><span style="background:#60a5fa"></span></button> <code>blue-400</code> <code>#60a5fa</code></td></tr><tr><th scope="row">success</th><td><button type="button" class="swatch" data-copy="#166534" aria-label="Copy green-800 #166534"><span style="background:#166534"></span></button> <code>green-800</code> <code>#166534</code></td><td></td></tr><tr><th scope="row">danger</th><td><button type="button" class="swatch" data-copy="#991b1b" aria-label="Copy red-800 #991b1b"><span style="background:#991b1b"></span></button> <code>red-800</code> <code>#991b1b</code></td><td></td></tr><tr><th scope="row">focus-ring</th><td><button type="button" class="swatch" data-copy="#2563eb" aria-label="Copy blue-600 #2563eb"><span style="background:#2563eb"></span></button> <code>blue-600</code> <code>#2563eb</code></td><td></td></tr></tbody></table><h3>Scales</h3><ul class="grid"><li><button type="button" class="swatch" data-copy="#ffffff" aria-label="Copy white #ffffff"><span style="background:#ffffff"></span></button><code>white</code><code>#ffffff</code></li><li><button type="button" class="swatch" data-copy="#e5e7eb" aria-label="Copy gray-200 #e5e7eb"><span style="background:#e5e7eb"></span></button><code>gray-200</code><code>#e5e7eb</code></li><li><button type="button" class="swatch" data-copy="#d1d5db" aria-label="Copy gray-300 #d1d5db"><span style="background:#d1d5db"></span></button><code>gray-300</code><code>#d1d5db</code></li><li><button type="button" class="swatch" data-copy="#6b7280" aria-label="Copy gray-600 #6b7280"><span style="background:#6b7280"></span></button><code>gray-600</code><code>#6b7280</code></li><li><button type="button" class="swatch" data-copy="#111827" aria-label="Copy gray-900 #111827"><span style="background:#111827"></span></button><code>gray-900</code><code>#111827</code></li><li><button type="button" class="swatch" data-copy="#0b0f19" aria-label="Copy gray-extra-1 #0b0f19"><span style="background:#0b0f19"></span></button><code>gray-extra-1</code><code>#0b0f19</code></li><li><button type="button" class="swatch" data-copy="#fee2e2" aria-label="Copy red-100 #fee2e2"><span style="background:#fee2e2"></span></button><code>red-100</code><code>#fee2e2</code></li><li><button type="button" class="swatch" data-copy="#991b1b" aria-label="Copy red-800 #991b1b"><span style="background:#991b1b"></span></button><code>red-800</code><code>#991b1b</code></li><li><button type="button" class="swatch" data-copy="#dcfce7" aria-label="Copy green-100 #dcfce7"><span style="background:#dcfce7"></span></button><code>green-100</code><code>#dcfce7</code></li><li><button type="button" class="swatch" data-copy="#166534" aria-label="Copy green-800 #166534"><span style="background:#166534"></span></button><code>green-800</code><code>#166534</code></li><li><button type="button" class="swatch" data-copy="#60a5fa" aria-label="Copy blue-400 #60a5fa"><span style="background:#60a5fa"></span></button><code>blue-400</code><code>#60a5fa</code></li><li><button type="button" class="swatch" data-copy="#2563eb" aria-label="Copy blue-600 #2563eb"><span style="background:#2563eb"></span></button><code>blue-600</code><code>#2563eb</code></li></ul><h3>Gradients</h3><ul class="stack"><li><span class="strip" style="background-image:linear-gradient(135deg, #2563eb, #60a5fa)"></span><code>gradient-1</code></li></ul></section>
+<section aria-labelledby="typography"><h2 id="typography">Typography</h2><h3>Families</h3><ul class="stack"><li><code>sans</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif">Helvetica Neue</span> <small>web font</small></li><li><code>display</code> <span style="font-family:"Georgia", "Times New Roman", serif">Georgia</span> <small>system font</small></li><li><code>mono</code> <span style="font-family:"JetBrains Mono", "Menlo", monospace">JetBrains Mono</span> <small>system font</small></li></ul><h3>Text styles</h3><ul class="stack"><li><code>h1</code> <span style="font-family:"Georgia", "Times New Roman", serif;font-size:36px;line-height:40px;font-weight:700">The quick brown fox</span> <small>36/40 700</small></li><li><code>h2</code> <span style="font-family:"Georgia", "Times New Roman", serif;font-size:24px;line-height:32px;font-weight:600">The quick brown fox</span> <small>24/32 600</small></li><li><code>h3</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif;font-size:20px;line-height:28px;font-weight:600">The quick brown fox</span> <small>20/28 600</small></li><li><code>button</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif;font-size:14px;line-height:20px;font-weight:600">The quick brown fox</span> <small>14/20 600</small></li><li><code>code</code> <span style="font-family:"JetBrains Mono", "Menlo", monospace;font-size:14px;line-height:24px;font-weight:400">The quick brown fox</span> <small>14/24 400</small></li><li><code>body</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif;font-size:16px;line-height:24px;font-weight:400">The quick brown fox</span> <small>16/24 400</small></li><li><code>body-sm</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif;font-size:14px;line-height:20px;font-weight:400">The quick brown fox</span> <small>14/20 400</small></li><li><code>caption</code> <span style="font-family:"Helvetica Neue", "Arial", sans-serif;font-size:12px;line-height:16px;font-weight:400">The quick brown fox</span> <small>12/16 400</small></li></ul><h3>Scale</h3><ul class="stack"><li><code>xs</code> <span style="font-size:12px;line-height:1.2">Aa</span> <small>12px</small></li><li><code>sm</code> <span style="font-size:14px;line-height:1.2">Aa</span> <small>14px</small></li><li><code>base</code> <span style="font-size:16px;line-height:1.2">Aa</span> <small>16px</small></li><li><code>lg</code> <span style="font-size:20px;line-height:1.2">Aa</span> <small>20px</small></li><li><code>xl</code> <span style="font-size:24px;line-height:1.2">Aa</span> <small>24px</small></li><li><code>2xl</code> <span style="font-size:36px;line-height:1.2">Aa</span> <small>36px</small></li></ul></section>
+<section aria-labelledby="spacing"><h2 id="spacing">Spacing</h2><p>Base unit 4px</p><ul class="stack"><li><code>space-1</code><span class="bar" style="width:8.333333333333332%"></span><small>4px</small></li><li><code>space-2</code><span class="bar" style="width:16.666666666666664%"></span><small>8px</small></li><li><code>space-3</code><span class="bar" style="width:25%"></span><small>12px</small></li><li><code>space-4</code><span class="bar" style="width:33.33333333333333%"></span><small>16px</small></li><li><code>space-6</code><span class="bar" style="width:50%"></span><small>24px</small></li><li><code>space-8</code><span class="bar" style="width:66.66666666666666%"></span><small>32px</small></li><li><code>space-12</code><span class="bar" style="width:100%"></span><small>48px</small></li></ul></section>
+<section aria-labelledby="layout"><h2 id="layout">Layout</h2><h3>Containers</h3><p><code>container-sm</code> 1024px</p><h3>Grid columns</h3><p>3</p><h3>Gaps</h3><p><code>gap-20</code> 20px</p></section>
+<section aria-labelledby="radius"><h2 id="radius">Radius</h2><ul class="grid"><li><span class="tile" style="border-radius:4px"></span><code>radius-sm</code></li><li><span class="tile" style="border-radius:6px"></span><code>radius-md</code></li><li><span class="tile" style="border-radius:8px"></span><code>radius-lg</code></li><li><span class="tile" style="border-radius:40px"></span><code>radius-full</code></li></ul></section>
+<section aria-labelledby="borders"><h2 id="borders">Borders</h2><ul class="grid"><li><span class="tile" style="border:1px solid #6b7280"></span><code>border-1</code></li></ul></section>
+<section aria-labelledby="shadows"><h2 id="shadows">Shadows</h2><ul class="grid light-tile"><li><span class="tile white" style="box-shadow:rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"></span><code>shadow-sm</code></li><li><span class="tile white" style="box-shadow:rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px"></span><code>shadow-md</code></li></ul></section>
+<section aria-labelledby="opacity"><h2 id="opacity">Opacity</h2><ul class="grid"><li><span class="tile filled" style="opacity:0.5"></span><code>opacity-disabled</code></li></ul></section>
+<section aria-labelledby="z-index"><h2 id="z-index">Z-index</h2><ol class="stack" reversed><li><code>z-dialog</code> 50</li></ol></section>
+<section aria-labelledby="motion"><h2 id="motion">Motion</h2><p><code>duration-150</code> · <code>duration-300</code></p><ul class="grid"><li><svg width="48" height="32" viewBox="0 0 48 32" aria-hidden="true"><path d="M2.0,30.0 C2.0,30.0 10.8,2.0 46.0,2.0" fill="none" stroke="#374151" stroke-width="2"/></svg><code>ease-out</code></li></ul></section>
+<section aria-labelledby="breakpoints"><h2 id="breakpoints">Breakpoints</h2><p><code>sm</code> 640px · <code>md</code> 768px · <code>lg</code> 1024px</p></section>
+<section aria-labelledby="components"><h2 id="components">Components</h2><h3>Focus ring</h3><p>outline 2px solid focus-ring (blue-600), offset 2px</p><h3>Button, primary</h3><div class="states"><figure><div class="preview" role="img" aria-label="Button, primary, default"><span style="display:inline-block;background-color:#2563eb;color:#ffffff;border:0;border-radius:6px;padding:8px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:14px;font-weight:600;line-height:20px">Button</span></div><figcaption>default</figcaption></figure><figure><div class="preview" role="img" aria-label="Button, primary, hover"><span style="display:inline-block;background-color:#111827;color:#ffffff;border:0;border-radius:6px;padding:8px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:14px;font-weight:600;line-height:20px">Button</span></div><figcaption>hover</figcaption></figure><figure><div class="preview" role="img" aria-label="Button, primary, focus-visible"><span style="display:inline-block;background-color:#2563eb;color:#ffffff;border:0;border-radius:6px;padding:8px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:14px;font-weight:600;line-height:20px;outline:2px solid #2563eb;outline-offset:2px">Button</span></div><figcaption>focus-visible</figcaption></figure></div><p><small>background primary (blue-600), text text (white), border none, radius radius-md, padding space-2 space-4 (8px 16px), font sans 14px/20px weight 600</small></p><h3>Button, secondary</h3><div class="states"><figure><div class="preview" role="img" aria-label="Button, secondary, default"><span style="display:inline-block;background-color:#ffffff;color:#111827;border:1px solid #d1d5db;border-radius:6px;padding:8px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:14px;font-weight:600;line-height:20px">Button</span></div><figcaption>default</figcaption></figure></div><p><small>background background (white), text text (gray-900), border 1px solid gray-300, radius radius-md, padding space-2 space-4 (8px 16px), font sans 14px/20px weight 600</small></p><h3>Input</h3><div class="states"><figure><div class="preview" role="img" aria-label="Input, default"><span style="display:inline-block;background-color:#ffffff;color:#111827;border:1px solid #d1d5db;border-radius:6px;padding:8px 12px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px">Placeholder</span></div><figcaption>default</figcaption></figure></div><p><small>background background (white), text text (gray-900), border 1px solid gray-300, radius radius-md, padding space-2 space-3 (8px 12px), height 38px, font sans 14px/20px weight 400</small></p><h3>Link</h3><div class="states"><figure><div class="preview" role="img" aria-label="Link, default"><span style="text-decoration:underline;color:#2563eb;font-family:"Helvetica Neue", Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px">Link text</span></div><figcaption>default</figcaption></figure></div><p><small>text primary (blue-600), font sans 16px/24px weight 400</small></p><h3>Card</h3><div class="states"><figure><div class="preview" role="img" aria-label="Card, default"><span style="display:inline-block;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:8px;padding:24px;box-shadow:rgba(0, 0, 0, 0.05) 0px 1px 2px 0px">Card title</span></div><figcaption>default</figcaption></figure></div><p><small>background background (white), border 1px solid border (gray-200), radius radius-lg, padding space-6 (24px), shadow shadow-sm</small></p><h3>Badge, info</h3><div class="states"><figure><div class="preview" role="img" aria-label="Badge, info, default"><span style="display:inline-block;background-color:#dbeafe;color:#1e40af;border:0;border-radius:9999px;padding:4px 12px;font-size:12px;font-weight:400">Badge</span></div><figcaption>default</figcaption></figure></div><p><small>background #dbeafe, text #1e40af, border none, radius radius-full, padding space-1 space-3 (4px 12px), font 12px weight 400</small></p><h3>Alert, success</h3><div class="states"><figure><div class="preview" role="img" aria-label="Alert, success, default"><span style="display:inline-block;background-color:#dcfce7;color:#166534;border:0;border-radius:6px;padding:12px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:16px">Alert message</span></div><figcaption>default</figcaption></figure></div><p><small>background green-100, text success (green-800), border none, radius radius-md, padding space-3 space-4 (12px 16px), font sans 16px</small></p><h3>Alert, danger</h3><div class="states"><figure><div class="preview" role="img" aria-label="Alert, danger, default"><span style="display:inline-block;background-color:#fee2e2;color:#991b1b;border:0;border-radius:6px;padding:12px 16px;font-family:"Helvetica Neue", Arial, sans-serif;font-size:16px">Alert message</span></div><figcaption>default</figcaption></figure></div><p><small>background red-100, text danger (red-800), border none, radius radius-md, padding space-3 space-4 (12px 16px), font sans 16px</small></p><h3>Nav bar</h3><div class="states"><figure><div class="preview" role="img" aria-label="Nav bar, default"><span style="display:inline-block;background-color:transparent;border:0;padding:0px">Home · About · Contact</span></div><figcaption>default</figcaption></figure></div><p><small>background transparent, border none, padding 0, height 24px, links: text #4b5563, font 14px weight 400</small></p><h3>Heading 1</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 1, default"><span style="display:inline-block;color:#111827;font-family:Georgia, "Times New Roman", serif;font-size:36px;font-weight:700;line-height:40px">Heading 1</span></div><figcaption>default</figcaption></figure></div><p><small>text text (gray-900), font display 36px/40px weight 700</small></p><h3>Heading 2</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 2, default"><span style="display:inline-block;color:#111827;font-family:Georgia, "Times New Roman", serif;font-size:24px;font-weight:600;line-height:32px">Heading 2</span></div><figcaption>default</figcaption></figure></div><p><small>text text (gray-900), font display 24px/32px weight 600</small></p><h3>Heading 3</h3><div class="states"><figure><div class="preview" role="img" aria-label="Heading 3, default"><span style="display:inline-block;color:#111827;font-family:"Helvetica Neue", Arial, sans-serif;font-size:20px;font-weight:600;line-height:28px">Heading 3</span></div><figcaption>default</figcaption></figure></div><p><small>text text (gray-900), font sans 20px/28px weight 600</small></p></section>
+<section aria-labelledby="accessibility"><h2 id="accessibility">Accessibility</h2><table><thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">Level</th></tr></thead><tbody><tr><td>gray-900 on white (light)</td><td>17.74:1</td><td>AAA</td></tr><tr><td>gray-600 on white (light)</td><td>4.83:1</td><td>AA</td></tr><tr><td>white on blue-600 (light)</td><td>5.17:1</td><td>AA</td></tr><tr><td>blue-600 on white (light)</td><td>5.17:1</td><td>AA</td></tr><tr><td>gray-900 on white (light)</td><td>17.74:1</td><td>AAA</td></tr><tr><td>green-800 on green-100 (light)</td><td>6.49:1</td><td>AA</td></tr><tr><td>red-800 on red-100 (light)</td><td>6.8:1</td><td>AA</td></tr></tbody></table></section>
+<section aria-labelledby="notes"><h2 id="notes">Notes</h2><ul><li>The other theme came from stylesheet overrides; component colors in it are not known (verify).</li></ul></section>
+</main>
+<script>
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var v=b.getAttribute('data-copy');if(navigator.clipboard){navigator.clipboard.writeText(v).catch(function(){});}var s=document.getElementById('status');s.textContent='Copied '+v;});
+var t=document.getElementById('theme');if(t){t.addEventListener('click',function(){var r=document.documentElement;var dark=r.getAttribute('data-theme')!=='dark';r.setAttribute('data-theme',dark?'dark':'light');t.setAttribute('aria-pressed',String(dark));t.textContent=dark?'Show light theme':'Show dark theme';});}
+</script>
+</body>
+</html>

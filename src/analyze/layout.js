@@ -117,7 +117,9 @@ export function analyzeRadii(raw) {
     map.set(key, (map.get(key) ?? 0) + weight);
   }
   const total = sum(map) + full || 1;
-  const kept = [...map.entries()].filter(([, w]) => w / total >= MIN_SHARE).sort((a, b) => a[0] - b[0]);
+  const kept = [...map.entries()]
+    .filter(([, w]) => w / total >= MIN_SHARE)
+    .sort((a, b) => a[0] - b[0]);
   const tokens = kept.map(([px, w], i) => ({
     id: ids.radius(px),
     name: `radius-${RADIUS_NAMES[i] ?? `${i - RADIUS_NAMES.length + 5}xl`}`,
@@ -127,7 +129,14 @@ export function analyzeRadii(raw) {
     excluded: false,
   }));
   if (full > 0 && full / total >= MIN_SHARE) {
-    tokens.push({ id: ids.radius(FULL_RADIUS_PX), name: 'radius-full', px: FULL_RADIUS_PX, usageShare: round4(full / total), count: full, excluded: false });
+    tokens.push({
+      id: ids.radius(FULL_RADIUS_PX),
+      name: 'radius-full',
+      px: FULL_RADIUS_PX,
+      usageShare: round4(full / total),
+      count: full,
+      excluded: false,
+    });
   }
   return { tokens, distinct: map.size + (full > 0 ? 1 : 0) };
 }
@@ -139,7 +148,14 @@ export function analyzeBorderWidths(raw) {
   const tokens = [...map.entries()]
     .filter(([, w]) => w / total >= MIN_SHARE)
     .sort((a, b) => a[0] - b[0])
-    .map(([px, w]) => ({ id: ids.border(px), name: `border-${String(px).replace('.', '-')}`, px, usageShare: round4(w / total), count: w, excluded: false }));
+    .map(([px, w]) => ({
+      id: ids.border(px),
+      name: `border-${String(px).replace('.', '-')}`,
+      px,
+      usageShare: round4(w / total),
+      count: w,
+      excluded: false,
+    }));
   const style = [...(raw.borderStyles ?? [])].sort((a, b) => b.count - a.count)[0]?.value ?? null;
   return { tokens, style };
 }
@@ -212,7 +228,14 @@ export function analyzeShadows(byMode) {
 export function analyzeBreakpoints(raw) {
   const values = (raw.breakpoints ?? []).filter((v) => v >= 320 && v <= 3840);
   const unique = [...new Set(values)].slice(0, BREAKPOINT_NAMES.length).sort((a, b) => a - b);
-  return unique.map((px, i) => ({ id: ids.breakpoint(px), name: BREAKPOINT_NAMES[i], px, usageShare: 0, count: 1, excluded: false }));
+  return unique.map((px, i) => ({
+    id: ids.breakpoint(px),
+    name: BREAKPOINT_NAMES[i],
+    px,
+    usageShare: 0,
+    count: 1,
+    excluded: false,
+  }));
 }
 
 /** Centered containers by area, up to 5, plus prose (AC-F16.1, AC-F16.2). */
@@ -224,7 +247,8 @@ export function analyzeContainers(raw) {
     if (!px) continue;
     const key = round2(px);
     map.set(key, (map.get(key) ?? 0) + s.weight);
-    if (s.contexts?.includes('prose') && (!prose || s.weight > prose.weight)) prose = { px: key, weight: s.weight };
+    if (s.contexts?.includes('prose') && (!prose || s.weight > prose.weight))
+      prose = { px: key, weight: s.weight };
   }
   const total = sum(map) || 1;
   const top = [...map.entries()]
@@ -241,7 +265,14 @@ export function analyzeContainers(raw) {
     excluded: false,
   }));
   if (prose) {
-    tokens.push({ id: ids.container(prose.px), name: 'prose', px: prose.px, usageShare: round4(prose.weight / total), count: 1, excluded: false });
+    tokens.push({
+      id: ids.container(prose.px),
+      name: 'prose',
+      px: prose.px,
+      usageShare: round4(prose.weight / total),
+      count: 1,
+      excluded: false,
+    });
   }
   return tokens;
 }
@@ -259,7 +290,14 @@ export function analyzeGridColumns(raw) {
     .filter(([, w]) => w / total >= 0.02)
     .sort((a, b) => b[1] - a[1] || b[0] - a[0])
     .slice(0, 6)
-    .map(([value, w]) => ({ id: ids.grid(value), name: `grid-${value}`, value, usageShare: round4(w / total), count: w, excluded: false }));
+    .map(([value, w]) => ({
+      id: ids.grid(value),
+      name: `grid-${value}`,
+      value,
+      usageShare: round4(w / total),
+      count: w,
+      excluded: false,
+    }));
 }
 
 /** Gaps; a gap equal to a spacing token references it (AC-F16.4). */
@@ -304,7 +342,14 @@ export function analyzeOpacities(raw) {
         name = 'opacity-disabled';
         disabledTaken = true;
       }
-      return { id: ids.opacity(value), name, value, usageShare: round4(e.count / total), count: e.count, excluded: false };
+      return {
+        id: ids.opacity(value),
+        name,
+        value,
+        usageShare: round4(e.count / total),
+        count: e.count,
+        excluded: false,
+      };
     })
     .filter((t) => t.usageShare >= 0.02 || t.name === 'opacity-disabled')
     .sort((a, b) => a.value - b.value);
@@ -320,7 +365,12 @@ export function analyzeZIndex(raw) {
     map.set(z.value, e);
   }
   const total = [...map.values()].reduce((a, e) => a + e.count, 0) || 1;
-  const kept = [...map.entries()].sort((a, b) => b[1].count - a[1].count || a[0] - b[0]).slice(0, MAX_Z);
+  // On equal use, values with a layer hint win the last places, so a dialog or toast layer is
+  // never dropped in favour of an anonymous z-index.
+  const hinted = (e) => (e.hints.size > 0 ? 1 : 0);
+  const kept = [...map.entries()]
+    .sort((a, b) => b[1].count - a[1].count || hinted(b[1]) - hinted(a[1]) || a[0] - b[0])
+    .slice(0, MAX_Z);
   const used = new Set();
   return kept
     .sort((a, b) => a[0] - b[0])
@@ -333,6 +383,14 @@ export function analyzeZIndex(raw) {
         layer = null;
       }
       used.add(name);
-      return { id: ids.z(value), name, value, layer, usageShare: round4(e.count / total), count: e.count, excluded: false };
+      return {
+        id: ids.z(value),
+        name,
+        value,
+        layer,
+        usageShare: round4(e.count / total),
+        count: e.count,
+        excluded: false,
+      };
     });
 }

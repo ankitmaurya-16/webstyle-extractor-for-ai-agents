@@ -29,7 +29,12 @@ import {
   sessionRemove,
 } from '../../src/platform/chrome.js';
 import { errorMessage } from '../../src/platform/errors.js';
-import { base64ToBlob, blobToBytes, blobToDataUrl, cropScreenshots } from '../../src/platform/screenshots.js';
+import {
+  base64ToBlob,
+  blobToBytes,
+  blobToDataUrl,
+  cropScreenshots,
+} from '../../src/platform/screenshots.js';
 import {
   deleteAllSnapshots,
   deleteProject,
@@ -45,15 +50,28 @@ import {
   takeMigrationNotice,
 } from '../../src/storage/snapshots.js';
 import { getSettings, normalizeSettings, setSettings } from '../../src/storage/settings.js';
-import { downloadName, exportFile, exportFiles, exportZip, zipName } from '../../src/export/index.js';
+import {
+  downloadName,
+  exportFile,
+  exportFiles,
+  exportZip,
+  zipName,
+} from '../../src/export/index.js';
 import { buildOverrideRaw } from '../../src/analyze/themes.js';
 import { planStages } from '../../src/advanced/plan.js';
 import { primaryModeOf } from '../../src/model/design.js';
 import { highlightMatch } from '../../src/model/highlight.js';
+import { sameSite } from '../../src/model/site.js';
 import { exportSnapshots, exportFileName, importSnapshots } from '../../src/io/index.js';
 import { exportDiffMd } from '../../src/diff/diff-md.js';
 import { exportMappingMd } from '../../src/mapping/mapping-md.js';
-import { defaultFileMap, ensurePermission, fileSystemSupported, mapFiles, writeToProject } from '../../src/project/index.js';
+import {
+  defaultFileMap,
+  ensurePermission,
+  fileSystemSupported,
+  mapFiles,
+  writeToProject,
+} from '../../src/project/index.js';
 import { t } from '../../src/i18n.js';
 
 export const AUTOSAVE_MS = 500;
@@ -76,6 +94,7 @@ const runtime = {
   worker: null,
   timer: null,
   saveTimer: null,
+  starting: false,
   unsubscribers: [],
   objectUrls: [],
 };
@@ -122,6 +141,7 @@ const initialState = {
   version: '0.0.0',
   firefox: false,
   fsSupported: false,
+  sortLowFirst: false, // "Low confidence first" on the token lists (AC-F28.5)
 };
 
 export const useStore = create((set, get) => ({
@@ -135,7 +155,13 @@ export const useStore = create((set, get) => ({
       // Outside the extension, for example in component tests.
     }
     set({ version, firefox: isFirefox(), fsSupported: !isFirefox() && fileSystemSupported() });
-    await Promise.all([get().refreshTab(), get().loadRecent(), get().loadSettings(), get().refreshPermissions(), get().loadProjects()]);
+    await Promise.all([
+      get().refreshTab(),
+      get().loadRecent(),
+      get().loadSettings(),
+      get().refreshPermissions(),
+      get().loadProjects(),
+    ]);
     try {
       runtime.unsubscribers.push(
         onSessionChange(PENDING_EXTRACT_KEY, (value) => value && get().consumePending(value)),
@@ -146,7 +172,8 @@ export const useStore = create((set, get) => ({
       // No chrome.* in component tests.
     }
     const notice = await takeMigrationNotice().catch(() => null);
-    if (notice) get().toast('MIGRATED', t('migration_notice', notice.migrated, notice.droppedEdits));
+    if (notice)
+      get().toast('MIGRATED', t('migration_notice', notice.snapshots, notice.droppedEdits));
     const pending = await sessionGet(PENDING_EXTRACT_KEY).catch(() => undefined);
     if (pending) await get().consumePending(pending);
   },
@@ -178,7 +205,9 @@ export const useStore = create((set, get) => ({
   },
 
   async updateSettings(patch) {
-    const settings = await setSettings(patch).catch(() => normalizeSettings({ ...get().settings, ...patch }));
+    const settings = await setSettings(patch).catch(() =>
+      normalizeSettings({ ...get().settings, ...patch }),
+    );
     set({ settings });
     return settings;
   },
@@ -216,10 +245,12 @@ export const useStore = create((set, get) => ({
       set({ capture: { ...get().capture, advanced: true } });
       return Promise.resolve(true);
     }
-    return get().grantDebugger().then((granted) => {
-      set({ capture: { ...get().capture, advanced: granted } });
-      return granted;
-    });
+    return get()
+      .grantDebugger()
+      .then((granted) => {
+        set({ capture: { ...get().capture, advanced: granted } });
+        return granted;
+      });
   },
 
   grantDebugger() {
@@ -296,22 +327,32 @@ export const useStore = create((set, get) => ({
    * @param {{intent?: string, tabId?: number, rootSelector?: string, advanced?: boolean, confirmed?: boolean}} [options]
    */
   async extract({ intent = 'new', tabId, rootSelector = null, advanced, confirmed = false } = {}) {
-    if (get().run) return;
+    // The tab lookup below awaits before `run` is set, so a synchronous flag keeps a double
+    // click or a shortcut during the lookup from starting a second run (AC-F1.3).
+    if (get().run || runtime.starting) return;
     const { capture, settings, debuggerGranted, record } = get();
-    const useAdvanced = (advanced ?? capture.advanced) && debuggerGranted && !get().firefox && intent !== 'component';
+    const useAdvanced =
+      (advanced ?? capture.advanced) && debuggerGranted && !get().firefox && intent !== 'component';
     const options = {
       autoScroll: intent === 'component' ? false : capture.autoScroll,
       advanced: useAdvanced ? settings.advancedDefaults : null,
       screenshots: capture.screenshots,
     };
 
-    let target = tabId !== undefined ? await getTabSafe(tabId) : await getActiveTab().catch(() => undefined);
-    if (tabId !== undefined && !target) target = { id: tabId };
+    let target;
+    runtime.starting = true;
+    try {
+      target =
+        tabId !== undefined ? await getTabSafe(tabId) : await getActiveTab().catch(() => undefined);
+      if (tabId !== undefined && !target) target = { id: tabId };
+      if (target?.id && tabId !== undefined) await get().refreshTab();
+    } finally {
+      runtime.starting = false;
+    }
     if (!target?.id) {
       fail(set, get, 'NO_ACCESS', 'No active tab', undefined, { intent });
       return;
     }
-    if (tabId !== undefined) await get().refreshTab();
 
     if (intent === 'add-page' && record) {
       if (record.pages.length >= MAX_PAGES) {
@@ -319,7 +360,7 @@ export const useStore = create((set, get) => ({
         return;
       }
       const host = describeTab(target).hostname;
-      if (!confirmed && host && host !== record.hostname) {
+      if (!confirmed && host && !sameSite(host, record.hostname)) {
         set({ dialog: { kind: 'cross-site', host, snapshotHost: record.hostname } });
         return;
       }
@@ -335,7 +376,15 @@ export const useStore = create((set, get) => ({
     ];
     const snapshotId = (intent === 'rerun' || intent === 'add-page') && record ? record.id : null;
     set({
-      run: { requestId, intent, stage: stages[0], stages, snapshotId, tabId: target.id, rootSelector },
+      run: {
+        requestId,
+        intent,
+        stage: stages[0],
+        stages,
+        snapshotId,
+        tabId: target.id,
+        rootSelector,
+      },
       returnScreen: get().screen === 'results' ? 'results' : 'home',
       screen: 'extracting',
       failure: null,
@@ -345,10 +394,15 @@ export const useStore = create((set, get) => ({
     const current = () => get().run?.requestId === requestId;
 
     try {
-      const reply = await sendExtract(get, set, { ...extractRequest(target.id, { ...options, requestId, intent, snapshotId, rootSelector }) });
+      const reply = await sendExtract(get, set, {
+        ...extractRequest(target.id, { ...options, requestId, intent, snapshotId, rootSelector }),
+      });
       if (!current()) return;
       if (!reply || reply.type !== MSG.CAPTURES) {
-        fail(set, get, reply?.code ?? 'INJECTION_FAILED', reply?.detail, target.url, { intent, rootSelector });
+        fail(set, get, reply?.code ?? 'INJECTION_FAILED', reply?.detail, target.url, {
+          intent,
+          rootSelector,
+        });
         return;
       }
 
@@ -379,28 +433,50 @@ export const useStore = create((set, get) => ({
       const edits = previous?.edits ?? [];
 
       setStage(set, get, 'analyzing');
-      const { extracted, edited, staleEdits } = await analyzeInWorker(requestId, allCaptures, edits, {
-        useSiteVariableNames: settings.useSiteVariableNames,
-        advanced: Boolean(options.advanced),
-        deepScan: Boolean(options.advanced?.deepScan),
-        partial: reply.warnings ?? [],
-      });
+      const { extracted, edited, staleEdits } = await analyzeInWorker(
+        requestId,
+        allCaptures,
+        edits,
+        {
+          useSiteVariableNames: settings.useSiteVariableNames,
+          advanced: Boolean(options.advanced),
+          deepScan: Boolean(options.advanced?.deepScan),
+          partial: reply.warnings ?? [],
+        },
+      );
       if (!current()) return;
 
       setStage(set, get, 'saving');
       const id = snapshotId ?? crypto.randomUUID();
-      const kind = intent === 'component' ? 'component' : previous?.kind === 'site' || intent === 'add-page' ? 'site' : 'page';
-      const next = makeRecord({ id, kind, captures: allCaptures, extracted, edited, edits, staleEdits, previous });
+      const kind =
+        intent === 'component'
+          ? 'component'
+          : previous?.kind === 'site' || intent === 'add-page'
+            ? 'site'
+            : 'page';
+      const next = makeRecord({
+        id,
+        kind,
+        captures: allCaptures,
+        extracted,
+        edited,
+        edits,
+        staleEdits,
+        previous,
+      });
       if (kind === 'component') next.rootSelector = rootSelector;
       if ((reply.warnings ?? []).length) next.captureWarnings = reply.warnings;
-      if (options.screenshots && (reply.screenshots ?? []).length === 0) next.screenshotFailed = true;
+      if (options.screenshots && (reply.screenshots ?? []).length === 0)
+        next.screenshotFailed = true;
 
       if ((reply.screenshots ?? []).length) {
         try {
           const shots = await cropScreenshots(reply.screenshots, edited.components, id);
           if (shots.length) {
             await saveScreenshots(shots);
-            next.screenshotIds = [...new Set([...(next.screenshotIds ?? []), ...shots.map((s) => s.id)])];
+            next.screenshotIds = [
+              ...new Set([...(next.screenshotIds ?? []), ...shots.map((s) => s.id)]),
+            ];
           }
         } catch {
           next.screenshotFailed = true;
@@ -412,7 +488,13 @@ export const useStore = create((set, get) => ({
         get().toast('STORAGE_FAILED');
       }
       if (!current()) return;
-      set({ record: next, screen: 'results', resultsTab: 'colors', run: null, mode: primaryModeOf(next.edited) });
+      set({
+        record: next,
+        screen: 'results',
+        resultsTab: 'colors',
+        run: null,
+        mode: primaryModeOf(next.edited),
+      });
       await get().loadScreenshots();
       announce(set, next.hostname);
       await get().loadRecent();
@@ -445,7 +527,11 @@ export const useStore = create((set, get) => ({
     const run = get().run;
     if (run) postPort(get, set, { type: MSG.CANCEL, requestId: run.requestId });
     stopWorker();
-    set({ run: null, screen: get().record && run?.intent !== 'new' && run?.intent !== 'component' ? 'results' : 'home' });
+    set({
+      run: null,
+      screen:
+        get().record && run?.intent !== 'new' && run?.intent !== 'component' ? 'results' : 'home',
+    });
   },
 
   retry() {
@@ -471,7 +557,8 @@ export const useStore = create((set, get) => ({
   goBack() {
     const screen = get().screen;
     if (screen === 'map') return set({ screen: 'results' });
-    if (screen === 'diff') return set({ screen: get().diff?.from === 'results' ? 'results' : 'history', diff: null });
+    if (screen === 'diff')
+      return set({ screen: get().diff?.from === 'results' ? 'results' : 'history', diff: null });
     if (screen === 'picking') return get().cancelPick();
     return get().goHome();
   },
@@ -482,6 +569,10 @@ export const useStore = create((set, get) => ({
 
   setMode(mode) {
     set({ mode });
+  },
+
+  setSortLowFirst(sortLowFirst) {
+    set({ sortLowFirst: Boolean(sortLowFirst) });
   },
 
   dismissBanner(id) {
@@ -566,12 +657,36 @@ export const useStore = create((set, get) => ({
     if (!record || record.pages.length <= 1 || get().run) return;
     const captures = record.captures.filter((c) => c.pageUrl !== pageUrl);
     const requestId = crypto.randomUUID();
-    set({ run: { requestId, intent: 'remove-page', stage: 'analyzing', stages: ['analyzing', 'saving'], snapshotId: record.id }, screen: 'extracting', returnScreen: 'results' });
+    set({
+      run: {
+        requestId,
+        intent: 'remove-page',
+        stage: 'analyzing',
+        stages: ['analyzing', 'saving'],
+        snapshotId: record.id,
+      },
+      screen: 'extracting',
+      returnScreen: 'results',
+    });
     try {
-      const { extracted, edited, staleEdits } = await analyzeInWorker(requestId, captures, record.edits, {
-        useSiteVariableNames: get().settings.useSiteVariableNames,
+      const { extracted, edited, staleEdits } = await analyzeInWorker(
+        requestId,
+        captures,
+        record.edits,
+        {
+          useSiteVariableNames: get().settings.useSiteVariableNames,
+        },
+      );
+      const next = makeRecord({
+        id: record.id,
+        kind: record.kind,
+        captures,
+        extracted,
+        edited,
+        edits: record.edits,
+        staleEdits,
+        previous: record,
       });
-      const next = makeRecord({ id: record.id, kind: record.kind, captures, extracted, edited, edits: record.edits, staleEdits, previous: record });
       await saveSnapshot(next).catch(() => get().toast('STORAGE_FAILED'));
       set({ record: next, run: null, screen: 'results' });
       await get().loadRecent();
@@ -586,10 +701,13 @@ export const useStore = create((set, get) => ({
   edit(edit) {
     const record = get().record;
     if (!record) return { ok: false, error: 'NOT_FOUND' };
-    const withMode = edit.kind === 'setRole' || edit.kind === 'clearRole' ? { mode: get().mode, ...edit } : edit;
+    const withMode =
+      edit.kind === 'setRole' || edit.kind === 'clearRole' ? { mode: get().mode, ...edit } : edit;
     const result = applyEdit(record.edited, withMode);
     if (!result.ok) return result;
-    set({ record: { ...record, edited: result.design, edits: [...(record.edits ?? []), withMode] } });
+    set({
+      record: { ...record, edited: result.design, edits: [...(record.edits ?? []), withMode] },
+    });
     scheduleSave(get);
     return result;
   },
@@ -597,7 +715,9 @@ export const useStore = create((set, get) => ({
   resetToExtracted() {
     const record = get().record;
     if (!record) return;
-    set({ record: { ...record, edited: structuredClone(record.extracted), edits: [], staleEdits: 0 } });
+    set({
+      record: { ...record, edited: structuredClone(record.extracted), edits: [], staleEdits: 0 },
+    });
     scheduleSave(get);
   },
 
@@ -627,13 +747,21 @@ export const useStore = create((set, get) => ({
 
   async toggleExportSelection(format) {
     const current = get().settings.exportSelection;
-    const exportSelection = current.includes(format) ? current.filter((f) => f !== format) : [...current, format];
+    const exportSelection = current.includes(format)
+      ? current.filter((f) => f !== format)
+      : [...current, format];
     await get().updateSettings({ exportSelection });
   },
 
   exportContext() {
     const { record, settings } = get();
-    return { mapping: record?.mapping ?? null, shadcnFormat: settings.shadcnFormat, screenshots: get().screenshots.map((s) => ({ recipeId: s.recipeId, mode: s.mode })) };
+    return {
+      mapping: record?.mapping ?? null,
+      // A component snapshot exports only what the component uses (AC-F26.8).
+      kind: record?.kind ?? 'page',
+      shadcnFormat: settings.shadcnFormat,
+      screenshots: get().screenshots.map((s) => ({ recipeId: s.recipeId, mode: s.mode })),
+    };
   },
 
   exportText(format = get().exportFormat) {
@@ -658,7 +786,10 @@ export const useStore = create((set, get) => ({
     const record = get().record;
     if (!record) return;
     const format = get().exportFormat;
-    saveBlob(new Blob([get().exportText(format)], { type: 'text/plain' }), downloadName(record.edited, format));
+    saveBlob(
+      new Blob([get().exportText(format)], { type: 'text/plain' }),
+      downloadName(record.edited, format),
+    );
   },
 
   async selectedFiles() {
@@ -670,7 +801,12 @@ export const useStore = create((set, get) => ({
       ctx.screenshotData = await screenshotPayload(record.id, 'dataUrl');
     }
     const formats = settings.exportSelection.filter((f) => f !== 'screenshots');
-    return { files: exportFiles(record.edited, version, { formats, ctx, includeScreenshots }), formats, ctx, includeScreenshots };
+    return {
+      files: exportFiles(record.edited, version, { formats, ctx, includeScreenshots }),
+      formats,
+      ctx,
+      includeScreenshots,
+    };
   },
 
   async downloadAll() {
@@ -678,7 +814,9 @@ export const useStore = create((set, get) => ({
     if (!record) return;
     const { formats, ctx, includeScreenshots } = await get().selectedFiles();
     saveBlob(
-      new Blob([exportZip(record.edited, get().version, { formats, ctx, includeScreenshots })], { type: 'application/zip' }),
+      new Blob([exportZip(record.edited, get().version, { formats, ctx, includeScreenshots })], {
+        type: 'application/zip',
+      }),
       zipName(record.edited),
     );
   },
@@ -695,7 +833,13 @@ export const useStore = create((set, get) => ({
     }
     return picking
       .then(async (handle) => {
-        const project = { id: crypto.randomUUID(), name: handle.name, handle, fileMap: defaultFileMap(), lastWrittenAt: null };
+        const project = {
+          id: crypto.randomUUID(),
+          name: handle.name,
+          handle,
+          fileMap: defaultFileMap(),
+          lastWrittenAt: null,
+        };
         await saveProject(project);
         await get().loadProjects();
         return project;
@@ -734,7 +878,13 @@ export const useStore = create((set, get) => ({
         await saveProject({ ...project, lastWrittenAt: Date.now() });
         await get().loadProjects();
         const failed = results.filter((r) => r.status === 'failed');
-        set({ dialog: { kind: failed.length ? 'write-failed' : 'write-summary', project: project.name, results } });
+        set({
+          dialog: {
+            kind: failed.length ? 'write-failed' : 'write-summary',
+            project: project.name,
+            results,
+          },
+        });
       })
       .catch(() => get().toast('FS_PERMISSION_DENIED'));
   },
@@ -754,11 +904,20 @@ export const useStore = create((set, get) => ({
       for (const r of records) {
         const rows = await getScreenshots(r.id).catch(() => []);
         for (const row of rows) {
-          screenshots.push({ snapshotId: r.id, id: row.id, recipeId: row.recipeId, mode: row.mode, base64: await blobToDataUrl(row.blob) });
+          screenshots.push({
+            snapshotId: r.id,
+            id: row.id,
+            recipeId: row.recipeId,
+            mode: row.mode,
+            base64: await blobToDataUrl(row.blob),
+          });
         }
       }
     }
-    saveBlob(new Blob([exportSnapshots(records, { screenshots })], { type: 'application/json' }), exportFileName(records));
+    saveBlob(
+      new Blob([exportSnapshots(records, { screenshots })], { type: 'application/json' }),
+      exportFileName(records),
+    );
   },
 
   async importFile(file) {
@@ -766,7 +925,13 @@ export const useStore = create((set, get) => ({
     try {
       text = await file.text();
     } catch {
-      set({ dialog: { kind: 'import-error', code: 'IMPORT_INVALID', problem: 'the file could not be read' } });
+      set({
+        dialog: {
+          kind: 'import-error',
+          code: 'IMPORT_INVALID',
+          problem: 'the file could not be read',
+        },
+      });
       return;
     }
     try {
@@ -775,13 +940,26 @@ export const useStore = create((set, get) => ({
       for (const record of snapshots) await saveSnapshot(record);
       if (screenshots.length) {
         await saveScreenshots(
-          screenshots.map((s) => ({ snapshotId: s.snapshotId, id: s.id, recipeId: s.recipeId, mode: s.mode, state: 'default', blob: base64ToBlob(s.base64) })),
+          screenshots.map((s) => ({
+            snapshotId: s.snapshotId,
+            id: s.id,
+            recipeId: s.recipeId,
+            mode: s.mode,
+            state: 'default',
+            blob: base64ToBlob(s.base64),
+          })),
         );
       }
       await get().loadRecent();
       get().toast('IMPORTED', t('toast_imported', snapshots.length));
     } catch (error) {
-      set({ dialog: { kind: 'import-error', code: error?.code ?? 'IMPORT_INVALID', problem: error?.message ?? '' } });
+      set({
+        dialog: {
+          kind: 'import-error',
+          code: error?.code ?? 'IMPORT_INVALID',
+          problem: error?.message ?? '',
+        },
+      });
     }
   },
 
@@ -790,8 +968,17 @@ export const useStore = create((set, get) => ({
   startPick() {
     const tab = get().tab;
     if (!tab?.id || get().run) return;
-    set({ returnScreen: get().screen === 'results' ? 'results' : 'home', screen: 'picking', picking: { tag: null, width: 0, height: 0 } });
-    requestPort(get, set, { type: MSG.PICK_START, tabId: tab.id }, (reply) => reply.type === MSG.PICK_READY || reply.type === MSG.EXTRACT_ERROR).then((reply) => {
+    set({
+      returnScreen: get().screen === 'results' ? 'results' : 'home',
+      screen: 'picking',
+      picking: { tag: null, width: 0, height: 0 },
+    });
+    requestPort(
+      get,
+      set,
+      { type: MSG.PICK_START, tabId: tab.id },
+      (reply) => reply.type === MSG.PICK_READY || reply.type === MSG.EXTRACT_ERROR,
+    ).then((reply) => {
       if (reply?.type === MSG.EXTRACT_ERROR) {
         set({ screen: get().returnScreen, picking: null });
         get().toast('PICK_FAILED');
@@ -812,8 +999,10 @@ export const useStore = create((set, get) => ({
 
   onPickerMessage(message) {
     if (!message || typeof message !== 'object' || get().screen !== 'picking') return;
-    if (message.type === MSG.PICK_HOVER) set({ picking: { tag: message.tag, width: message.width, height: message.height } });
-    else if (message.type === MSG.PICK_CANCELLED) set({ screen: get().returnScreen ?? 'home', picking: null });
+    if (message.type === MSG.PICK_HOVER)
+      set({ picking: { tag: message.tag, width: message.width, height: message.height } });
+    else if (message.type === MSG.PICK_CANCELLED)
+      set({ screen: get().returnScreen ?? 'home', picking: null });
     else if (message.type === MSG.PICK_RESULT && typeof message.selector === 'string') {
       set({ picking: null });
       get().extract({ intent: 'component', rootSelector: message.selector, tabId: get().tab?.id });
@@ -828,7 +1017,12 @@ export const useStore = create((set, get) => ({
     if (highlight?.tokenId === tokenId) return clearHighlightNow(get, set);
     const match = highlightMatch(record.edited, tokenId);
     if (!match) return;
-    const reply = await requestPort(get, set, { type: MSG.HIGHLIGHT_SHOW, tabId: tab.id, tokenId, match }, (r) => r.type === MSG.HIGHLIGHT_COUNT && r.tokenId === tokenId);
+    const reply = await requestPort(
+      get,
+      set,
+      { type: MSG.HIGHLIGHT_SHOW, tabId: tab.id, tokenId, match },
+      (r) => r.type === MSG.HIGHLIGHT_COUNT && r.tokenId === tokenId,
+    );
     if (!reply) return;
     if (reply.error && reply.error !== 'INJECTION_FAILED') {
       get().toast('HIGHLIGHT_NO_ACCESS');
@@ -852,15 +1046,59 @@ export const useStore = create((set, get) => ({
     const [a, b] = await Promise.all([getSnapshot(idA), getSnapshot(idB)]);
     if (!a || !b) return;
     const [first, second] = a.capturedAt <= b.capturedAt ? [a, b] : [b, a];
-    const result = await workerRequest({ type: MSG.DIFF, a: first.edited, b: second.edited }, MSG.DIFF_RESULT).catch(() => null);
+    const result = await workerRequest(
+      { type: MSG.DIFF, a: first.edited, b: second.edited },
+      MSG.DIFF_RESULT,
+    ).catch(() => null);
     if (!result) return;
-    set({ diff: { a: toHeader(first), b: toHeader(second), result: result.diff, from }, screen: 'diff' });
+    set({
+      diff: { a: toHeader(first), b: toHeader(second), result: result.diff, from },
+      screen: 'diff',
+    });
   },
 
   exportDiff() {
     const diff = get().diff;
     if (!diff) return;
-    saveBlob(new Blob([exportDiffMd(diff.result)], { type: 'text/markdown' }), `${diff.a.hostname}-diff.md`);
+    saveBlob(
+      new Blob([exportDiffMd(diff.result)], { type: 'text/markdown' }),
+      `${diff.a.hostname}-diff.md`,
+    );
+  },
+
+  /**
+   * "Add to snapshot…" (AC-F26.9): copies a component snapshot's picked recipe into another
+   * snapshot as variant `picked`, replacing an earlier pick of the same kind.
+   */
+  async addPickedToSnapshot(targetId) {
+    const source = get().record;
+    const recipe =
+      source?.kind === 'component' ? source.edited.components.find((r) => !r.excluded) : null;
+    if (!recipe) return;
+    const target = await getSnapshot(targetId).catch(() => undefined);
+    if (!target) return;
+    const picked = {
+      ...structuredClone(recipe),
+      id: `component:${recipe.kind}:picked`,
+      variant: 'picked',
+      screenshotIds: [],
+    };
+    const place = (design) => ({
+      ...design,
+      components: [...design.components.filter((r) => r.id !== picked.id), picked],
+    });
+    try {
+      await saveSnapshot({
+        ...target,
+        extracted: place(target.extracted),
+        edited: place(target.edited),
+        updatedAt: Date.now(),
+      });
+      get().toast('ADDED', t('toast_added_to_snapshot', target.hostname));
+      await get().loadRecent();
+    } catch {
+      get().toast('STORAGE_FAILED');
+    }
   },
 
   openMap() {
@@ -877,7 +1115,10 @@ export const useStore = create((set, get) => ({
       text = '';
     }
     try {
-      const reply = await workerRequest({ type: MSG.MAP, design: record.edited, fileText: text, fileName: file.name }, MSG.MAP_RESULT);
+      const reply = await workerRequest(
+        { type: MSG.MAP, design: record.edited, fileText: text, fileName: file.name },
+        MSG.MAP_RESULT,
+      );
       const next = { ...get().record, mapping: reply.mapping };
       set({ record: next });
       scheduleSave(get);
@@ -896,7 +1137,10 @@ export const useStore = create((set, get) => ({
   exportMapping() {
     const record = get().record;
     if (!record?.mapping) return;
-    saveBlob(new Blob([exportMappingMd(record.edited, record.mapping)], { type: 'text/markdown' }), `${record.hostname}-mapping.md`);
+    saveBlob(
+      new Blob([exportMappingMd(record.edited, record.mapping)], { type: 'text/markdown' }),
+      `${record.hostname}-mapping.md`,
+    );
   },
 
   // ---------------------------------------------------------------- settings and misc
@@ -921,8 +1165,14 @@ export const useStore = create((set, get) => ({
   toast(kind, text) {
     const id = crypto.randomUUID();
     const message = text ?? t(TOAST_KEYS[kind] ?? 'toast_storage_failed');
-    const quiet = kind === 'COPIED' || kind === 'IMPORTED' || kind === 'MIGRATED';
-    set({ toasts: [...get().toasts, { id, kind, text: message, success: quiet, duration: kind === 'COPIED' ? 1500 : 4000 }] });
+    const quiet =
+      kind === 'COPIED' || kind === 'IMPORTED' || kind === 'MIGRATED' || kind === 'ADDED';
+    set({
+      toasts: [
+        ...get().toasts,
+        { id, kind, text: message, success: quiet, duration: kind === 'COPIED' ? 1500 : 4000 },
+      ],
+    });
   },
 
   dismissToast(id) {
@@ -953,7 +1203,11 @@ export function stageLabel(stage) {
 function advancedStages(options, tab) {
   // The base capture is not known yet, so the theme stage is shown when it may run; the service
   // worker skips it on sites that switch themes with a class or attribute.
-  const stages = planStages(options, { viewport: { width: tab.width ?? 0 }, colorScheme: 'light', themeSignals: { darkMedia: true } });
+  const stages = planStages(options, {
+    viewport: { width: tab.width ?? 0 },
+    colorScheme: 'light',
+    themeSignals: { darkMedia: true },
+  });
   return stages;
 }
 
@@ -1053,7 +1307,14 @@ function requestPort(get, set, message, match) {
 }
 
 function sendExtract(get, set, message) {
-  return requestPort(get, set, message, (reply) => reply.requestId === message.requestId && (reply.type === MSG.CAPTURES || reply.type === MSG.EXTRACT_ERROR));
+  return requestPort(
+    get,
+    set,
+    message,
+    (reply) =>
+      reply.requestId === message.requestId &&
+      (reply.type === MSG.CAPTURES || reply.type === MSG.EXTRACT_ERROR),
+  );
 }
 
 function clearHighlightNow(get, set) {
@@ -1120,8 +1381,10 @@ async function screenshotPayload(snapshotId, as) {
   const rows = await getScreenshots(snapshotId).catch(() => []);
   const out = [];
   for (const row of rows) {
-    if (as === 'bytes') out.push({ recipeId: row.recipeId, mode: row.mode, bytes: await blobToBytes(row.blob) });
-    else out.push({ recipeId: row.recipeId, mode: row.mode, dataUrl: await blobToDataUrl(row.blob) });
+    if (as === 'bytes')
+      out.push({ recipeId: row.recipeId, mode: row.mode, bytes: await blobToBytes(row.blob) });
+    else
+      out.push({ recipeId: row.recipeId, mode: row.mode, dataUrl: await blobToDataUrl(row.blob) });
   }
   return out;
 }
@@ -1150,7 +1413,8 @@ export function flushPendingSave() {
 
 function persist(get) {
   const record = get().record;
-  if (record) saveSnapshot({ ...record, updatedAt: Date.now() }).catch(() => get().toast('STORAGE_FAILED'));
+  if (record)
+    saveSnapshot({ ...record, updatedAt: Date.now() }).catch(() => get().toast('STORAGE_FAILED'));
 }
 
 function saveBlob(blob, filename) {
@@ -1171,6 +1435,7 @@ export function resetStore() {
   runtime.saveTimer = null;
   for (const off of runtime.unsubscribers.splice(0)) off();
   runtime.port = null;
+  runtime.starting = false;
   runtime.pending.clear();
   useStore.setState({ ...initialState });
 }

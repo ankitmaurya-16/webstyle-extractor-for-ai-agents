@@ -39,7 +39,12 @@ export function TypeTab({ design }) {
       >
         <span
           className="min-w-0 flex-1 truncate text-text"
-          style={{ fontFamily: stackOf(s.familyId), fontSize: Math.min(s.sizePx, 28), fontWeight: s.fontWeight, lineHeight: 1.2 }}
+          style={{
+            fontFamily: stackOf(s.familyId),
+            fontSize: Math.min(s.sizePx, 28),
+            fontWeight: s.fontWeight,
+            lineHeight: 1.2,
+          }}
           aria-hidden
         >
           {isHeading ? t('heading_sample') : t('body_sample')}
@@ -80,9 +85,18 @@ export function TypeTab({ design }) {
       </span>
     </TokenRow>
   );
-  const trackingRow = (x) => <TokenRow key={x.id} token={x} category="tracking" siblings={letterSpacings} detail={`${x.em}em`} />;
+  const trackingRow = (x) => (
+    <TokenRow
+      key={x.id}
+      token={x}
+      category="tracking"
+      siblings={letterSpacings}
+      detail={`${x.em}em`}
+    />
+  );
 
-  if (families.length === 0 && sizes.length === 0) return <p className="mt-6 text-muted">{t('nothing_found')}</p>;
+  if (families.length === 0 && sizes.length === 0)
+    return <p className="mt-6 text-muted">{t('nothing_found')}</p>;
 
   return (
     <>

@@ -16,9 +16,11 @@ export function applyMapping(design, mapping) {
     let name = userTokenName(entry.userToken);
     const key = `${found.category}|${name}`;
     if (used.has(key)) continue;
-    if (found.list.some((t) => t !== found.token && t.name === name)) name = `${name}-${found.token.name}`;
+    if (found.list.some((t) => t !== found.token && t.name === name))
+      name = `${name}-${found.token.name}`;
     used.set(key, true);
-    if (!found.token.aliases?.includes(found.token.name)) found.token.aliases = [...(found.token.aliases ?? []), found.token.name];
+    if (!found.token.aliases?.includes(found.token.name))
+      found.token.aliases = [...(found.token.aliases ?? []), found.token.name];
     found.token.name = name;
   }
   return refreshRefs(next);

@@ -41,7 +41,12 @@ export function Settings() {
         <div className="flex flex-col gap-1">
           {!firefox && (
             <>
-              <PermissionRow label={t('advanced_capture')} granted={debuggerGranted} onGrant={store.grantDebugger} onRevoke={store.revokeDebugger} />
+              <PermissionRow
+                label={t('advanced_capture')}
+                granted={debuggerGranted}
+                onGrant={store.grantDebugger}
+                onRevoke={store.revokeDebugger}
+              />
               <p className="text-sm text-faint">{t('advanced_help')}</p>
               {debuggerGranted && (
                 <div className="ml-2 border-l border-border pl-3">
@@ -50,7 +55,12 @@ export function Settings() {
               )}
             </>
           )}
-          <SwitchRow id="set-scroll" label={t('scroll_default')} checked={settings.autoScroll} onChange={(v) => store.updateSettings({ autoScroll: v })} />
+          <SwitchRow
+            id="set-scroll"
+            label={t('scroll_default')}
+            checked={settings.autoScroll}
+            onChange={(v) => store.updateSettings({ autoScroll: v })}
+          />
           <SwitchRow
             id="set-shots"
             label={t('screenshots_default')}
@@ -96,7 +106,9 @@ export function Settings() {
         <ul className="flex flex-col">
           {allowedSites.map((origin) => (
             <li key={origin} className="flex h-8 items-center gap-2 px-1">
-              <span className="min-w-0 flex-1 truncate font-mono text-sm">{origin.replace(/\/\*$/, '')}</span>
+              <span className="min-w-0 flex-1 truncate font-mono text-sm">
+                {origin.replace(/\/\*$/, '')}
+              </span>
               <Button variant="ghost" className="h-7" onClick={() => store.removeSite(origin)}>
                 {t('remove')}
               </Button>
@@ -112,7 +124,11 @@ export function Settings() {
                 <li key={p.id} className="flex min-h-8 items-center gap-2 px-1">
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-text">{p.name}</span>
-                    <span className="block text-sm text-faint">{p.lastWrittenAt ? t('last_written', shortDate(p.lastWrittenAt)) : t('never_written')}</span>
+                    <span className="block text-sm text-faint">
+                      {p.lastWrittenAt
+                        ? t('last_written', shortDate(p.lastWrittenAt))
+                        : t('never_written')}
+                    </span>
                   </span>
                   <Button variant="ghost" className="h-7" onClick={() => setEditing(p.id)}>
                     {t('files')}
@@ -133,16 +149,29 @@ export function Settings() {
         <SectionLabel>{t('about')}</SectionLabel>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
           <span>{t('version', version)}</span>
-          <button type="button" className="text-accent hover:underline" onClick={() => store.openUrl(SOURCE_URL)}>
+          <button
+            type="button"
+            className="text-accent hover:underline"
+            onClick={() => store.openUrl(SOURCE_URL)}
+          >
             {t('source_code')}
           </button>
-          <button type="button" className="text-accent hover:underline" onClick={store.openShortcuts}>
+          <button
+            type="button"
+            className="text-accent hover:underline"
+            onClick={store.openShortcuts}
+          >
             {t('change_shortcut')}
           </button>
           <Keycap>{t('shortcut')}</Keycap>
         </div>
       </main>
-      {editing && <FileMapEditor project={projects.find((p) => p.id === editing)} onClose={() => setEditing(null)} />}
+      {editing && (
+        <FileMapEditor
+          project={projects.find((p) => p.id === editing)}
+          onClose={() => setEditing(null)}
+        />
+      )}
     </>
   );
 }

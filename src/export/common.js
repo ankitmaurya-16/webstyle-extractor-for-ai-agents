@@ -24,7 +24,8 @@ export const generatedBy = (design, version) =>
 export const safeComment = (text) => text.replace(/\*\//g, '*\\/');
 
 /** LF endings and exactly one trailing newline. */
-export const finish = (lines) => `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
+export const finish = (lines) =>
+  `${lines.join('\n').replace(/\r\n?/g, '\n').replace(/\n+$/, '')}\n`;
 
 export const pxString = (n) => `${Math.round(n * 100) / 100}px`;
 export const emString = (n) => `${Math.round(n * 1000) / 1000}em`;
@@ -32,12 +33,38 @@ export const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 /**
  * The design as exporters see it: names follow the edit log, then site names, then the user's
- * names when "Use my token names" is on (v2 spec 9.1).
+ * names when "Use my token names" is on (v2 spec 9.1). A component snapshot (F26) keeps only
+ * tokens used inside the picked element.
  * @param {object} design
- * @param {{mapping?: object|null}} [ctx]
+ * @param {{mapping?: object|null, kind?: 'page'|'site'|'component'}} [ctx]
  */
 export function prepare(design, ctx = {}) {
-  return ctx.mapping?.useMyNames ? applyMapping(design, ctx.mapping) : design;
+  const named = ctx.mapping?.useMyNames ? applyMapping(design, ctx.mapping) : design;
+  return ctx.kind === 'component' || named.meta?.kind === 'component'
+    ? scopeToComponent(named)
+    : named;
+}
+
+/**
+ * Only the picked subtree is walked, so element tokens are already scoped. Breakpoints, web
+ * fonts and the responsive table come from the whole page, so they are cut to what the
+ * component uses (AC-F26.8).
+ */
+export function scopeToComponent(design) {
+  const used = new Set(
+    visible(design.typography?.families ?? [])
+      .map((f) => f.webFont?.family?.toLowerCase())
+      .filter(Boolean),
+  );
+  return {
+    ...design,
+    meta: {
+      ...design.meta,
+      webFonts: (design.meta?.webFonts ?? []).filter((f) => used.has(f.family.toLowerCase())),
+    },
+    breakpoints: [],
+    responsive: null,
+  };
 }
 
 /** Everything an exporter prints, filtered for excluded tokens and sorted. */
@@ -128,7 +155,13 @@ export function darkBlock(design) {
   if ((mechanism === 'class' || mechanism === 'attribute') && selector) {
     return { open: `${selector} {`, close: '}', indent: '  ', mechanism, selector };
   }
-  return { open: '@media (prefers-color-scheme: dark) {\n  :root {', close: '  }\n}', indent: '    ', mechanism: 'media', selector: null };
+  return {
+    open: '@media (prefers-color-scheme: dark) {\n  :root {',
+    close: '  }\n}',
+    indent: '    ',
+    mechanism: 'media',
+    selector: null,
+  };
 }
 
 /** The mode whose semantic values go in :root and the other mode, for paired output. */

@@ -51,6 +51,8 @@ export function tokenConfidence(input) {
     score -= 0.1;
     reasons.push('Some stylesheets were unreadable');
   }
+  // A color measured over an image is a guess whatever its usage, so it stays low (AC-F9.9).
+  if (input.overImage) score = Math.min(score, MEDIUM - 0.01);
   return result(score, reasons);
 }
 
@@ -58,7 +60,15 @@ export function tokenConfidence(input) {
  * Role score: 0.5 * evidence + 0.5 * margin + boosts - penalties, where margin is the
  * winner's weight minus the runner-up's over the winner's.
  */
-export function roleConfidence({ count, winnerWeight, runnerUpWeight, runnerUpName, siteVariable, overrideOnly, truncated }) {
+export function roleConfidence({
+  count,
+  winnerWeight,
+  runnerUpWeight,
+  runnerUpName,
+  siteVariable,
+  overrideOnly,
+  truncated,
+}) {
   const reasons = [];
   const margin = winnerWeight > 0 ? (winnerWeight - (runnerUpWeight ?? 0)) / winnerWeight : 1;
   let score = 0.5 * evidence(count) + 0.5 * margin;
@@ -72,7 +82,10 @@ export function roleConfidence({ count, winnerWeight, runnerUpWeight, runnerUpNa
     score -= 0.2;
     reasons.push('From stylesheet overrides only');
   }
-  if (truncated) score -= 0.1;
+  if (truncated) {
+    score -= 0.1;
+    reasons.push('The capture stopped at the element limit');
+  }
   return result(score, reasons);
 }
 
@@ -83,7 +96,8 @@ export function recipeConfidence({ count, stateSource }) {
   if (stateSource === 'forced') {
     score += 0.1;
     reasons.push('States from forced capture');
-  } else if (stateSource === 'stylesheet') reasons.push('States from stylesheet rules (approximate)');
+  } else if (stateSource === 'stylesheet')
+    reasons.push('States from stylesheet rules (approximate)');
   return result(score, reasons);
 }
 

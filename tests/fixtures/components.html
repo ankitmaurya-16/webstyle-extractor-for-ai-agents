@@ -33,9 +33,147 @@
       a {
         color: #2563eb;
       }
+      /* v2 component kinds (F20). Nothing below adds a button, input or inline link. */
+      .topnav {
+        display: flex;
+        gap: 16px;
+        height: 56px;
+        align-items: center;
+        padding: 0 24px;
+        background: #111827;
+        border-bottom: 1px solid #374151;
+      }
+      .topnav a {
+        color: #d1d5db;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .topnav a[aria-current='page'] {
+        color: #ffffff;
+        font-weight: 700;
+        border-bottom: 2px solid #2563eb;
+      }
+      .cards {
+        display: flex;
+        gap: 16px;
+        margin: 16px 0;
+      }
+      .card {
+        width: 200px;
+        padding: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .card.lift {
+        background: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .card.lift:hover {
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+      .badges {
+        display: flex;
+        gap: 8px;
+        margin: 16px 0;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        background: #e5e7eb;
+        color: #374151;
+      }
+      .badge.success {
+        background: #16a34a;
+        color: #ffffff;
+      }
+      .badge.danger {
+        background: #dc2626;
+        color: #ffffff;
+      }
+      .badge.warning {
+        background: #f59e0b;
+        color: #111827;
+      }
+      [role='tablist'] {
+        display: flex;
+        gap: 4px;
+        margin: 16px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      [role='tab'] {
+        padding: 8px 12px;
+        color: #6b7280;
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+      }
+      [role='tab'][aria-selected='true'] {
+        color: #2563eb;
+        font-weight: 600;
+        border-bottom: 2px solid #2563eb;
+      }
+      .alert {
+        margin: 8px 0;
+        padding: 12px 16px;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        font-size: 14px;
+      }
+      .alert.danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fca5a5;
+      }
+      .alert.success {
+        background: #dcfce7;
+        color: #166534;
+        border-color: #86efac;
+      }
+      .alert.warning {
+        background: #fef3c7;
+        color: #92400e;
+        border-color: #fcd34d;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 16px 0;
+      }
+      th {
+        background: #f3f4f6;
+        color: #374151;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        padding: 8px 12px;
+      }
+      td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      tbody tr:nth-child(even) {
+        background: #f9fafb;
+      }
     </style>
   </head>
   <body>
+    <nav class="topnav" aria-label="Main">
+      <a href="#home" aria-current="page">Home</a>
+      <a href="#docs">Docs</a>
+      <a href="#guide">Guide</a>
+      <a href="#about">About</a>
+    </nav>
     <p>
       <button class="b">One</button>
       <input type="submit" class="b" value="Two" />
@@ -70,5 +208,78 @@
       <li>Filler nine</li>
       <li>Filler ten</li>
     </ul>
+    <div class="cards">
+      <div class="card">
+        <h3>Card title</h3>
+        <p>Card body copy.</p>
+      </div>
+      <div class="card">
+        <h3>Card title</h3>
+        <p>Card body copy.</p>
+      </div>
+      <div class="card">
+        <h3>Card title</h3>
+        <p>Card body copy.</p>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card lift">
+        <h3>Card title</h3>
+        <p>Card body copy.</p>
+      </div>
+      <div class="card lift">
+        <h3>Card title</h3>
+        <p>Card body copy.</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">Draft</span>
+      <span class="badge">Draft</span>
+      <span class="badge">Draft</span>
+      <span class="badge">Draft</span>
+      <span class="badge success">Live</span>
+      <span class="badge success">Live</span>
+      <span class="badge success">Live</span>
+      <span class="badge danger">Late</span>
+      <span class="badge danger">Late</span>
+      <span class="badge warning">Soon</span>
+    </div>
+    <div role="tablist" aria-label="Sections">
+      <div role="tab" aria-selected="true" tabindex="0">Tab one</div>
+      <div role="tab" aria-selected="false" tabindex="-1">Tab two</div>
+      <div role="tab" aria-selected="false" tabindex="-1">Tab three</div>
+    </div>
+    <div class="alert danger" role="alert">Alert message</div>
+    <div class="alert danger" role="alert">Alert message</div>
+    <div class="alert danger" role="alert">Alert message</div>
+    <div class="alert success" role="status">Alert message</div>
+    <div class="alert success" role="status">Alert message</div>
+    <div class="alert warning">Alert message</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Column</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cell</td>
+          <td>Cell</td>
+        </tr>
+        <tr>
+          <td>Cell</td>
+          <td>Cell</td>
+        </tr>
+        <tr>
+          <td>Cell</td>
+          <td>Cell</td>
+        </tr>
+        <tr>
+          <td>Cell</td>
+          <td>Cell</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

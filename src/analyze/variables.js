@@ -4,6 +4,7 @@
 import { parse } from 'culori';
 import { deriveName, isExcludedVariable, kebab, roleFromName } from '../detect/variable-rules.js';
 import { normalizeColor, oklabDistance } from './colors.js';
+import { parseGradient } from './gradients.js';
 import { cmp, parseFontStack, toPx } from './units.js';
 
 export const COLOR_MATCH = 0.005;
@@ -37,12 +38,14 @@ export function parseVariableValue(value, rootPx = 16) {
     const c = normalizeColor(bare);
     return c ? { type: 'color', ...c } : null;
   }
-  if (/^-?[\d.]+(ms|s)$/.test(v)) return { type: 'duration', ms: v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000 };
+  if (/^-?[\d.]+(ms|s)$/.test(v))
+    return { type: 'duration', ms: v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000 };
   if (/^(cubic-bezier\(|steps\(|ease|linear$)/.test(v)) return { type: 'easing', css: v };
   if (/^-?[\d.]+(px|rem|em)$/.test(v)) return { type: 'length', px: toPx(v, rootPx) };
   if (/^-?[\d.]+$/.test(v)) return { type: 'number', value: Number(v) };
   if (/gradient\(/.test(v)) return { type: 'gradient', css: v.replace(/\s+/g, ' ') };
-  if (/(\d+px|\d)\s+[\d.-]+px\s+[\d.-]+px/.test(v) && /(rgb|hsl|#|oklch)/.test(v)) return { type: 'shadow', css: normalizeShadow(v) };
+  if (/(\d+px|\d)\s+[\d.-]+px\s+[\d.-]+px/.test(v) && /(rgb|hsl|#|oklch)/.test(v))
+    return { type: 'shadow', css: normalizeShadow(v) };
   if (!/\(/.test(v) || /^(rgb|hsl|oklch|oklab|lab|lch|hwb|color)\(/i.test(v) || /^#/.test(v)) {
     try {
       if (parse(v)) {
@@ -60,7 +63,11 @@ export function parseVariableValue(value, rootPx = 16) {
   return null;
 }
 
-export const normalizeShadow = (css) => String(css).replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').trim();
+export const normalizeShadow = (css) =>
+  String(css)
+    .replace(/\s+/g, ' ')
+    .replace(/\s*,\s*/g, ', ')
+    .trim();
 
 /**
  * Builds typed candidates per mode from VariableDefs. Light uses root and light-selector scopes;
@@ -74,7 +81,12 @@ export function variableCandidates(defs, usage, rootPx) {
   const seen = new Set();
   for (const d of defs) {
     if (isExcludedVariable(d.name)) continue;
-    const mode = d.scope === 'dark-media' || d.scope === 'dark-selector' ? 'dark' : d.scope === 'other' ? null : 'light';
+    const mode =
+      d.scope === 'dark-media' || d.scope === 'dark-selector'
+        ? 'dark'
+        : d.scope === 'other'
+          ? null
+          : 'light';
     if (!mode) continue;
     const key = `${mode}|${d.name}`;
     if (seen.has(key)) continue;
@@ -102,7 +114,33 @@ export function lengthCategory(name) {
   return hit ? hit[0] : null;
 }
 
-const LENGTH_CATEGORIES = new Set(['space', 'radius', 'border', 'container', 'gap', 'breakpoint', 'text']);
+const LENGTH_CATEGORIES = new Set([
+  'space',
+  'radius',
+  'border',
+  'container',
+  'gap',
+  'breakpoint',
+  'text',
+]);
+
+/**
+ * Gradients compared by parsed stops: a variable holds the authored CSS (hex stops) while the
+ * token holds the computed CSS (rgb() stops), so the strings rarely agree.
+ */
+export function sameGradient(a, b) {
+  const pa = parseGradient(a);
+  const pb = parseGradient(b);
+  if (!pa || !pb || pa.stops.length === 0) return false;
+  const dir = (g) => (g.direction ?? '').replace(/\s+/g, ' ').toLowerCase();
+  return (
+    pa.type === pb.type &&
+    pa.repeating === pb.repeating &&
+    dir(pa) === dir(pb) &&
+    pa.stops.length === pb.stops.length &&
+    pa.stops.every((s, i) => s.hex === pb.stops[i].hex && s.position === pb.stops[i].position)
+  );
+}
 
 /** Whether a candidate's value equals a token's value, by type (F10 matching rules). */
 export function valueMatches(category, token, parsed, name = '') {
@@ -132,11 +170,13 @@ export function valueMatches(category, token, parsed, name = '') {
     case 'duration':
       return parsed.type === 'duration' && Math.abs(parsed.ms - token.ms) < 0.5;
     case 'easing':
-      return parsed.type === 'easing' && parsed.css.replace(/\s+/g, '') === token.css.replace(/\s+/g, '');
+      return (
+        parsed.type === 'easing' && parsed.css.replace(/\s+/g, '') === token.css.replace(/\s+/g, '')
+      );
     case 'shadow':
       return parsed.type === 'shadow' && parsed.css === normalizeShadow(token.value);
     case 'gradient':
-      return parsed.type === 'gradient' && parsed.css.replace(/\s+/g, '') === token.css.replace(/\s+/g, '');
+      return parsed.type === 'gradient' && sameGradient(parsed.css, token.css);
     case 'font':
       return parsed.type === 'font' && parsed.first === (token.stack[0] ?? '').toLowerCase();
     case 'z':
@@ -157,7 +197,9 @@ export function pickVariable(category, token, candidates, isSemantic) {
   matches.sort(
     (a, b) =>
       b.usage - a.usage ||
-      (isSemantic ? Number(Boolean(roleFromName(b.name))) - Number(Boolean(roleFromName(a.name))) : 0) ||
+      (isSemantic
+        ? Number(Boolean(roleFromName(b.name))) - Number(Boolean(roleFromName(a.name)))
+        : 0) ||
       a.name.length - b.name.length ||
       cmp(a.name, b.name),
   );
@@ -173,18 +215,28 @@ export function pickVariable(category, token, candidates, isSemantic) {
  * @param {{useSiteVariableNames: boolean, semanticIds: Set<string>}} options
  */
 export function applySiteNames(lists, candidates, options) {
+  const order = new Map(candidates.map((c, i) => [c, i]));
   for (const [category, tokens] of Object.entries(lists)) {
     const matched = [];
+    const picks = [];
     for (const token of tokens) {
       token.generatedName = token.name;
       token.aliases = [];
       token.siteVariable = null;
       token.siteName = null;
       const match = pickVariable(category, token, candidates, options.semanticIds.has(token.id));
-      if (match) {
-        token.siteVariable = match.name;
-        matched.push(token);
-      }
+      if (match) picks.push({ token, match });
+    }
+    // A themed variable such as --bg matches the light token through its root value and the dark
+    // token through its dark-scope value. It names only one of them, the one matched in the
+    // theme listed first (the primary theme), or both would export the same variable twice.
+    picks.sort((a, b) => order.get(a.match) - order.get(b.match));
+    const taken = new Set();
+    for (const { token, match } of picks) {
+      if (taken.has(match.name)) continue;
+      taken.add(match.name);
+      token.siteVariable = match.name;
+      matched.push(token);
     }
     const derivedCount = new Map();
     for (const t of matched) {
@@ -194,7 +246,8 @@ export function applySiteNames(lists, candidates, options) {
     const generated = new Set(tokens.map((t) => t.generatedName));
     for (const t of matched) {
       const derived = deriveName(t.siteVariable);
-      const collides = derivedCount.get(derived) > 1 || (generated.has(derived) && derived !== t.generatedName);
+      const collides =
+        derivedCount.get(derived) > 1 || (generated.has(derived) && derived !== t.generatedName);
       // Collisions within a category keep the full variable name (AC-F10.6).
       t.siteName = collides ? kebab(t.siteVariable) : derived;
       setPreferredName(t, options.useSiteVariableNames);
@@ -226,7 +279,11 @@ export function rolesFromVariables(colorTokens, candidates) {
     const token = colorTokens.find((t) => valueMatches('color', t, c.parsed));
     if (!token) continue;
     const prev = roles[role];
-    if (!prev || c.usage > prev.usage || (c.usage === prev.usage && c.name.length < prev.name.length)) {
+    if (
+      !prev ||
+      c.usage > prev.usage ||
+      (c.usage === prev.usage && c.name.length < prev.name.length)
+    ) {
       roles[role] = { token, name: c.name, usage: c.usage };
     }
   }

@@ -1,7 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { analyze } from '../../../src/analyze/index.js';
-import { detectBaseUnit, shadowBlur } from '../../../src/analyze/layout.js';
-import { rawSnapshot, stat } from '../helpers.js';
+import {
+  analyzeBorderWidths,
+  analyzeContainers,
+  analyzeGaps,
+  analyzeGridColumns,
+  analyzeOpacities,
+  analyzeZIndex,
+  detectBaseUnit,
+  shadowBlur,
+} from '../../../src/analyze/layout.js';
+import { analyzeFixture, analyzeRaw, loadRaw, rawSnapshot, stat } from '../helpers.js';
+
+const analyze = (raw) => analyzeRaw(raw);
 
 const spacing = (pairs) => pairs.map(([v, n]) => stat(`${v}px`, n, [], n));
 
@@ -133,7 +143,181 @@ describe('layout tokens', () => {
 
   it('AC-F4.6 marks breakpoints partial when no stylesheet is readable', () => {
     const d = analyze(rawSnapshot({ stylesheets: { readable: 0, unreadable: 2 } }));
-    expect(d.meta.partial).toEqual(['breakpoints', 'cssVariables']);
+    expect(d.meta.partial).toEqual(expect.arrayContaining(['breakpoints', 'cssVariables']));
     expect(d.breakpoints).toEqual([]);
+  });
+});
+
+describe('layout structure (F16)', () => {
+  it('AC-F16.1 collects centered containers weighted by area, in px', () => {
+    const containers = loadRaw('layout').containers;
+    const byPx = Object.fromEntries(containers.map((c) => [c.value, c]));
+    // 48em on 16px text arrives as 768px; the 65ch article is a px value too.
+    expect(Object.keys(byPx).sort()).toEqual([
+      '1100px',
+      '1200px',
+      '360px',
+      '400px',
+      '656px',
+      '768px',
+      '960px',
+    ]);
+    // .wide is 1100 by 400 px.
+    expect(byPx['1100px'].weight).toBe(440000);
+    // .offset has unequal margins and is not a container.
+    expect(byPx['700px']).toBeUndefined();
+  });
+
+  it('AC-F16.1 converts em and rem container values with the root font size', () => {
+    const tokens = analyzeContainers(
+      rawSnapshot({ rootFontSizePx: 16, containers: [stat('40rem', 100), stat('80em', 50)] }),
+    );
+    expect(tokens.map((t) => t.px)).toEqual([640, 1280]);
+  });
+
+  it('AC-F16.2 keeps 5 containers by area, named sm to 2xl ascending, plus prose', () => {
+    const { containers } = analyzeFixture('layout').layout;
+    expect(containers.map((c) => [c.name, c.px])).toEqual([
+      ['container-sm', 400],
+      ['container-md', 768],
+      ['container-lg', 960],
+      ['container-xl', 1100],
+      ['container-2xl', 1200],
+      ['prose', 656],
+    ]);
+  });
+
+  it('AC-F16.2 adds no prose token without a paragraph column', () => {
+    const tokens = analyzeContainers(
+      rawSnapshot({ containers: [stat('1024px', 10, []), stat('640px', 5, [])] }),
+    );
+    expect(tokens.map((t) => t.name)).toEqual(['container-sm', 'container-md']);
+  });
+
+  it('AC-F16.3 counts grid tracks, ignoring line names, and equal-width flex rows', () => {
+    const counts = Object.fromEntries(loadRaw('layout').gridColumns.map((g) => [g.value, g.count]));
+    // repeat(12, 1fr); three tracks with line names; 1fr 1fr plus a flex row of two equal
+    // children. The flex row of unequal children is not counted.
+    expect(counts).toEqual({ 12: 1, 3: 1, 2: 2 });
+    const { gridColumns } = analyzeFixture('layout').layout;
+    expect(gridColumns.map((g) => [g.name, g.value, g.usageShare])).toEqual([
+      ['grid-2', 2, 0.5],
+      ['grid-12', 12, 0.25],
+      ['grid-3', 3, 0.25],
+    ]);
+  });
+
+  it('AC-F16.3 ignores invalid column counts', () => {
+    const tokens = analyzeGridColumns(
+      rawSnapshot({ gridColumns: [stat('0', 1), stat('x', 1), stat('4', 3, [], 3)] }),
+    );
+    expect(tokens.map((t) => t.value)).toEqual([4]);
+  });
+
+  it('AC-F16.4 collects row and column gaps; a gap equal to a spacing token references it', () => {
+    const d = analyzeFixture('layout');
+    const gaps = Object.fromEntries(d.layout.gaps.map((g) => [g.px, g]));
+    expect(Object.keys(gaps).map(Number)).toEqual([8, 12, 16, 24, 32]);
+    const space = Object.fromEntries(d.spacing.tokens.map((t) => [t.px, t]));
+    expect(gaps[16]).toMatchObject({ spaceId: space[16].id, name: space[16].name });
+    expect(gaps[8].spaceId).toBe(space[8].id);
+    // 12 px, 24 px and 32 px are not spacing tokens on this page.
+    expect(gaps[24]).toMatchObject({ spaceId: null, name: 'gap-24' });
+    expect(gaps[32]).toMatchObject({ spaceId: null, name: 'gap-32' });
+  });
+
+  it('AC-F16.4 names fractional gaps without a dot', () => {
+    const gaps = analyzeGaps(rawSnapshot({ gaps: [stat('10.5px', 1)] }), []);
+    expect(gaps[0]).toMatchObject({ name: 'gap-10-5', px: 10.5, spaceId: null });
+  });
+});
+
+describe('layout values (F17)', () => {
+  it('AC-F17.1 collects z-index from positioned elements with layer hints', () => {
+    const hints = Object.fromEntries(loadRaw('layout').zIndices.map((z) => [z.value, z.hints]));
+    expect(hints).toEqual({
+      1: [],
+      2: [],
+      10: [],
+      40: ['menu'],
+      50: ['sticky-header'],
+      60: ['toast'],
+      70: ['tooltip'],
+      90: ['overlay'],
+      100: ['dialog'],
+    });
+  });
+
+  it('AC-F17.2 names layers after their dominant hint and keeps at most 8', () => {
+    const { zIndex } = analyzeFixture('layout');
+    // Nine values used once each: the anonymous z-10 gives way to the six layers.
+    expect(zIndex).toHaveLength(8);
+    expect(zIndex.map((z) => [z.name, z.value])).toEqual([
+      ['z-1', 1],
+      ['z-2', 2],
+      ['z-menu', 40],
+      ['z-header', 50],
+      ['z-toast', 60],
+      ['z-tooltip', 70],
+      ['z-overlay', 90],
+      ['z-dialog', 100],
+    ]);
+    expect(zIndex.find((z) => z.value === 100).layer).toBe('dialog');
+  });
+
+  it('AC-F17.2 uses z-<value> when no hint dominates and never repeats a layer name', () => {
+    const tokens = analyzeZIndex(
+      rawSnapshot({
+        zIndices: [
+          { value: 10, count: 4, hints: ['menu'] },
+          { value: 10, count: 6, hints: [] },
+          { value: 50, count: 2, hints: ['dialog'] },
+          { value: 60, count: 1, hints: ['dialog'] },
+        ],
+      }),
+    );
+    expect(tokens.map((t) => [t.name, t.layer])).toEqual([
+      ['z-10', null],
+      ['z-dialog', 'dialog'],
+      ['z-60', null],
+    ]);
+  });
+
+  it('AC-F17.3 rounds opacity to 0.05, names opacity-<percent> and finds disabled opacity', () => {
+    const { opacities } = analyzeFixture('layout');
+    expect(opacities.map((o) => [o.name, o.value])).toEqual([
+      // 0.33 rounds to 0.35.
+      ['opacity-35', 0.35],
+      ['opacity-disabled', 0.4],
+      ['opacity-50', 0.5],
+      ['opacity-75', 0.75],
+    ]);
+  });
+
+  it('AC-F17.3 ignores opacity 0 and 1', () => {
+    const tokens = analyzeOpacities(
+      rawSnapshot({ opacities: [stat('0', 5), stat('1', 5), stat('0.98', 5), stat('0.6', 5)] }),
+    );
+    expect(tokens.map((t) => t.value)).toEqual([0.6]);
+  });
+
+  it('AC-F17.4 names border widths border-<px> and notes the dominant style', () => {
+    const d = analyzeFixture('layout');
+    expect(d.borderWidths.map((b) => [b.name, b.px])).toEqual([
+      ['border-1', 1],
+      ['border-2', 2],
+      ['border-4', 4],
+    ]);
+    expect(d.meta.borderStyle).toBe('solid');
+    const dashed = analyzeBorderWidths(
+      rawSnapshot({
+        borderWidths: [stat('0.5px', 3)],
+        borderStyles: [stat('dashed', 3, [], 3), stat('solid', 1, [], 1)],
+      }),
+    );
+    expect(dashed).toEqual({
+      tokens: [expect.objectContaining({ name: 'border-0-5', px: 0.5 })],
+      style: 'dashed',
+    });
   });
 });

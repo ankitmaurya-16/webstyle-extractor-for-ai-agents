@@ -12,7 +12,9 @@ const px = (n) => `${n}px`;
 export function highlightMatch(design, tokenId) {
   const recipe = (design.components ?? []).find((r) => r.id === tokenId);
   if (recipe) {
-    return recipe.representativeSelector ? { property: 'selector', values: [recipe.representativeSelector] } : null;
+    return recipe.representativeSelector
+      ? { property: 'selector', values: [recipe.representativeSelector] }
+      : null;
   }
   const found = findToken(design, tokenId);
   if (!found) return null;

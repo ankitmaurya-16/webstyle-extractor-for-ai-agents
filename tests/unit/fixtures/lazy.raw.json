@@ -1,43 +1,105 @@
 {
+ "borderStyles": [
+  {
+   "contexts": [],
+   "count": 80,
+   "value": "solid",
+   "weight": 80
+  }
+ ],
+ "borderWidths": [
+  {
+   "contexts": [],
+   "count": 80,
+   "value": "1px",
+   "weight": 80
+  }
+ ],
  "breakpoints": [],
+ "canvasHex": "#fafaf9",
  "capturedAt": 1792324800000,
  "colorScheme": "light",
  "colors": [
   {
+   "backdropHex": "#fafaf9",
    "contexts": [
     "background"
    ],
    "count": 1,
+   "effectiveHex": "#fafaf9",
+   "maxWeight": 1742080,
+   "overImageShare": 0,
    "value": "rgb(250, 250, 249)",
    "weight": 1742080
   },
   {
+   "backdropHex": "#fafaf9",
    "contexts": [
     "background"
    ],
    "count": 20,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 72384,
+   "overImageShare": 0,
    "value": "rgb(255, 255, 255)",
    "weight": 1447680
   },
   {
-   "contexts": [
-    "text"
-   ],
-   "count": 21,
-   "value": "rgb(28, 25, 23)",
-   "weight": 479
-  },
-  {
+   "backdropHex": "#ffffff",
    "contexts": [
     "border"
    ],
    "count": 80,
+   "effectiveHex": "#e7e5e4",
+   "maxWeight": 1248,
+   "overImageShare": 0,
    "value": "rgb(231, 229, 228)",
    "weight": 52240
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "effectiveHex": "#1c1917",
+   "maxWeight": 24,
+   "overImageShare": 0,
+   "value": "rgb(28, 25, 23)",
+   "weight": 479
   }
  ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 20,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#1c1917",
+   "fontWeight": 400,
+   "sizePx": 16
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#fafaf9",
+   "effectiveText": "#1c1917",
+   "fontWeight": 700,
+   "sizePx": 32
+  }
+ ],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
  "cssVariables": {},
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
  "elementsSampled": 25,
+ "fontFaces": [],
  "fontFamilies": [
   {
    "contexts": [
@@ -84,6 +146,31 @@
    "weight": 9
   }
  ],
+ "frameCount": 0,
+ "frameworkSignals": [
+  {
+   "count": 2,
+   "evidence": "unique class names sampled",
+   "id": "meta:classes"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "value": "0",
+   "weight": 479
+  }
+ ],
  "lineHeights": [
   {
    "contexts": [
@@ -94,6 +181,7 @@
    "weight": 479
   }
  ],
+ "opacities": [],
  "radii": [
   {
    "contexts": [],
@@ -102,22 +190,49 @@
    "weight": 20
   }
  ],
+ "reducedMotion": false,
+ "representatives": [
+  {
+   "inViewport": true,
+   "kind": "h1",
+   "rect": {
+    "height": 24,
+    "width": 1248,
+    "x": 16,
+    "y": 16
+   },
+   "selector": "body > h1",
+   "variant": "h1:3d7bab43"
+  }
+ ],
  "rootFontSizePx": 16,
  "samples": [
   {
    "count": 1,
+   "hints": [],
+   "key": "h1:3d7bab43",
    "kind": "h1",
    "styles": {
     "background-color": "rgba(0, 0, 0, 0)",
+    "background-image": "none",
     "border": "none",
     "border-radius": "0px",
+    "border-width": "0px",
     "box-shadow": "none",
     "color": "rgb(28, 25, 23)",
     "font-family": "system-ui, sans-serif",
     "font-size": "32px",
     "font-weight": "700",
+    "gap": "0px",
+    "height": "24px",
+    "letter-spacing": "normal",
     "line-height": "24px",
-    "padding": "0px 0px 0px 0px"
+    "opacity": "1",
+    "outline": "none",
+    "outline-offset": "0px",
+    "padding": "0px 0px 0px 0px",
+    "text-transform": "none",
+    "transition": "none"
    }
   }
  ],
@@ -136,33 +251,66 @@
    "weight": 40
   }
  ],
+ "stateSamples": [],
  "stylesheets": {
   "readable": 1,
   "unreadable": 0
  },
  "textStyles": [
   {
-   "contexts": [
+   "count": 20,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": 24,
+   "sizePx": 16,
+   "tags": [
     "div"
    ],
-   "count": 20,
-   "value": "16px|24px|400|system-ui, sans-serif",
-   "weight": 470
+   "textTransform": "none",
+   "usage": 470
   },
   {
-   "contexts": [
+   "count": 1,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 700,
+   "letterSpacingEm": 0,
+   "lineHeightPx": 24,
+   "sizePx": 32,
+   "tags": [
     "h1"
    ],
-   "count": 1,
-   "value": "32px|24px|700|system-ui, sans-serif",
-   "weight": 9
+   "textTransform": "none",
+   "usage": 9
   }
  ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 21,
+   "value": "none",
+   "weight": 479
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
  "title": "Lazy-loading fixture",
+ "transitionProperties": [],
  "truncated": false,
  "url": "http://127.0.0.1:4173/lazy.html",
+ "variableDefs": [],
+ "variableUsage": {},
  "viewport": {
   "height": 720,
   "width": 1280
- }
+ },
+ "zIndices": []
 }

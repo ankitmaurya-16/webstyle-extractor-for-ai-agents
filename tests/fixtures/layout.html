@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Layout fixture</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        color: #111827;
+        background: #ffffff;
+        margin: 0;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        height: 56px;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .header nav {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+      }
+      /* Six centered containers; the five largest by area are kept. */
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      .wide {
+        max-width: 1100px;
+        margin: 0 auto;
+        height: 400px;
+      }
+      .content {
+        max-width: 960px;
+        margin: 0 auto;
+        height: 300px;
+      }
+      .em-box {
+        max-width: 48em;
+        margin: 0 auto;
+        height: 200px;
+      }
+      .narrow {
+        max-width: 400px;
+        margin: 0 auto;
+        height: 120px;
+      }
+      .tiny {
+        max-width: 360px;
+        margin: 0 auto;
+        height: 20px;
+      }
+      /* A readable-width column that wraps paragraphs: the prose token. */
+      .article {
+        max-width: 65ch;
+        margin: 0 auto;
+      }
+      /* Not centered: the margins differ. */
+      .offset {
+        max-width: 700px;
+        margin-left: 40px;
+        margin-right: 0;
+        height: 40px;
+      }
+      .grid-12 {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: [full-start] 1fr [main-start] 1fr 1fr [main-end full-end];
+        gap: 24px;
+      }
+      .grid-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 8px;
+        column-gap: 32px;
+      }
+      .flex-equal {
+        display: flex;
+        gap: 16px;
+      }
+      .flex-equal > div {
+        width: 200px;
+        height: 20px;
+      }
+      .flex-unequal {
+        display: flex;
+        gap: 12px;
+      }
+      .flex-unequal > div {
+        height: 20px;
+      }
+      .cell {
+        border: 1px solid #e5e7eb;
+        padding: 8px;
+      }
+      .thick {
+        border: 2px solid #d1d5db;
+        padding: 8px;
+      }
+      .dashed {
+        border: 4px dashed #9ca3af;
+        padding: 8px;
+      }
+      .menu {
+        position: absolute;
+        z-index: 40;
+        top: 120px;
+        left: 24px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+      }
+      .dialog {
+        position: fixed;
+        z-index: 100;
+        top: 200px;
+        left: 200px;
+        width: 300px;
+        height: 100px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+      }
+      .toast {
+        position: fixed;
+        z-index: 60;
+        bottom: 16px;
+        right: 16px;
+        background: #111827;
+        color: #ffffff;
+        padding: 8px;
+      }
+      .tooltip {
+        position: absolute;
+        z-index: 70;
+        top: 80px;
+        left: 400px;
+        background: #111827;
+        color: #ffffff;
+        padding: 4px;
+      }
+      .raised {
+        position: relative;
+      }
+      .z1 {
+        z-index: 1;
+      }
+      .z2 {
+        z-index: 2;
+      }
+      .z10 {
+        z-index: 10;
+      }
+      .muted {
+        opacity: 0.5;
+      }
+      .faded {
+        opacity: 0.75;
+      }
+      .rounding {
+        opacity: 0.33;
+      }
+      button:disabled {
+        opacity: 0.4;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <nav><a href="#a">Home</a><a href="#b">Docs</a><a href="#c">Blog</a></nav>
+    </header>
+    <main class="page">
+      <div class="wide"></div>
+      <div class="content"></div>
+      <div class="em-box"></div>
+      <div class="narrow"></div>
+      <div class="tiny"></div>
+      <div class="offset"></div>
+      <article class="article">
+        <p>Prose paragraph one. The article column keeps lines at a readable measure.</p>
+        <p>Prose paragraph two, more text in the same readable column of the page.</p>
+      </article>
+      <div class="grid-12">
+        <div class="cell">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell">4</div>
+        <div class="cell">5</div>
+        <div class="cell">6</div>
+        <div class="cell">7</div>
+        <div class="cell">8</div>
+        <div class="cell">9</div>
+        <div class="cell">10</div>
+        <div class="cell">11</div>
+        <div class="cell">12</div>
+      </div>
+      <div class="grid-3">
+        <div class="thick">A</div>
+        <div class="thick">B</div>
+        <div class="dashed">C</div>
+      </div>
+      <div class="grid-split">
+        <div class="cell">L</div>
+        <div class="cell">R</div>
+      </div>
+      <div class="flex-equal">
+        <div></div>
+        <div></div>
+      </div>
+      <div class="flex-unequal">
+        <div style="width: 100px"></div>
+        <div style="width: 300px"></div>
+      </div>
+      <p>
+        <span class="raised z1">one</span> <span class="raised z2">two</span>
+        <span class="raised z10">ten</span>
+      </p>
+      <p class="muted">Muted one</p>
+      <p class="muted">Muted two</p>
+      <p class="muted">Muted three</p>
+      <p class="faded">Faded</p>
+      <p class="rounding">Rounds to thirty-five</p>
+      <button disabled>Disabled one</button>
+      <button disabled>Disabled two</button>
+    </main>
+    <ul class="menu" role="menu">
+      <li role="menuitem">Item</li>
+    </ul>
+    <div class="tooltip" role="tooltip">Tip</div>
+    <div class="toast" role="status" aria-live="polite">Saved</div>
+    <div class="overlay"></div>
+    <div class="dialog" role="dialog" aria-modal="true">Dialog</div>
+  </body>
+</html>
