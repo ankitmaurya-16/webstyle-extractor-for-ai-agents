@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { stageLabel, useStore } from '../store.js';
+import { classifyUrl } from '../../../src/platform/errors.js';
 import { hasMessage, shortDate, t } from '../../../src/i18n.js';
 import { modesOf } from '../../../src/model/design.js';
 import { sameSite } from '../../../src/model/site.js';
@@ -96,7 +97,8 @@ export function Results() {
             label: t('add_this_page'),
             onSelect: () => store.extract({ intent: 'add-page' }),
             icon: FilePlus2,
-            disabled: !tab?.url || record.pages.includes(tab.url),
+            // Only a readable tab on a page the snapshot does not hold yet (AC-F25.1).
+            disabled: !tab?.url || Boolean(classifyUrl(tab.url)) || record.pages.includes(tab.url),
           },
           { label: t('pick_element'), onSelect: store.startPick, icon: Crosshair },
           !firefox && debuggerGranted

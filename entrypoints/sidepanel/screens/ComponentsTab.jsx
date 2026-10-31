@@ -6,6 +6,8 @@ import { useStore } from '../store.js';
 import { ConfidenceDot, RoleBadge, SectionLabel, Segmented } from '../components/Basics.jsx';
 import { HighlightButton, RenameField } from '../components/TokenRow.jsx';
 import { TokenMenu } from '../components/TokenMenu.jsx';
+import { Button } from '../components/Button.jsx';
+import { SnapshotPicker } from '../components/SnapshotPicker.jsx';
 
 const STATES = ['default', 'hover', 'focus', 'focus-visible', 'active'];
 const STATE_KEYS = { default: 'state_default', hover: 'state_hover', focus: 'state_focus', 'focus-visible': 'state_focus_visible', active: 'state_active' };
@@ -200,8 +202,24 @@ export function ComponentsTab({ design, mode, record }) {
   const recipes = visible(design.components);
   const excluded = design.components.filter((r) => r.excluded);
   const pickedFirst = record?.kind === 'component';
+  const addPicked = useStore((s) => s.addPickedToSnapshot);
+  const [choosing, setChoosing] = useState(false);
   return (
     <>
+      {pickedFirst && recipes.length > 0 && (
+        <Button variant="secondary" className="mt-4" onClick={() => setChoosing(true)}>
+          {t('add_to_snapshot')}
+        </Button>
+      )}
+      <SnapshotPicker
+        open={choosing}
+        onOpenChange={setChoosing}
+        exclude={record?.id}
+        onPick={(id) => {
+          setChoosing(false);
+          addPicked(id);
+        }}
+      />
       <FocusRingCard design={design} mode={mode} />
       {recipes.length === 0 && <p className="mt-6 text-muted">{t('no_components')}</p>}
       {recipes.map((recipe, i) => (

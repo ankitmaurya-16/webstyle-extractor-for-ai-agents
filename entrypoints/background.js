@@ -1,16 +1,17 @@
 import { MSG, PANEL_PORT, PENDING_EXTRACT_KEY, isExtractRequest } from '../src/messaging.js';
 import { cleanupOverlays, handleExtract, recoverActiveCapture } from '../src/platform/extract-handler.js';
+import { openPanelFromGesture, openPanelOnAction } from '../src/platform/chrome.js';
 import { clearHighlight, showHighlight, startPicker, stopPicker, pickerKey } from '../src/platform/overlays.js';
 
 export default defineBackground(() => {
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+  openPanelOnAction();
   // A restart in the middle of a capture must not leave the debugger attached (AC-F23.7).
   recoverActiveCapture();
 
   chrome.commands.onCommand.addListener((command, tab) => {
     if (command !== 'extract' || !tab?.id) return;
-    // sidePanel.open must run first with no await before it, or Chrome drops the user gesture.
-    chrome.sidePanel.open({ windowId: tab.windowId }).catch(() => {});
+    // Opening must run first with no await before it, or the browser drops the user gesture.
+    openPanelFromGesture(tab.windowId);
     chrome.storage.session.set({
       [PENDING_EXTRACT_KEY]: { tabId: tab.id, windowId: tab.windowId, at: Date.now() },
     });

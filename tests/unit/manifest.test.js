@@ -128,7 +128,7 @@ describe('Firefox manifest (F43)', () => {
 
   it('AC-F43.1 package.json has build:firefox and zip:firefox scripts', () => {
     const pkg = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'), 'utf8'));
-    expect(pkg.scripts['build:firefox']).toBe('wxt build -b firefox');
-    expect(pkg.scripts['zip:firefox']).toBe('wxt zip -b firefox');
+    expect(pkg.scripts['build:firefox']).toBe('wxt build -b firefox --mv3');
+    expect(pkg.scripts['zip:firefox']).toBe('wxt zip -b firefox --mv3');
   });
 });
