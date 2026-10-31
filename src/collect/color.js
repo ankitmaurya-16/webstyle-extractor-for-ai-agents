@@ -36,7 +36,10 @@ function parseHex(hex) {
 }
 
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
-const h2 = (n) => Math.round(clamp(n, 0, 255)).toString(16).padStart(2, '0');
+const h2 = (n) =>
+  Math.round(clamp(n, 0, 255))
+    .toString(16)
+    .padStart(2, '0');
 
 /** Lowercase #rrggbb, or #rrggbbaa when translucent. */
 export function toHex({ r, g, b, a }) {
@@ -78,9 +81,18 @@ export function canvasColorParser() {
     try {
       ctx ??= new OffscreenCanvas(1, 1).getContext('2d', { willReadFrequently: true });
       ctx.clearRect(0, 0, 1, 1);
-      ctx.fillStyle = '#000';
+      // fillStyle ignores invalid colors, so a value that leaves two different sentinels in
+      // place is not a color. Without this check any string, such as a border shorthand,
+      // would read as opaque black and compare equal to every other non-color string.
+      ctx.fillStyle = '#010203';
       ctx.fillStyle = value;
-      // fillStyle ignores invalid colors; a sentinel check keeps black-looking garbage out.
+      const first = ctx.fillStyle;
+      ctx.fillStyle = '#040506';
+      ctx.fillStyle = value;
+      if (first === '#010203' && ctx.fillStyle === '#040506') {
+        cache.set(value, null);
+        return null;
+      }
       ctx.fillRect(0, 0, 1, 1);
       const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
       result = a === 0 ? { r: 0, g: 0, b: 0, a: 0 } : { r, g, b, a: a / 255 };

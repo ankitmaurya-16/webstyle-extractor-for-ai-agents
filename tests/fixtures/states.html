@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>States fixture</title>
+    <style>
+      :root {
+        --brand: #2563eb;
+        --brand-dark: #1e40af;
+        --link-hover: #1e3a8a;
+        --ring: #f59e0b;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: #111827;
+        background: #ffffff;
+      }
+      a {
+        color: var(--brand);
+      }
+      .btn {
+        background: var(--brand);
+        color: #ffffff;
+        border: 0;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font: inherit;
+      }
+      /* Higher specificity, earlier in source: wins over .btn:hover below (AC-F12.2). */
+      button.btn:hover {
+        background-color: var(--brand-dark);
+      }
+      .btn:hover {
+        background-color: #3b82f6;
+        /* Same as the default color: never stored as a state difference (AC-F12.4). */
+        color: #ffffff;
+      }
+      /* Equal specificity: the later rule wins (AC-F12.2). */
+      .btn:active {
+        background-color: #172554;
+      }
+      .btn:active {
+        background-color: #1e3a8a;
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+      }
+      /* Does not match a 1280 px viewport, so it is ignored (AC-F12.2). */
+      @media (max-width: 400px) {
+        .btn:hover {
+          color: #ef4444;
+        }
+      }
+      /* Matches every viewport: applies. */
+      @media (min-width: 100px) {
+        .btn:active {
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+      }
+      /* A button with hover only and no focus style of its own. */
+      .ghost {
+        background: #f3f4f6;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 8px 16px;
+        font: inherit;
+      }
+      .ghost:hover {
+        background-color: #e5e7eb;
+      }
+      /* var() resolves through the element's computed custom properties (AC-F12.3). */
+      p a:hover {
+        color: var(--link-hover);
+      }
+      input {
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        padding: 8px;
+        font: inherit;
+      }
+      input:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>States</h1>
+    <p>
+      <button class="btn">Primary one</button>
+      <button class="btn">Primary two</button>
+      <button class="btn">Primary three</button>
+      <button class="btn">Primary four</button>
+    </p>
+    <p>
+      <button class="ghost">Plain one</button>
+      <button class="ghost">Plain two</button>
+    </p>
+    <p>Some text with an <a href="#x">inline link</a> and more text after it.</p>
+    <p><input type="text" aria-label="Field" /></p>
+  </body>
+</html>

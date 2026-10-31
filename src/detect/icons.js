@@ -30,7 +30,11 @@ export function detectIcons(hits) {
       id,
       name,
       version: null,
-      confidence: { level, score: level === 'high' ? 0.9 : level === 'medium' ? 0.6 : 0.3, reasons: evidence },
+      confidence: {
+        level,
+        score: level === 'high' ? 0.9 : level === 'medium' ? 0.6 : 0.3,
+        reasons: evidence,
+      },
       evidence,
     });
   }

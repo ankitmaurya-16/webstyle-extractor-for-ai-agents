@@ -31,9 +31,11 @@ export function planWidths(widths, currentWidth) {
 export function planStages(options, baseRaw) {
   const stages = ['attach'];
   if (options.deepScan) stages.push('deep-scan');
-  if (options.dark && canEmulateTheme(baseRaw)) stages.push(baseRaw.colorScheme === 'dark' ? 'light' : 'dark');
+  if (options.dark && canEmulateTheme(baseRaw))
+    stages.push(baseRaw.colorScheme === 'dark' ? 'light' : 'dark');
   if (options.states) stages.push('states');
-  for (const w of planWidths(options.widths, baseRaw.viewport?.width ?? 0)) stages.push(`width-${w}`);
+  for (const w of planWidths(options.widths, baseRaw.viewport?.width ?? 0))
+    stages.push(`width-${w}`);
   stages.push('detach');
   return stages;
 }
@@ -47,9 +49,15 @@ export function canEmulateTheme(raw) {
 
 function withTimeout(promise, ms, label) {
   let timer;
-  return Promise.race([promise.finally(() => clearTimeout(timer)), new Promise((_, reject) => {
-    timer = setTimeout(() => reject(Object.assign(new Error(`${label} timed out`), { code: 'TIMEOUT' })), ms);
-  })]);
+  return Promise.race([
+    promise.finally(() => clearTimeout(timer)),
+    new Promise((_, reject) => {
+      timer = setTimeout(
+        () => reject(Object.assign(new Error(`${label} timed out`), { code: 'TIMEOUT' })),
+        ms,
+      );
+    }),
+  ]);
 }
 
 /**
@@ -67,20 +75,37 @@ function withTimeout(promise, ms, label) {
  * @param {(mode: string) => Promise<object>} [input.onThemeCaptured] screenshot hook
  * @returns {Promise<{base: object, extra: Array<{mode: string, kind: string, method: string, viewportWidth: number, raw: object}>, failed: string[]}>}
  */
-export async function runAdvancedPlan({ cdp, baseRaw, options, collect, readRecipe, onStage = () => {}, signal, wait = sleep, onThemeCaptured }) {
+export async function runAdvancedPlan({
+  cdp,
+  baseRaw,
+  options,
+  collect,
+  readRecipe,
+  onStage = () => {},
+  signal,
+  wait = sleep,
+  onThemeCaptured,
+}) {
   const failed = [];
   const extra = [];
   let base = baseRaw;
   const started = Date.now();
   const check = () => {
     if (signal?.aborted) throw Object.assign(new Error('Cancelled'), { code: 'CANCELLED' });
-    if (Date.now() - started > ADVANCED_TIMEOUT_MS) throw Object.assign(new Error('Advanced capture timed out'), { code: 'TIMEOUT' });
+    if (Date.now() - started >= ADVANCED_TIMEOUT_MS)
+      throw Object.assign(new Error('Advanced capture timed out'), { code: 'TIMEOUT' });
   };
   const stage = async (name, fn) => {
     check();
     onStage(name);
     try {
-      await withTimeout(Promise.resolve().then(fn), STAGE_TIMEOUT_MS, name);
+      // A stage never runs past the plan's own limit (AC-F23.9).
+      const remaining = ADVANCED_TIMEOUT_MS - (Date.now() - started);
+      await withTimeout(
+        Promise.resolve().then(fn),
+        Math.max(0, Math.min(STAGE_TIMEOUT_MS, remaining)),
+        name,
+      );
     } catch (error) {
       if (error?.code === 'CANCELLED' || error?.code === 'PAGE_CHANGED') throw error;
       failed.push(name);
@@ -103,13 +128,16 @@ export async function runAdvancedPlan({ cdp, baseRaw, options, collect, readReci
       let bytes = 0;
       for (const header of headers) {
         if (header.isInline && !header.sourceURL) continue;
-        const { text } = await cdp.send('CSS.getStyleSheetText', { styleSheetId: header.styleSheetId });
+        const { text } = await cdp.send('CSS.getStyleSheetText', {
+          styleSheetId: header.styleSheetId,
+        });
         bytes += text.length;
         if (bytes > MAX_SHEET_BYTES) break;
         texts.push(text);
       }
       const raw = await collect({ sheetTexts: texts });
-      if (raw) base = { ...raw, deepScan: { sheets: texts.length, capped: bytes > MAX_SHEET_BYTES } };
+      if (raw)
+        base = { ...raw, deepScan: { sheets: texts.length, capped: bytes > MAX_SHEET_BYTES } };
     });
   }
 
@@ -119,11 +147,19 @@ export async function runAdvancedPlan({ cdp, baseRaw, options, collect, readReci
   if (options.dark && canEmulateTheme(base)) {
     await stage(other, async () => {
       try {
-        await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: other }] });
+        await cdp.send('Emulation.setEmulatedMedia', {
+          features: [{ name: 'prefers-color-scheme', value: other }],
+        });
         await wait(200);
         themeRaw = await collect({});
         if (themeRaw) {
-          const capture = { mode: other, kind: 'theme', method: 'emulated', viewportWidth: themeRaw.viewport.width, raw: themeRaw };
+          const capture = {
+            mode: other,
+            kind: 'theme',
+            method: 'emulated',
+            viewportWidth: themeRaw.viewport.width,
+            raw: themeRaw,
+          };
           // A screenshot of the other theme has to be taken while the emulation is on (F36).
           if (onThemeCaptured) capture.screenshot = await onThemeCaptured(other).catch(() => null);
           extra.push(capture);
@@ -142,7 +178,9 @@ export async function runAdvancedPlan({ cdp, baseRaw, options, collect, readReci
       base = { ...base, stateSamples: await forceStates(cdp, base, readRecipe) };
       if (themeRaw) {
         try {
-          await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: other }] });
+          await cdp.send('Emulation.setEmulatedMedia', {
+            features: [{ name: 'prefers-color-scheme', value: other }],
+          });
           await wait(100);
           themeRaw.stateSamples = await forceStates(cdp, themeRaw, readRecipe);
         } finally {
@@ -164,7 +202,14 @@ export async function runAdvancedPlan({ cdp, baseRaw, options, collect, readReci
         });
         await wait(350);
         const raw = await collect({});
-        if (raw) extra.push({ mode: base.colorScheme, kind: 'width', method: 'emulated', viewportWidth: width, raw });
+        if (raw)
+          extra.push({
+            mode: base.colorScheme,
+            kind: 'width',
+            method: 'emulated',
+            viewportWidth: width,
+            raw,
+          });
       } finally {
         await cdp.send('Emulation.clearDeviceMetricsOverride').catch(() => {});
       }
@@ -191,7 +236,10 @@ export async function forceStates(cdp, raw, readRecipe) {
   const done = new Set();
   for (const rep of reps) {
     if (done.has(rep.variant)) continue;
-    const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: rep.selector });
+    const { nodeId } = await cdp.send('DOM.querySelector', {
+      nodeId: root.nodeId,
+      selector: rep.selector,
+    });
     if (!nodeId) continue;
     const defaults = await readRecipe(rep.selector);
     if (!defaults) continue;
@@ -200,20 +248,28 @@ export async function forceStates(cdp, raw, readRecipe) {
         await cdp.send('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: [state] });
         const styles = await readRecipe(rep.selector);
         const diff = {};
-        for (const [prop, value] of Object.entries(styles ?? {})) if (value !== defaults[prop]) diff[prop] = value;
-        if (Object.keys(diff).length) forced.push({ kind: rep.kind, variant: rep.variant, state, styles: diff, source: 'forced' });
+        for (const [prop, value] of Object.entries(styles ?? {}))
+          if (value !== defaults[prop]) diff[prop] = value;
+        if (Object.keys(diff).length)
+          forced.push({
+            kind: rep.kind,
+            variant: rep.variant,
+            state,
+            styles: diff,
+            source: 'forced',
+          });
       } finally {
         await cdp.send('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: [] }).catch(() => {});
       }
     }
     done.add(rep.variant);
   }
-  // Forced results replace the stylesheet approximation for the variants they cover.
-  const covered = new Set(forced.map((s) => s.variant));
+  // Forced results replace the stylesheet approximation for every variant that was forced, even
+  // when forcing showed no change: the stylesheet guess is then known to be wrong (AC-F12.5).
+  const covered = done;
   return [...(raw.stateSamples ?? []).filter((s) => !covered.has(s.variant)), ...forced];
 }
 
 export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-

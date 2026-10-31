@@ -1,0 +1,248 @@
+{
+ "borderStyles": [],
+ "borderWidths": [],
+ "breakpoints": [],
+ "canvasHex": "#ffffff",
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 158720,
+   "overImageShare": 0,
+   "value": "rgb(255, 255, 255)",
+   "weight": 158720
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "effectiveHex": "#111827",
+   "maxWeight": 53,
+   "overImageShare": 0,
+   "value": "rgb(17, 24, 39)",
+   "weight": 68
+  }
+ ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 3,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#111827",
+   "fontWeight": 400,
+   "sizePx": 24
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#111827",
+   "fontWeight": 400,
+   "sizePx": 16
+  }
+ ],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
+ "cssVariables": {},
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
+ "elementsSampled": 6,
+ "fontFaces": [],
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "system-ui, sans-serif",
+   "weight": 53
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 3,
+   "value": "\"Material Symbols Outlined\"",
+   "weight": 15
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "16px",
+   "weight": 53
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 3,
+   "value": "24px",
+   "weight": 15
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "400",
+   "weight": 68
+  }
+ ],
+ "frameCount": 0,
+ "frameworkSignals": [
+  {
+   "count": 1,
+   "evidence": "unique class names sampled",
+   "id": "meta:classes"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [
+  {
+   "count": 1,
+   "evidence": "Material Symbols or Material Icons font",
+   "id": "material:font"
+  },
+  {
+   "count": 3,
+   "evidence": "material-symbols or material-icons classes",
+   "id": "material:classes"
+  }
+ ],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "0",
+   "weight": 68
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "normal",
+   "weight": 53
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 3,
+   "value": "24px",
+   "weight": 15
+  }
+ ],
+ "opacities": [],
+ "radii": [],
+ "reducedMotion": false,
+ "representatives": [],
+ "rootFontSizePx": 16,
+ "samples": [],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "24px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "16px",
+   "weight": 2
+  }
+ ],
+ "stateSamples": [],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "count": 1,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 16,
+   "tags": [
+    "p"
+   ],
+   "textTransform": "none",
+   "usage": 53
+  },
+  {
+   "count": 3,
+   "family": "\"Material Symbols Outlined\"",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": 24,
+   "sizePx": 24,
+   "tags": [
+    "span"
+   ],
+   "textTransform": "none",
+   "usage": 15
+  }
+ ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 4,
+   "value": "none",
+   "weight": 68
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
+ "title": "Material Symbols-like icons",
+ "transitionProperties": [],
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/icons/material.html",
+ "variableDefs": [],
+ "variableUsage": {},
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ },
+ "zIndices": []
+}

@@ -52,7 +52,8 @@ export function detectFrameworks(hits) {
         counts = n >= (id === 'shadcn' || id === 'radix-themes' ? 1 : 2);
         if (counts) strong = true;
       } else if (type === 'classes') {
-        counts = n >= 2;
+        // .radix-themes is one root class, so a single element is the whole signal.
+        counts = n >= (id === 'radix-themes' ? 1 : 2);
         if (counts && n >= 5) strong = true;
       } else if (type === 'attributes') {
         counts = n >= 2;
@@ -72,7 +73,11 @@ export function detectFrameworks(hits) {
       id,
       name,
       version: versionOf(id, get),
-      confidence: { level, score: level === 'high' ? 0.9 : level === 'medium' ? 0.6 : 0.3, reasons: evidence },
+      confidence: {
+        level,
+        score: level === 'high' ? 0.9 : level === 'medium' ? 0.6 : 0.3,
+        reasons: evidence,
+      },
       evidence,
     });
   }

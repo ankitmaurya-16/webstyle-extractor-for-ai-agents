@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Plain CSS fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        color: #111827;
+        background: #ffffff;
+      }
+      :root {
+        --brand: #7c3aed;
+        --page-width: 960px;
+      }
+      .site-header {
+        padding: 16px 24px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .site-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--brand);
+      }
+      .intro {
+        max-width: var(--page-width);
+        margin: 0 auto;
+      }
+      .action {
+        padding: 8px 16px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--brand);
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><span class="site-title">Plain site</span></header>
+    <section class="intro">
+      <p class="lead">Hand-written classes only.</p>
+      <button class="action">Action</button>
+    </section>
+  </body>
+</html>

@@ -38,7 +38,8 @@ export function deriveName(variable) {
   let name = variable.replace(/^--/, '');
   for (const prefix of CATEGORY_PREFIXES) {
     if (name.toLowerCase().startsWith(prefix) && name.length > prefix.length) {
-      name = name.slice(prefix.length);
+      // --space-4 stays space-4: a bare "4" would need an n prefix and lose its meaning.
+      if (!/^\d/.test(name.slice(prefix.length))) name = name.slice(prefix.length);
       break;
     }
   }
@@ -75,23 +76,30 @@ const ROLE_WORDS = [
  * @param {string} variable
  */
 export function roleFromName(variable) {
-  const words = variable.replace(/^--/, '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  const words = variable
+    .replace(/^--/, '')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
   const joined = words.join('-');
   if (words.length === 0) return null;
-  if (/(^|-)muted(-|$)|(^|-)subtle(-|$)|text-secondary|secondary-text|fg-muted|text-muted/.test(joined)) return 'text-muted';
-  const isForeground = words.some((w) => w === 'foreground' || w === 'fg');
-  if (isForeground && words.length > 1) return null;
-  // A leading category word decides the family: text-primary is a text color, bg-primary a fill.
+  // A leading category word decides the family first: text-primary is a text color, bg-primary
+  // a fill, and border-subtle a border rather than muted text.
   const head = words[0];
   if (head === 'text' || head === 'fg' || head === 'foreground') {
+    if (words.length > 1 && /muted|subtle|secondary/.test(words[1])) return 'text-muted';
     return words.length === 1 || /primary|default|base|body|main/.test(words[1]) ? 'text' : null;
   }
   if (head === 'bg' || head === 'background') {
-    if (words.length === 1 || /primary|default|base|page|body|main/.test(words[1])) return 'background';
+    if (words.length === 1 || /primary|default|base|page|body|main/.test(words[1]))
+      return 'background';
     if (/secondary|subtle|muted|surface|elevated|raised|card/.test(words[1])) return 'surface';
     return null;
   }
   if (head === 'border' || head === 'divider') return words.length <= 2 ? 'border' : null;
+  if (/(^|-)muted(-|$)|(^|-)subtle(-|$)|secondary-text/.test(joined)) return 'text-muted';
+  const isForeground = words.some((w) => w === 'foreground' || w === 'fg');
+  if (isForeground && words.length > 1) return null;
   if (words.includes('color') && words.length === 1) return null;
   for (const [role, list] of ROLE_WORDS) {
     if (words.some((w) => list.includes(w))) return role;

@@ -58,9 +58,7 @@ describe('collecting variables (F10)', () => {
     expect(resolveVars('var(--self)', lookup)).toBe('red');
   });
 
-  // Blocked: resolveVars (src/collect/stylesheets.js) substitutes a cyclic variable with '' and
-  // drops the outer fallback; CSS treats the cycle as invalid and uses the fallback.
-  it.skip('AC-F10.1 uses the fallback of a reference to a cyclic variable', () => {
+  it('AC-F10.1 uses the fallback of a reference to a cyclic variable', () => {
     const vars = { '--a': 'var(--b)', '--b': 'var(--a)' };
     expect(resolveVars('var(--a, #111827)', (name) => vars[name])).toBe('#111827');
   });
@@ -357,9 +355,7 @@ describe('naming tokens after site variables (F10)', () => {
     for (const [name, role] of Object.entries(cases)) expect(roleFromName(name), name).toBe(role);
   });
 
-  // Blocked: roleFromName (src/detect/variable-rules.js) tests the muted/subtle words before the
-  // leading category word, so --border-subtle signals text-muted instead of border.
-  it.skip('AC-F10.8 a leading border word wins over subtle', () => {
+  it('AC-F10.8 a leading border word wins over subtle', () => {
     expect(roleFromName('--border-subtle')).toBe('border');
     expect(roleFromName('--bg-subtle')).toBe('surface');
     expect(analyzeFixture('variables').semantic['text-muted']).toBeUndefined();

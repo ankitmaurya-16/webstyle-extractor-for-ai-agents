@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Coverage fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        color: #111827;
+        background: #ffffff;
+      }
+      iframe {
+        border: 1px solid #e5e7eb;
+        display: block;
+        margin: 16px 0;
+      }
+      .spacer {
+        height: 1600px;
+      }
+      .late {
+        padding: 16px;
+        margin: 8px 0;
+        background: #7c3aed;
+        color: #ffffff;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Coverage</h1>
+    <!-- An open shadow root: walked, and its stylesheets read (AC-F22.1). -->
+    <open-widget></open-widget>
+    <!-- A closed shadow root: unreachable, so its colors never appear. -->
+    <closed-widget></closed-widget>
+    <!-- A same-origin frame that is read and merged (AC-F22.2). -->
+    <iframe src="coverage-frame.html" width="400" height="200" title="Same origin"></iframe>
+    <!-- A frame under 100 x 100 px, which returns nothing (AC-F22.3). -->
+    <iframe src="coverage-frame.html" width="80" height="60" title="Tiny"></iframe>
+    <!-- A frame on the second origin. -->
+    <iframe
+      src="http://localhost:4174/frame.html"
+      width="400"
+      height="200"
+      title="Second origin"
+    ></iframe>
+    <div class="spacer"></div>
+    <div id="feed"></div>
+    <div id="sentinel" style="height: 1px"></div>
+    <script>
+      class OpenWidget extends HTMLElement {
+        constructor() {
+          super();
+          const root = this.attachShadow({ mode: 'open' });
+          root.innerHTML =
+            '<style>:host { display: block; --widget-accent: #db2777; }' +
+            ' .chip { display: inline-block; padding: 4px 12px; border-radius: 12px;' +
+            ' background: var(--widget-accent); color: #ffffff; }' +
+            ' @media (min-width: 900px) { .chip { padding: 6px 14px; } }</style>' +
+            '<span class="chip">Open root</span>';
+          // An adopted sheet inside the open root, also read.
+          const sheet = new CSSStyleSheet();
+          sheet.replaceSync(
+            ':host { --widget-adopted: #0891b2; } .chip { border: 2px solid #0891b2; }',
+          );
+          root.adoptedStyleSheets = [sheet];
+        }
+      }
+      class ClosedWidget extends HTMLElement {
+        constructor() {
+          super();
+          const root = this.attachShadow({ mode: 'closed' });
+          root.innerHTML =
+            '<style>:host { display: block; --closed-secret: #65a30d; }' +
+            ' .box { padding: 8px; background: #65a30d; color: #ffffff; }</style>' +
+            '<div class="box">Closed root</div>';
+        }
+      }
+      customElements.define('open-widget', OpenWidget);
+      customElements.define('closed-widget', ClosedWidget);
+
+      // Lazy content: only added once the sentinel scrolls into view.
+      let loaded = false;
+      new IntersectionObserver((entries) => {
+        if (loaded || !entries[0].isIntersecting) return;
+        loaded = true;
+        const feed = document.getElementById('feed');
+        for (let i = 0; i < 6; i += 1) {
+          const div = document.createElement('div');
+          div.className = 'late';
+          div.textContent = 'Loaded later';
+          feed.appendChild(div);
+        }
+      }).observe(document.getElementById('sentinel'));
+    </script>
+  </body>
+</html>

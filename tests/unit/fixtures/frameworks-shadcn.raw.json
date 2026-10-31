@@ -1,0 +1,407 @@
+{
+ "borderStyles": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "solid",
+   "weight": 4
+  }
+ ],
+ "borderWidths": [
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "1px",
+   "weight": 4
+  }
+ ],
+ "breakpoints": [],
+ "canvasHex": "#ffffff",
+ "capturedAt": 1792324800000,
+ "colorScheme": "light",
+ "colors": [
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background"
+   ],
+   "count": 1,
+   "effectiveHex": "#ffffff",
+   "maxWeight": 231680,
+   "overImageShare": 0,
+   "value": "oklch(1 0 0)",
+   "weight": 231680
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "border"
+   ],
+   "count": 4,
+   "effectiveHex": "#e5e5e5",
+   "maxWeight": 1232,
+   "overImageShare": 0,
+   "value": "oklch(0.922 0 0)",
+   "weight": 2730
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "background",
+    "interactive"
+   ],
+   "count": 1,
+   "effectiveHex": "#171717",
+   "maxWeight": 2140,
+   "overImageShare": 0,
+   "value": "oklch(0.205 0 0)",
+   "weight": 2140.45
+  },
+  {
+   "backdropHex": "#ffffff",
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "effectiveHex": "#0a0a0a",
+   "maxWeight": 10,
+   "overImageShare": 0,
+   "value": "oklch(0.145 0 0)",
+   "weight": 10
+  },
+  {
+   "backdropHex": "#171717",
+   "contexts": [
+    "interactive",
+    "text"
+   ],
+   "count": 1,
+   "effectiveHex": "#fafafa",
+   "maxWeight": 6,
+   "overImageShare": 0,
+   "value": "oklch(0.985 0 0)",
+   "weight": 6
+  }
+ ],
+ "containers": [],
+ "contrastSamples": [
+  {
+   "count": 1,
+   "effectiveBg": "#ffffff",
+   "effectiveText": "#0a0a0a",
+   "fontWeight": 400,
+   "sizePx": 16
+  },
+  {
+   "count": 1,
+   "effectiveBg": "#171717",
+   "effectiveText": "#fafafa",
+   "fontWeight": 400,
+   "sizePx": 13.3333
+  }
+ ],
+ "coverage": {
+  "autoScrolled": false,
+  "frames": {
+   "read": 0,
+   "skipped": 0
+  },
+  "shadowRoots": 0
+ },
+ "cssVariables": {
+  "--background": "oklch(1 0 0)",
+  "--foreground": "oklch(0.145 0 0)",
+  "--primary": "oklch(0.205 0 0)",
+  "--primary-foreground": "oklch(0.985 0 0)",
+  "--radius": "0.625rem",
+  "--ring": "oklch(0.708 0 0)"
+ },
+ "devicePixelRatio": 1,
+ "durations": [],
+ "easings": [],
+ "elementsSampled": 5,
+ "fontFaces": [],
+ "fontFamilies": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "system-ui, sans-serif",
+   "weight": 10
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "Arial",
+   "weight": 6
+  }
+ ],
+ "fontSizes": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "16px",
+   "weight": 10
+  },
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 1,
+   "value": "13.3333px",
+   "weight": 6
+  }
+ ],
+ "fontWeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "400",
+   "weight": 16
+  }
+ ],
+ "frameCount": 0,
+ "frameworkSignals": [
+  {
+   "count": 1,
+   "evidence": "theme variables use oklch() or an @layer theme exists",
+   "id": "tailwind:v4"
+  },
+  {
+   "count": 5,
+   "evidence": "--background, --foreground, --primary-foreground, --ring, --radius",
+   "id": "shadcn:variables"
+  },
+  {
+   "count": 3,
+   "evidence": "data-slot attributes",
+   "id": "shadcn:attributes"
+  },
+  {
+   "count": 1,
+   "evidence": "theme variables use oklch()",
+   "id": "shadcn:oklch"
+  }
+ ],
+ "gaps": [],
+ "gradientText": 0,
+ "gradients": [],
+ "gridColumns": [],
+ "iconSignals": [],
+ "iconSizes": [],
+ "iconStrokes": [],
+ "letterSpacings": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "0",
+   "weight": 16
+  }
+ ],
+ "lineHeights": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "normal",
+   "weight": 16
+  }
+ ],
+ "opacities": [],
+ "radii": [
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "10px",
+   "weight": 1
+  },
+  {
+   "contexts": [],
+   "count": 1,
+   "value": "8px",
+   "weight": 1
+  }
+ ],
+ "reducedMotion": false,
+ "representatives": [
+  {
+   "inViewport": true,
+   "kind": "button",
+   "rect": {
+    "height": 31,
+    "width": 69,
+    "x": 49,
+    "y": 101
+   },
+   "selector": "body > div > button",
+   "variant": "button:2a81ad80"
+  }
+ ],
+ "rootFontSizePx": 16,
+ "samples": [
+  {
+   "count": 1,
+   "hints": [],
+   "key": "button:2a81ad80",
+   "kind": "button",
+   "styles": {
+    "background-color": "oklch(0.205 0 0)",
+    "background-image": "none",
+    "border": "none",
+    "border-radius": "8px",
+    "border-width": "0px",
+    "box-shadow": "none",
+    "color": "oklch(0.985 0 0)",
+    "font-family": "Arial",
+    "font-size": "13.3333px",
+    "font-weight": "400",
+    "gap": "0px",
+    "height": "31px",
+    "letter-spacing": "normal",
+    "line-height": "normal",
+    "opacity": "1",
+    "outline": "none",
+    "outline-offset": "0px",
+    "padding": "8px 16px 8px 16px",
+    "text-transform": "none",
+    "transition": "none"
+   }
+  }
+ ],
+ "shadows": [],
+ "spacing": [
+  {
+   "contexts": [],
+   "count": 8,
+   "value": "24px",
+   "weight": 8
+  },
+  {
+   "contexts": [],
+   "count": 4,
+   "value": "16px",
+   "weight": 4
+  },
+  {
+   "contexts": [],
+   "count": 2,
+   "value": "8px",
+   "weight": 2
+  }
+ ],
+ "stateSamples": [],
+ "stylesheets": {
+  "readable": 1,
+  "unreadable": 0
+ },
+ "textStyles": [
+  {
+   "count": 1,
+   "family": "system-ui, sans-serif",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 16,
+   "tags": [
+    "p"
+   ],
+   "textTransform": "none",
+   "usage": 10
+  },
+  {
+   "count": 1,
+   "family": "Arial",
+   "fontWeight": 400,
+   "letterSpacingEm": 0,
+   "lineHeightPx": null,
+   "sizePx": 13.3333,
+   "tags": [
+    "button"
+   ],
+   "textTransform": "none",
+   "usage": 6
+  }
+ ],
+ "textTransforms": [
+  {
+   "contexts": [
+    "text"
+   ],
+   "count": 2,
+   "value": "none",
+   "weight": 16
+  }
+ ],
+ "themeRootRules": [],
+ "themeSignals": {
+  "activeMode": "light",
+  "colorSchemeProperty": "normal",
+  "darkMedia": false,
+  "darkSelectors": [],
+  "lightSelectors": []
+ },
+ "title": "shadcn-like fixture",
+ "transitionProperties": [],
+ "truncated": false,
+ "url": "http://127.0.0.1:4173/frameworks/shadcn.html",
+ "variableDefs": [
+  {
+   "name": "--radius",
+   "scope": "root",
+   "selector": ":root",
+   "value": "0.625rem"
+  },
+  {
+   "name": "--background",
+   "scope": "root",
+   "selector": ":root",
+   "value": "oklch(1 0 0)"
+  },
+  {
+   "name": "--foreground",
+   "scope": "root",
+   "selector": ":root",
+   "value": "oklch(0.145 0 0)"
+  },
+  {
+   "name": "--primary",
+   "scope": "root",
+   "selector": ":root",
+   "value": "oklch(0.205 0 0)"
+  },
+  {
+   "name": "--primary-foreground",
+   "scope": "root",
+   "selector": ":root",
+   "value": "oklch(0.985 0 0)"
+  },
+  {
+   "name": "--ring",
+   "scope": "root",
+   "selector": ":root",
+   "value": "oklch(0.708 0 0)"
+  }
+ ],
+ "variableUsage": {
+  "--background": 1,
+  "--foreground": 1,
+  "--primary": 1,
+  "--primary-foreground": 1,
+  "--radius": 2
+ },
+ "viewport": {
+  "height": 720,
+  "width": 1280
+ },
+ "zIndices": []
+}

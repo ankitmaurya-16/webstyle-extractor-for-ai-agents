@@ -47,7 +47,8 @@ export function selectorScope(selector, inDarkMedia) {
       .replace(LIGHT_SELECTOR, '')
       .replace(/:where\(\s*\)/g, '')
       .trim();
-    const rootish = rest === '' || rest.split(/\s+/).every((p) => ROOTISH.test(p) || p === '*' || p === '>');
+    const rootish =
+      rest === '' || rest.split(/\s+/).every((p) => ROOTISH.test(p) || p === '*' || p === '>');
     if (!rootish) return 'other';
     if (dark) return 'dark-selector';
     if (light) return 'light-selector';
@@ -148,18 +149,25 @@ export function readStylesheets({ sheets, texts = [], doc, win }) {
   const visitStyleRule = (rule, ctx) => {
     const selector = rule.selectorText ?? '';
     const text = rule.style?.cssText ?? '';
-    for (const m of text.matchAll(/var\(\s*(--[\w-]+)/g)) out.usage[m[1]] = (out.usage[m[1]] ?? 0) + 1;
+    for (const m of text.matchAll(/var\(\s*(--[\w-]+)/g))
+      out.usage[m[1]] = (out.usage[m[1]] ?? 0) + 1;
 
     const hasDark = DARK_SELECTOR.test(selector);
     const hasLight = LIGHT_SELECTOR.test(selector);
     if (hasDark) for (const s of matchingParts(selector, DARK_SELECTOR)) out.darkSelectors.add(s);
-    if (hasLight) for (const s of matchingParts(selector, LIGHT_SELECTOR)) out.lightSelectors.add(s);
+    if (hasLight)
+      for (const s of matchingParts(selector, LIGHT_SELECTOR)) out.lightSelectors.add(s);
 
     const scope = selectorScope(selector, ctx.dark);
     if (scope !== 'other') {
       for (const prop of rule.style) {
         if (prop.startsWith('--') && out.defs.length < MAX_DEFS) {
-          out.defs.push({ name: prop, value: rule.style.getPropertyValue(prop).trim(), scope, selector });
+          out.defs.push({
+            name: prop,
+            value: rule.style.getPropertyValue(prop).trim(),
+            scope,
+            selector,
+          });
         }
       }
       if (scope !== 'root' || ctx.dark) {
@@ -170,7 +178,10 @@ export function readStylesheets({ sheets, texts = [], doc, win }) {
       }
     }
 
-    if (/:(hover|focus|focus-visible|active)\b/.test(selector) && out.stateRules.length < MAX_STATE_RULES) {
+    if (
+      /:(hover|focus|focus-visible|active)\b/.test(selector) &&
+      out.stateRules.length < MAX_STATE_RULES
+    ) {
       const decls = {};
       for (const prop of STATE_PROPS) {
         const value = rule.style.getPropertyValue(prop).trim();
@@ -271,12 +282,12 @@ function replaceFirstVar(value, lookup, seen) {
     replacement = fallback;
   } else {
     const found = lookup(name);
-    if (found !== undefined && found !== '') {
-      const nextSeen = new Set(seen).add(name);
-      replacement = resolveVars(found, lookup, nextSeen);
-    } else {
-      replacement = fallback;
-    }
+    const resolved =
+      found !== undefined && found !== ''
+        ? resolveVars(found, lookup, new Set(seen).add(name))
+        : '';
+    // An empty result means a missing or cyclic variable; CSS then uses the fallback.
+    replacement = resolved !== '' ? resolved : fallback;
   }
   return value.slice(0, start) + replacement + value.slice(end + 1);
 }
