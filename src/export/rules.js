@@ -25,7 +25,18 @@ export function frameworkLabel(d) {
 const fontWithWeights = (f) =>
   f.weights?.length ? `${f.family} (${f.weights.join(', ')})` : f.family;
 
-export const loadedFonts = (design) => (design.meta.webFonts ?? []).filter((f) => f.loaded);
+/**
+ * Web fonts the page loaded and its text uses. A face that is declared and loaded but heads no
+ * family token (a logo or icon face, say) is not worth telling an agent to load.
+ */
+export function loadedFonts(design) {
+  const used = new Set(
+    (design.typography?.families ?? [])
+      .filter((f) => !f.excluded)
+      .map((f) => String(f.stack?.[0] ?? '').toLowerCase()),
+  );
+  return (design.meta.webFonts ?? []).filter((f) => f.loaded && used.has(f.family.toLowerCase()));
+}
 
 export function mechanismText(design) {
   const { themeMechanism: m, themeSelector: sel } = design.meta;

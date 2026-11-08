@@ -270,6 +270,8 @@ export function setPreferredName(token, useSite) {
  * Roles signalled by variable names (AC-F10.8): { role: { token, name, usage } }. Works on color
  * clusters or tokens, anything with hex, alpha and mergedFrom.
  */
+const SOLID_ROLES = new Set(['primary', 'accent', 'success', 'warning', 'danger']);
+
 export function rolesFromVariables(colorTokens, candidates) {
   const roles = {};
   for (const c of candidates) {
@@ -278,6 +280,9 @@ export function rolesFromVariables(colorTokens, candidates) {
     if (!role) continue;
     const token = colorTokens.find((t) => valueMatches('color', t, c.parsed));
     if (!token) continue;
+    // Brand and status roles are solid colors; a translucent value under such a name is a tint
+    // or an overlay, not the color itself.
+    if (SOLID_ROLES.has(role) && token.alpha < 1) continue;
     const prev = roles[role];
     if (
       !prev ||

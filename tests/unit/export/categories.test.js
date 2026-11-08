@@ -393,7 +393,10 @@ describe('web fonts in DESIGN.md (F19)', () => {
     expect(section(md, 'Stack')).toContain('- Web font: Inter 400, 600 from Google Fonts');
     expect(section(md, 'Stack')).toContain('- Web font: Mono Kit 500 from cdn.fonts-example.net');
     expect(md).not.toContain('fonts.gstatic.com');
-    expect(md).toContain('Load Inter (400, 600) and Mono Kit (500) rather than substituting.');
+    // Listed in the Stack, but no text on the page uses them, so the rule does not ask for them
+    // (a loaded logo or icon face, say).
+    expect(md).not.toContain('Load Inter');
+    expect(md).not.toContain('Mono Kit (500) rather than substituting');
   });
 
   it('AC-F19.6 a rule tells the agent to load the same families and weights', () => {

@@ -4,6 +4,7 @@
 import { ids } from '../model/ids.js';
 import { familyOf, normalizeColor, oklchOf } from './colors.js';
 import { cmp, parseFontStack, round2, toPx } from './units.js';
+import { visibleShadow } from './layout.js';
 
 const stableJson = (styles) =>
   JSON.stringify(
@@ -98,8 +99,9 @@ function referenceValue(prop, value, t, findColor, rootPx) {
   }
   if (prop === 'letter-spacing') return value;
   if (prop === 'box-shadow') {
-    const shadow = t.shadows.find((s) => s.value === value);
-    return shadow ? ref('shadow', shadow, value) : value;
+    const visible = visibleShadow(value);
+    const shadow = t.shadows.find((s) => s.value === visible);
+    return shadow ? ref('shadow', shadow, visible) : visible;
   }
   if (prop === 'border-width') {
     const px = toPx(value, rootPx);
@@ -229,13 +231,26 @@ export function buildRecipes(rawByMode, t, findColor, primaryByMode) {
     };
     const look = (s) => [s.styles['background-color'], s.styles.color, s.styles.border].join('|');
 
-    // Buttons: primary when the most common style's fill is the primary color, then one more.
-    const buttons = samplesOf('button');
+    // Buttons: icon and text buttons with no fill, border or padding say little about the
+    // design, so only styled buttons count when the page has any. Then, per AC-F5.2, the most
+    // common style is primary when its fill is the primary color; the next one is secondary.
+    const visibleFill = (s) => (normalizeColor(s.styles['background-color'] ?? '')?.alpha ?? 0) > 0;
+    const visibleBorder = (s) => {
+      const b = String(s.styles.border ?? 'none');
+      return b !== 'none' && !/\bnone\b/.test(b) && parseFloat(b) > 0;
+    };
+    const padded = (s) =>
+      String(s.styles.padding ?? '0')
+        .split(/\s+/)
+        .some((p) => parseFloat(p) > 0);
+    const styled = (s) => visibleFill(s) || visibleBorder(s) || padded(s);
+    const allButtons = samplesOf('button');
+    const buttons = allButtons.some(styled) ? allButtons.filter(styled) : allButtons;
     if (buttons[0]) {
       const first = buttons[0];
       const isPrimary = primaryId && findColor(first.styles['background-color'])?.id === primaryId;
       add('button', isPrimary ? 'primary' : 'default', first);
-      const second = buttons.find((s) => look(s) !== look(first));
+      const second = buttons.find((s) => s !== first && look(s) !== look(first));
       if (second) add('button', 'secondary', second);
     }
     if (samplesOf('input')[0]) add('input', 'default', samplesOf('input')[0]);
@@ -389,10 +404,15 @@ export function buildFocusRing(raws, findColor) {
   const states = raws
     .flatMap((r) => r.stateSamples ?? [])
     .filter((s) => ['button', 'link', 'input'].includes(s.kind));
+  // A placeholder ring such as Tailwind's `0 0 #0000` draws nothing and is not a focus style.
+  const visibleOutline = (outline) =>
+    Boolean(outline) &&
+    !/\b(none|hidden)\b/.test(outline) &&
+    parseFloat(String(outline).split(' ')[0]) > 0;
+  const draws = (s) =>
+    visibleOutline(s.styles.outline) || visibleShadow(s.styles['box-shadow']) !== 'none';
   const pick = ['focus-visible', 'focus']
-    .map((state) =>
-      states.filter((s) => s.state === state && (s.styles.outline || s.styles['box-shadow'])),
-    )
+    .map((state) => states.filter((s) => s.state === state && draws(s)))
     .find((list) => list.length > 0);
   if (!pick)
     return {
@@ -404,10 +424,9 @@ export function buildFocusRing(raws, findColor) {
       source: 'browser-default',
     };
   const s = pick.find((x) => x.source === 'forced') ?? pick[0];
-  const outline =
-    s.styles.outline && s.styles.outline !== 'none' ? borderValue(s.styles.outline) : null;
-  const boxShadow =
-    s.styles['box-shadow'] && s.styles['box-shadow'] !== 'none' ? s.styles['box-shadow'] : null;
+  const outline = visibleOutline(s.styles.outline) ? borderValue(s.styles.outline) : null;
+  const shadow = visibleShadow(s.styles['box-shadow']);
+  const boxShadow = shadow === 'none' ? null : shadow;
   let colorValue = null;
   if (outline) colorValue = outline.split(' ').slice(2).join(' ');
   else if (boxShadow)

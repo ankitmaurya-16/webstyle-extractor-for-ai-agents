@@ -190,6 +190,30 @@ export function splitLayers(value) {
   return layers.map((l) => l.trim()).filter(Boolean);
 }
 
+const TRANSPARENT =
+  /^(transparent|#0000|#00000000|rgba?\([^)]*[,/]\s*0(\.0+)?\s*\)|hsla?\([^)]*[,/]\s*0(\.0+)?%?\s*\))$/i;
+
+/**
+ * A shadow without its invisible layers: a transparent color, or every length zero. Tailwind
+ * writes placeholder layers such as `0 0 #0000` and `rgba(0, 0, 0, 0) 0px 0px 0px 0px` that
+ * draw nothing, so they must not become tokens or a focus ring. Returns 'none' when nothing
+ * is left.
+ * @param {string} value
+ */
+export function visibleShadow(value) {
+  if (!value || value === 'none') return 'none';
+  const layers = splitLayers(value).filter((layer) => {
+    const color =
+      /(rgba?\([^)]*\)|hsla?\([^)]*\)|oklch\([^)]*\)|#[0-9a-f]{3,8}\b|transparent)/i.exec(
+        layer,
+      )?.[1];
+    if (color && TRANSPARENT.test(color.trim())) return false;
+    const lengths = layer.replace(color ?? '', '').match(/-?\d*\.?\d+(px|rem|em)?/g) ?? [];
+    return lengths.some((n) => parseFloat(n) !== 0);
+  });
+  return layers.length ? layers.join(', ') : 'none';
+}
+
 /**
  * Shadows by usage, up to 6, named by blur (AC-F4.4). `byMode` holds each theme's shadow stats.
  * @param {Record<string, object[]>} byMode
@@ -198,11 +222,12 @@ export function analyzeShadows(byMode) {
   const map = new Map();
   for (const [mode, stats] of Object.entries(byMode)) {
     for (const s of stats ?? []) {
-      if (!s.value || s.value === 'none') continue;
-      const e = map.get(s.value) ?? { count: 0, modes: new Set() };
+      const value = visibleShadow(s.value);
+      if (value === 'none') continue;
+      const e = map.get(value) ?? { count: 0, modes: new Set() };
       e.count += s.count || 1;
       e.modes.add(mode);
-      map.set(s.value, e);
+      map.set(value, e);
     }
   }
   const total = [...map.values()].reduce((a, e) => a + e.count, 0) || 1;
