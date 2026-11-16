@@ -2,6 +2,13 @@
 
 Text and assets for the Chrome Web Store, Microsoft Edge Add-ons and addons.mozilla.org. Screenshots (1280 x 800) are in `store/` and are regenerated with `node scripts/screenshots.js`; take them in both panel themes for v2. The 128 px icon is `public/icon/128.png`. Build the uploads with `pnpm zip` (Chrome and Edge) and `pnpm zip:firefox` (Firefox); the files land in `.output/`. The name and short description in the manifest come from `public/_locales/en/messages.json` (`extName`, `extDescription`).
 
+## Assets
+
+- Screenshots (1280 x 800, at most five): `store/screenshot-colors.png`, `screenshot-components.png`, `screenshot-insights.png`, `screenshot-layout.png`, `screenshot-export.png`. Regenerate with `WXT_E2E=1 pnpm wxt build && node scripts/screenshots.js`.
+- Store icon: `public/icon/128.png`.
+- Privacy policy URL: the `PRIVACY.md` file on GitHub (https://github.com/ankitmaurya-16/webstyle-extractor-for-ai-agents/blob/main/PRIVACY.md).
+- Add the CLI sentence to the description only once `webstyle-extractor` is published on npm: "A command-line version for AI agents is on npm as webstyle-extractor."
+
 ## Name
 
 WebStyle Extractor for AI Agents
@@ -41,7 +48,7 @@ Optional Advanced capture uses Chrome's debugger, only when you turn it on, to r
 
 Private by design: the extension makes no network requests, has no analytics and calls no AI service. It only reads a tab after you click its icon or press its shortcut there (or after you allow a site), reads computed styles and class names rather than page content, and keeps everything in your browser. Light and dark panel themes.
 
-Free and open source under the MIT license. A command-line version for AI agents is on npm as webstyle-extractor.
+Free and open source under the MIT license.
 
 ## Privacy practices
 
