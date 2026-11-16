@@ -14,18 +14,26 @@ const { context, worker, extensionId } = await launch();
 try {
   const { page, tabId } = await openFixture(context, worker, 'classic.html');
   const panel = await openPanel(context, extensionId, tabId);
+  // The store and README show the panel's dark theme, its default look on most machines.
+  await panel.evaluate(() => chrome.storage.local.set({ settings: { panelTheme: 'dark' } }));
+  await panel.reload();
+  await panel.waitForSelector('[data-screen]');
   await panel.setViewportSize({ width: 360, height: 800 });
   await panel.screenshot({ path: `${images}home.png` });
   await panel.getByRole('button', { name: 'Extract design system' }).click();
   await panel.waitForSelector('[data-screen=results]');
-  await panel.getByRole('button', { name: 'Show blue-600' }).click();
+  // v2 names the classic fixture's blue from its own --brand variable.
+  await panel.getByRole('button', { name: 'Show brand' }).click();
   const shots = [
     ['colors', 'Colors'],
     ['type', 'Type'],
     ['layout', 'Layout'],
     ['components', 'Components'],
+    ['insights', 'Insights'],
     ['export', 'Export'],
   ];
+  // The Chrome Web Store takes at most five screenshots.
+  const storeShots = shots.filter(([file]) => file !== 'type');
   await page.setViewportSize({ width: 920, height: 800 });
   for (const [file, tab] of shots) {
     await panel.getByRole('tab', { name: tab }).click();
@@ -36,7 +44,7 @@ try {
   // Store screenshots: page on the left, panel on the right, like Chrome shows them.
   const composer = await context.newPage();
   await composer.setViewportSize({ width: 1280, height: 800 });
-  for (const [file, tab] of shots) {
+  for (const [file, tab] of storeShots) {
     await panel.getByRole('tab', { name: tab }).click();
     const pageShot = (await page.screenshot()).toString('base64');
     const panelShot = (await panel.screenshot()).toString('base64');
